@@ -54,7 +54,7 @@ class MainView extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.help),
-              iconSize: 150,
+              iconSize: 110,
               onPressed: () => debugPrint('Help button tapped'),
             ).withGridPlacement(
               columnStart: 0,
