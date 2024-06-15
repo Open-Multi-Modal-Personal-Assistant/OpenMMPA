@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 import 'package:pref/pref.dart';
 
@@ -8,19 +9,21 @@ class PreferencesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Preferences')),
+      appBar: AppBar(title: Text(l10n.preferencesAppBarTitle)),
       body: PrefPage(
         children: [
           PrefText(
-            label: 'Api Key',
+            label: l10n.preferencesApiKeyLabel,
             pref: PreferencesState.apiKeyTag,
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'\w')),
             ],
           ),
-          const PrefCheckbox(
-            title: Text('TSS / STT Remote?'),
+          PrefCheckbox(
+            title: Text(l10n.preferencesSpeechServicesRemoteLabel),
             pref: PreferencesState.areSpeechServicesRemoteTag,
           ),
         ],

@@ -3,5 +3,17 @@
     "counterAppBarTitle": "Counter",
     "@counterAppBarTitle": {
         "description": "Text shown in the AppBar of the Counter Page"
+    },
+    "preferencesAppBarTitle": "Preferences",
+    "@preferencesAppBarTitle": {
+        "description": "Text shown in the AppBar of the Preferences Page"
+    },
+    "preferencesApiKeyLabel": "API Key",
+    "@preferencesApiKeyLabel": {
+        "description": "Text shown in the preferences settings for API Key"
+    },
+    "preferencesSpeechServicesRemoteLabel": "TSS / STT Remote?",
+    "@preferencesSpeechServicesRemoteLabel": {
+        "description": "Text shown in the preferences settings for Are Speech Services Remote?"
     }
 }
