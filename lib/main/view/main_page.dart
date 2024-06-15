@@ -4,8 +4,8 @@ import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:inspector_gadget/counter/counter.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 
-class CounterPage extends StatelessWidget {
-  const CounterPage({super.key});
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +16,8 @@ class CounterPage extends StatelessWidget {
   }
 }
 
-class CounterView extends StatelessWidget {
-  const CounterView({super.key});
+class MainView extends StatelessWidget {
+  const MainView({super.key});
 
   @override
   Widget build(BuildContext context) {
