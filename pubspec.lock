@@ -213,6 +213,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  heart_rate_flutter:
+    dependency: "direct main"
+    description:
+      name: heart_rate_flutter
+      sha256: "7fe36726a892d9c597d6a6c4f5f57dee6fa01fb8473b1de73338f973a5d40379"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   http_multi_server:
     dependency: transitive
     description:
