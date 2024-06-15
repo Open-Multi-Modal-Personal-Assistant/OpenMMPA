@@ -37,7 +37,7 @@ class MainView extends StatelessWidget {
           rowSizes: [1.fr, 1.fr],
           children: [
             IconButton(
-              icon: Image.asset('assets/marty.png'),
+              icon: Image.asset('assets/marty_mcfly.png'),
               iconSize: 150,
               onPressed: () => debugPrint('Marty button tapped'),
             ).withGridPlacement(
