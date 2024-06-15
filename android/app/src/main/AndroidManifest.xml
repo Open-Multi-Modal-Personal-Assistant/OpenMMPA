@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.verygoodcore.my_app">
-   <application
+    package="dev.csaba.inspector_gadget">
+    <application
         android:label="${appName}"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
