@@ -4,6 +4,10 @@
     "@counterAppBarTitle": {
         "description": "Texto mostrado en la AppBar de la página del contador"
     },
+    "mainAppBarTitle": "Agente",
+    "@mainAppBarTitle": {
+        "description": "Texto mostrado en la AppBar de la página principal"
+    },
     "preferencesAppBarTitle": "Preferencias",
     "@preferencesAppBarTitle": {
         "description": "Texto mostrado en la AppBar de la página de Preferencias"

@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.4
+  flutter_layout_grid: ^2.0.0
   flutter_localizations:
     sdk: flutter
   heart_rate_flutter: ^0.0.2
