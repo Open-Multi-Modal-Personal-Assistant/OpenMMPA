@@ -2,10 +2,13 @@ import 'package:pref/pref.dart';
 
 class PreferencesState {
   PreferencesState() {
-    PrefServiceShared.init(prefix: prefix, defaults: {
-      apiKeyTag: apiKeyDefault,
-      areSpeechServicesRemoteTag: areSpeechServicesRemoteDefault,
-    }).then((ps) {
+    PrefServiceShared.init(
+      prefix: prefix,
+      defaults: {
+        apiKeyTag: apiKeyDefault,
+        areSpeechServicesRemoteTag: areSpeechServicesRemoteDefault,
+      },
+    ).then((ps) {
       prefService = ps;
     });
   }
@@ -27,8 +30,9 @@ class PreferencesState {
     prefService.set<String>(apiKeyTag, apiKey);
   }
 
-  void setAreSpeechServicesRemote(
-      {bool areSpeechServicesRemote = areSpeechServicesRemoteDefault}) {
+  void setAreSpeechServicesRemote({
+    bool areSpeechServicesRemote = areSpeechServicesRemoteDefault,
+  }) {
     prefService.set<bool>(areSpeechServicesRemoteTag, areSpeechServicesRemote);
   }
 }

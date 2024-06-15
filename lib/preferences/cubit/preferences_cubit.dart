@@ -10,11 +10,13 @@ class CounterCubit extends Cubit<PreferencesState> {
     emit(state);
   }
 
-  void setRemoteSpeechServices(
-      {bool areSpeechServicesRemote =
-          PreferencesState.areSpeechServicesRemoteDefault}) {
+  void setRemoteSpeechServices({
+    bool areSpeechServicesRemote =
+        PreferencesState.areSpeechServicesRemoteDefault,
+  }) {
     state.setAreSpeechServicesRemote(
-        areSpeechServicesRemote: areSpeechServicesRemote);
+      areSpeechServicesRemote: areSpeechServicesRemote,
+    );
     emit(state);
   }
 
