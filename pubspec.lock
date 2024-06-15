@@ -642,6 +642,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.1"
+  statemachine:
+    dependency: "direct main"
+    description:
+      name: statemachine
+      sha256: "42ce52468879383c60d4983526114d91282b8b0c36657bc7d58be88975a02982"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.1"
   stream_channel:
     dependency: transitive
     description:
