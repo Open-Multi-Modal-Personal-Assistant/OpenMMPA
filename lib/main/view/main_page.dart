@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
-import 'package:inspector_gadget/counter/counter.dart';
+import 'package:inspector_gadget/heart_rate/heart_rate.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
+import 'package:inspector_gadget/location/location.dart';
+import 'package:inspector_gadget/main/main.dart';
+import 'package:inspector_gadget/preferences/preferences.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => CounterCubit(),
-      child: const CounterView(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => MainCubit()),
+        BlocProvider(create: (_) => LocationCubit()),
+        BlocProvider(create: (_) => HeartRateCubit()),
+      ],
+      child: const MainView(),
     );
   }
 }
@@ -56,7 +63,12 @@ class MainView extends StatelessWidget {
             IconButton(
               icon: Image.asset('assets/flux_capacitor.png'),
               iconSize: 150,
-              onPressed: () => debugPrint('Flux button tapped'),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => const PreferencesPage(),
+                ),
+              ),
             ).withGridPlacement(
               columnStart: 1,
               rowStart: 1,
