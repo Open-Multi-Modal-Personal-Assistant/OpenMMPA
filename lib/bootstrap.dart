@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
+import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
+import 'package:pref/pref.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
@@ -21,13 +23,32 @@ class AppBlocObserver extends BlocObserver {
 }
 
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
-  FlutterError.onError = (details) {
-    log(details.exceptionAsString(), stackTrace: details.stack);
-  };
+  await runZonedGuarded<Future<void>>(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
 
-  Bloc.observer = const AppBlocObserver();
+      FlutterError.onError = (details) {
+        log(details.exceptionAsString(), stackTrace: details.stack);
+      };
 
-  // Add cross-flavor configuration here
+      Bloc.observer = const AppBlocObserver();
 
-  runApp(await builder());
+      // Add cross-flavor configuration here
+      PreferencesState.prefService = await PrefServiceShared.init(
+        prefix: PreferencesState.prefix,
+        defaults: {
+          PreferencesState.apiKeyTag: PreferencesState.apiKeyDefault,
+          PreferencesState.areSpeechServicesRemoteTag:
+              PreferencesState.areSpeechServicesRemoteDefault,
+        },
+      );
+
+      runApp(await builder());
+    },
+    (error, stack) => error is Exception
+        ? log(error.toString(), stackTrace: stack)
+        : (error is Error
+            ? log(error.toString(), stackTrace: error.stackTrace)
+            : log(error.toString())),
+  );
 }
