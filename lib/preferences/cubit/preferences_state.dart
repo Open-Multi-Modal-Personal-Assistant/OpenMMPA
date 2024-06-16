@@ -26,13 +26,14 @@ class PreferencesState {
       prefService.get<bool>(areSpeechServicesRemoteTag) ??
       areSpeechServicesRemoteDefault;
 
-  void setApiKey(String apiKey) {
-    prefService.set<String>(apiKeyTag, apiKey);
-  }
-
-  void setAreSpeechServicesRemote({
-    bool areSpeechServicesRemote = areSpeechServicesRemoteDefault,
-  }) {
-    prefService.set<bool>(areSpeechServicesRemoteTag, areSpeechServicesRemote);
-  }
+  // void setApiKey(String apiKey) {
+  //   prefService.set<String>(apiKeyTag, apiKey);
+  // }
+  //
+  // void setAreSpeechServicesRemote({
+  //   bool areSpeechServicesRemote = areSpeechServicesRemoteDefault,
+  // }) {
+  //   prefService.set<bool>(areSpeechServicesRemoteTag,
+  //        areSpeechServicesRemote);
+  // }
 }

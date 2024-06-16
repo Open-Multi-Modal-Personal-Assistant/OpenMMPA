@@ -5,18 +5,7 @@ import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 class PreferencesCubit extends Cubit<PreferencesState> {
   PreferencesCubit() : super(PreferencesState());
 
-  void setApiKey(String apiKey) {
-    state.setApiKey(apiKey);
-    emit(state);
-  }
-
-  void setRemoteSpeechServices({
-    bool areSpeechServicesRemote =
-        PreferencesState.areSpeechServicesRemoteDefault,
-  }) {
-    state.setAreSpeechServicesRemote(
-      areSpeechServicesRemote: areSpeechServicesRemote,
-    );
+  void emitState() {
     emit(state);
   }
 
