@@ -2,8 +2,8 @@ import 'package:bloc/bloc.dart';
 
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 
-class CounterCubit extends Cubit<PreferencesState> {
-  CounterCubit() : super(PreferencesState());
+class PreferencesCubit extends Cubit<PreferencesState> {
+  PreferencesCubit() : super(PreferencesState());
 
   void setApiKey(String apiKey) {
     state.setApiKey(apiKey);
