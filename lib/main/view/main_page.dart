@@ -34,6 +34,7 @@ class MainView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final appState = context.select((MainCubit cubit) => cubit.state);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.mainAppBarTitle)),
       body: Center(
@@ -45,7 +46,9 @@ class MainView extends StatelessWidget {
               key: const Key(martyMcFlyKey),
               icon: Image.asset('assets/marty_mcfly.png'),
               iconSize: 150,
-              onPressed: () => debugPrint('Marty button tapped'),
+              onPressed: () => appState == MainCubit.waitingState
+                  ? debugPrint('Marty button tapped')
+                  : null,
             ).withGridPlacement(
               columnStart: 0,
               rowStart: 0,
@@ -54,7 +57,9 @@ class MainView extends StatelessWidget {
               key: const Key(theDocKey),
               icon: Image.asset('assets/doc.png'),
               iconSize: 150,
-              onPressed: () => debugPrint('Doc button tapped'),
+              onPressed: () => appState == MainCubit.waitingState
+                  ? debugPrint('Doc button tapped')
+                  : null,
             ).withGridPlacement(
               columnStart: 1,
               rowStart: 0,
@@ -63,7 +68,9 @@ class MainView extends StatelessWidget {
               key: const Key(translateKey),
               icon: const Icon(Icons.translate),
               iconSize: 110,
-              onPressed: () => debugPrint('Translate button tapped'),
+              onPressed: () => appState == MainCubit.waitingState
+                  ? debugPrint('Translate button tapped')
+                  : null,
             ).withGridPlacement(
               columnStart: 0,
               rowStart: 1,
@@ -72,12 +79,14 @@ class MainView extends StatelessWidget {
               key: const Key(fluxCapacitorKey),
               icon: Image.asset('assets/flux_capacitor.png'),
               iconSize: 150,
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (context) => const PreferencesPage(),
-                ),
-              ),
+              onPressed: () => appState == MainCubit.waitingState
+                  ? Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (context) => const PreferencesPage(),
+                      ),
+                    )
+                  : null,
             ).withGridPlacement(
               columnStart: 1,
               rowStart: 1,

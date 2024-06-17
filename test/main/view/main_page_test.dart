@@ -27,7 +27,7 @@ void main() {
     });
 
     testWidgets('renders four buttons', (tester) async {
-      final state = MainCubit.initialState;
+      final state = MainCubit.waitingState;
       when(() => mainCubit.state).thenReturn(state);
       await tester.pumpApp(
         BlocProvider.value(
@@ -44,7 +44,7 @@ void main() {
 
     testWidgets('navigates to preferences when the pref button is tapped',
         (tester) async {
-      when(() => mainCubit.state).thenReturn(MainCubit.initialState);
+      when(() => mainCubit.state).thenReturn(MainCubit.waitingState);
       await tester.pumpApp(
         BlocProvider.value(
           value: mainCubit,

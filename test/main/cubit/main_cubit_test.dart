@@ -6,7 +6,7 @@ import 'package:statemachine/statemachine.dart';
 void main() {
   group('MainCubit', () {
     test('initial state is initialState', () {
-      expect(MainCubit().state, equals(MainCubit.initialState));
+      expect(MainCubit().state, equals(MainCubit.waitingState));
     });
 
     blocTest<MainCubit, State<String>>(
