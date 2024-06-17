@@ -26,6 +26,11 @@ class MainPage extends StatelessWidget {
 class MainView extends StatelessWidget {
   const MainView({super.key});
 
+  static const String martyMcFlyKey = 'MartyMcFly';
+  static const String theDocKey = 'TheDoc';
+  static const String translateKey = 'Translate';
+  static const String fluxCapacitorKey = 'FluxCapacitor';
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -37,6 +42,7 @@ class MainView extends StatelessWidget {
           rowSizes: [1.fr, 1.fr],
           children: [
             IconButton(
+              key: const Key(martyMcFlyKey),
               icon: Image.asset('assets/marty_mcfly.png'),
               iconSize: 150,
               onPressed: () => debugPrint('Marty button tapped'),
@@ -45,6 +51,7 @@ class MainView extends StatelessWidget {
               rowStart: 0,
             ),
             IconButton(
+              key: const Key(theDocKey),
               icon: Image.asset('assets/doc.png'),
               iconSize: 150,
               onPressed: () => debugPrint('Doc button tapped'),
@@ -53,6 +60,7 @@ class MainView extends StatelessWidget {
               rowStart: 0,
             ),
             IconButton(
+              key: const Key(translateKey),
               icon: const Icon(Icons.translate),
               iconSize: 110,
               onPressed: () => debugPrint('Translate button tapped'),
@@ -61,6 +69,7 @@ class MainView extends StatelessWidget {
               rowStart: 1,
             ),
             IconButton(
+              key: const Key(fluxCapacitorKey),
               icon: Image.asset('assets/flux_capacitor.png'),
               iconSize: 150,
               onPressed: () => Navigator.push(

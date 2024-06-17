@@ -1,20 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inspector_gadget/app/app.dart';
 import 'package:inspector_gadget/main/main.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:pref/pref.dart';
 
-abstract class MockWithExpandedToString extends Mock {
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.debug}) {
-    return super.toString();
-  }
-}
-
-class MockPrefService extends MockWithExpandedToString
-    implements BasePrefService {}
+import '../../helpers/helpers.dart';
 
 void main() {
   group('App', () {
