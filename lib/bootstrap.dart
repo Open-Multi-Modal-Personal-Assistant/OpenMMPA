@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
-import 'package:pref/pref.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
@@ -34,14 +33,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
       Bloc.observer = const AppBlocObserver();
 
       // Add cross-flavor configuration here
-      PreferencesState.prefService = await PrefServiceShared.init(
-        prefix: PreferencesState.prefix,
-        defaults: {
-          PreferencesState.apiKeyTag: PreferencesState.apiKeyDefault,
-          PreferencesState.areSpeechServicesRemoteTag:
-              PreferencesState.areSpeechServicesRemoteDefault,
-        },
-      );
+      await PreferencesState.init();
 
       runApp(await builder());
     },

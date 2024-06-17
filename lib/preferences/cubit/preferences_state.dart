@@ -9,6 +9,16 @@ class PreferencesState {
   static const bool areSpeechServicesRemoteDefault = true;
   static const String prefix = 'ig';
 
+  static Future<void> init() async {
+    prefService = await PrefServiceShared.init(
+      prefix: prefix,
+      defaults: {
+        apiKeyTag: apiKeyDefault,
+        areSpeechServicesRemoteTag: areSpeechServicesRemoteDefault,
+      },
+    );
+  }
+
   String get apiKey => prefService?.get<String>(apiKeyTag) ?? apiKeyDefault;
   bool get areSpeechServicesRemote =>
       prefService?.get<bool>(areSpeechServicesRemoteTag) ??
