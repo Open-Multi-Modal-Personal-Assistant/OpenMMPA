@@ -1,7 +1,7 @@
 import 'package:pref/pref.dart';
 
 class PreferencesState {
-  static PrefServiceShared? prefService;
+  static BasePrefService? prefService;
 
   static const String apiKeyTag = 'api_key';
   static const String apiKeyDefault = '';
