@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:fl_location/fl_location.dart';
@@ -49,7 +50,7 @@ class LocationCubit extends Cubit<Location> {
       await FlLocation.getLocation(timeLimit: timeLimit)
           .then(emit)
           .onError((error, stackTrace) {
-        // TODO(MrCsabaToth): log error
+        log(error.toString(), stackTrace: stackTrace);
       });
     }
   }
