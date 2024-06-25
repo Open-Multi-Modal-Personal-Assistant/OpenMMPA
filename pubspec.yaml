@@ -19,7 +19,7 @@ dependencies:
   heart_rate_flutter: ^0.0.2
   intl: ^0.19.0
   pref: ^2.8.0
-  record: ^5.1.1
+  record: ^5.1.2
   statemachine: ^3.3.1
 
 dev_dependencies:
