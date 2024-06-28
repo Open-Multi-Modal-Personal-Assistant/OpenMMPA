@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "mainAppBarTitle": "Agentic",
+    "mainAppBarTitle": "Choose Action:",
     "@mainAppBarTitle": {
         "description": "Text shown in the AppBar of the Main Page"
     },
@@ -12,8 +12,32 @@
     "@preferencesApiKeyLabel": {
         "description": "Text shown in the preferences settings for API Key"
     },
-    "preferencesSpeechServicesRemoteLabel": "TSS / STT Remote?",
+    "preferencesSpeechServicesNativeLabel": "TTS / STT Native?",
+    "@preferencesSpeechServicesNativeLabel": {
+        "description": "Text shown in the preferences settings for Are Speech Services Native (Android)?"
+    },
+    "preferencesSpeechServicesRemoteLabel": "TTS / STT Remote?",
     "@preferencesSpeechServicesRemoteLabel": {
         "description": "Text shown in the preferences settings for Are Speech Services Remote?"
+    },
+    "preferencesInputLocaleLabel": "Input Locale",
+    "@preferencesInputLocaleLabel": {
+        "description": "Text shown in the preferences settings for Input Locale"
+    },
+    "preferencesInputLocaleSubLabel": "For native TTS only",
+    "@preferencesInputLocaleSubLabel": {
+        "description": "Text shown in the preferences settings subtitle for Input Locale"
+    },
+    "preferencesOutputLocaleLabel": "Output Locale",
+    "@preferencesOutputLocaleLabel": {
+        "description": "Text shown in the preferences settings for Output Locale"
+    },
+    "preferencesOutputLocaleSubLabel": "For native STT only",
+    "@preferencesOutputLocaleSubLabel": {
+        "description": "Text shown in the preferences settings subtitle for Output Locale"
+    },
+    "utteranceAppBarTitle": "Press to stop recording:",
+    "@utteranceAppBarTitle": {
+        "description": "Text shown in the AppBar of the Utterance Page"
     }
 }

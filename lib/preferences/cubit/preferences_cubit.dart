@@ -16,4 +16,12 @@ class PreferencesCubit extends Cubit<PreferencesState> {
   bool getAreSpeechServicesRemote() {
     return state.areSpeechServicesRemote;
   }
+
+  String getInputLocale() {
+    return state.inputLocale;
+  }
+
+  String getOutputLocale() {
+    return state.outputLocale;
+  }
 }

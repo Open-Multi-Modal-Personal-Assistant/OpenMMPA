@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "mainAppBarTitle": "Agente",
+    "mainAppBarTitle": "Elige Acción:",
     "@mainAppBarTitle": {
         "description": "Texto mostrado en la AppBar de la página principal"
     },
@@ -12,8 +12,32 @@
     "@preferencesApiKeyLabel": {
         "description": "Texto mostrado en la configuración de preferencias para la clave API"
     },
-    "preferencesSpeechServicesRemoteLabel": "¿TSS / STT remoto?",
+    "preferencesSpeechServicesNativeLabel": "¿STT / TTS Nativo?",
+    "@preferencesSpeechServicesNativeLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias de ¿Son nativos los servicios de voz (Android)?"
+    },
+    "preferencesSpeechServicesRemoteLabel": "¿STT / TTS Remoto?",
     "@preferencesSpeechServicesRemoteLabel": {
         "description": "Texto mostrado en la configuración de preferencias de '¿Son remotos los servicios de voz?'"
+    },
+    "preferencesInputLocaleLabel": "Configuración regional de entrada",
+    "@preferencesInputLocaleLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias para la configuración regional de entrada"
+    },
+    "preferencesInputLocaleSubLabel": "Solo para TTS nativo",
+    "@preferencesInputLocaleSubLabel": {
+        "description": "Texto que se muestra en el subtítulo de configuración de preferencias para la configuración regional de entrada"
+    },
+    "preferencesOutputLocaleLabel": "Configuración regional de salida",
+    "@preferencesOutputLocaleLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias para la configuración regional de salida"
+    },
+    "preferencesOutputLocaleSubLabel": "Solo para STT nativo",
+    "@preferencesOutputLocaleSubLabel": {
+        "description": "Texto que se muestra en el subtítulo de configuración de preferencias para la configuración regional de salida"
+    },
+    "utteranceAppBarTitle": "Presione para detener la grabación:",
+    "@utteranceAppBarTitle": {
+        "description": "Texto que se muestra en la AppBar de la página de expresión"
     }
 }
