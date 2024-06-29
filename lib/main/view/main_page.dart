@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
+import 'package:inspector_gadget/gen/assets.gen.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/main/main.dart';
 import 'package:inspector_gadget/preferences/preferences.dart';
@@ -75,7 +76,7 @@ class _MainViewState extends State<MainView> {
           children: [
             IconButton(
               key: const Key(MainView.martyMcFlyKey),
-              icon: Image.asset('assets/marty_mcfly.png'),
+              icon: Assets.martyMcfly.image(),
               iconSize: 150,
               onPressed: () => appState.name == MainCubit.waitingStateLabel
                   ? navigateWithMode(
@@ -91,7 +92,7 @@ class _MainViewState extends State<MainView> {
             ),
             IconButton(
               key: const Key(MainView.theDocKey),
-              icon: Image.asset('assets/doc.png'),
+              icon: Assets.doc.image(),
               iconSize: 150,
               onPressed: () => appState.name == MainCubit.waitingStateLabel
                   ? navigateWithMode(
@@ -123,7 +124,7 @@ class _MainViewState extends State<MainView> {
             ),
             IconButton(
               key: const Key(MainView.fluxCapacitorKey),
-              icon: Image.asset('assets/flux_capacitor.png'),
+              icon: Assets.fluxCapacitor.image(),
               iconSize: 150,
               onPressed: () => appState.name == MainCubit.waitingStateLabel
                   ? Navigator.push(
