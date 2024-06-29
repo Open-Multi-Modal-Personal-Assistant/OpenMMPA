@@ -105,6 +105,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  dart_helper_utils:
+    dependency: "direct main"
+    description:
+      name: dart_helper_utils
+      sha256: ad83a1a32c6fa2d341bda7ba36c1819f8dace73dac6bb5ddd53414f93f090425
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
+  daylight:
+    dependency: "direct main"
+    description:
+      name: daylight
+      sha256: "5397bb889063eabcbca6a3b26258c950e62b7b6412be2ad75178e1fc6d8d9b0e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
   diff_match_patch:
     dependency: transitive
     description:
@@ -113,6 +129,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.1"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.5"
   fake_async:
     dependency: transitive
     description:

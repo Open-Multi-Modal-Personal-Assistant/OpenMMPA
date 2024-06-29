@@ -1,26 +1,10 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:fl_location/fl_location.dart';
 
-class LocationCubit extends Cubit<Location> {
-  LocationCubit()
-      : super(
-          Location(
-            latitude: 0,
-            longitude: 0,
-            accuracy: 0,
-            altitude: 0,
-            heading: 0,
-            speed: 0,
-            speedAccuracy: 0,
-            millisecondsSinceEpoch:
-                DateTime.now().millisecondsSinceEpoch.toDouble(),
-            timestamp: DateTime.now(),
-            isMock: true,
-          ),
-        );
+class LocationCubit extends Cubit<Location?> {
+  LocationCubit() : super(null);
 
   Future<bool> _checkAndRequestPermission() async {
     if (!await FlLocation.isLocationServicesEnabled) {
@@ -44,14 +28,14 @@ class LocationCubit extends Cubit<Location> {
     return true;
   }
 
-  Future<void> obtain() async {
+  Future<Location?> obtain() async {
     if (await _checkAndRequestPermission()) {
       const timeLimit = Duration(milliseconds: 500);
-      await FlLocation.getLocation(timeLimit: timeLimit)
-          .then(emit)
-          .onError((error, stackTrace) {
-        log(error.toString(), stackTrace: stackTrace);
-      });
+      final location = await FlLocation.getLocation(timeLimit: timeLimit);
+      emit(location);
+      return location;
     }
+
+    return null;
   }
 }

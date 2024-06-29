@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:daylight/daylight.dart';
+import 'package:fl_location/fl_location.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +21,7 @@ import 'package:inspector_gadget/secrets.dart';
 import 'package:inspector_gadget/stt/cubit/stt_cubit.dart';
 import 'package:inspector_gadget/utterance/cubit/utterance_cubit.dart';
 import 'package:inspector_gadget/utterance/view/constants.dart';
+import 'package:inspector_gadget/utterance/view/sun_request.dart';
 import 'package:inspector_gadget/utterance/view/transcription_list.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -63,6 +66,8 @@ class _UtteranceViewState extends State<UtteranceView>
   bool areSpeechServicesRemote =
       PreferencesState.areSpeechServicesRemoteDefault;
   bool started = false;
+  int heartRate = 0;
+  Location? gpsLocation;
 
   @override
   void initState() {
@@ -223,16 +228,136 @@ class _UtteranceViewState extends State<UtteranceView>
     final model = GenerativeModel(
       model: 'gemini-1.5-$modelType-latest',
       apiKey: geminiApiKey,
+      tools: [
+        Tool(
+          functionDeclarations: [
+            FunctionDeclaration(
+              'fetchGpsLocation',
+              'Returns the GPS location of the user.',
+              Schema(SchemaType.string),
+            ),
+            FunctionDeclaration(
+              'fetchHeartRate',
+              'Returns the heart rate of the user.',
+              Schema(SchemaType.integer),
+            ),
+            FunctionDeclaration(
+              'fetchSunrise',
+              'Returns the sunrise time for a given GPS location and date.',
+              Schema(
+                SchemaType.string,
+                properties: {
+                  'latitude': Schema.number(
+                    description: 'Latitude of the sunrise observer',
+                  ),
+                  'longitude': Schema.number(
+                    description: 'Longitude of the sunrise observer',
+                  ),
+                  'date': Schema.string(
+                    description: 'Date of the sunrise observation',
+                  ),
+                },
+              ),
+            ),
+            FunctionDeclaration(
+              'fetchSunset',
+              'Returns the sunset time for a given GPS location and date.',
+              Schema(
+                SchemaType.string,
+                properties: {
+                  'latitude': Schema.number(
+                    description: 'Latitude of the sunset observer',
+                  ),
+                  'longitude': Schema.number(
+                    description: 'Longitude of the sunset observer',
+                  ),
+                  'date': Schema.string(
+                    description: 'Date of the sunset observation',
+                  ),
+                },
+              ),
+            ),
+          ],
+        ),
+      ],
     );
 
     // TODO(MrCsabaToth): History: https://github.com/google-gemini/generative-ai-dart/blob/main/samples/dart/bin/advanced_chat.dart
-    final chat = model.startChat();
+    // note: chat.sendMessage takes only one content,
+    // whereas the last comprehensive call after the function calls
+    // supplies an array of content
     // TODO(MrCsabaToth): Multi modal call?
     // TODO(MrCsabaToth): Vector DB + embedding for knowledge base
     // TODO(MrCsabaToth): Tools
-    final response = await chat.sendMessage(Content.text(prompt));
+    final content = [Content.text(prompt)];
+    var response = await model.generateContent(content);
+
+    List<FunctionCall> functionCalls;
+    while ((functionCalls = response.functionCalls.toList()).isNotEmpty) {
+      final responses = <FunctionResponse>[
+        for (final functionCall in functionCalls)
+          _dispatchFunctionCall(functionCall),
+      ];
+      content
+        ..add(response.candidates.first.content)
+        ..add(Content.functionResponses(responses));
+      response = await model.generateContent(content);
+    }
 
     debugPrint(response.text);
+  }
+
+  FunctionResponse _dispatchFunctionCall(FunctionCall call) {
+    final result = switch (call.name) {
+      'fetchGpsLocation' => {
+          'gpsLocation': _fetchGpsLocation(gpsLocation),
+        },
+      'fetchHeartRate' => {
+          'heartRate': _fetchHeartRate(heartRate),
+        },
+      'fetchSunrise' => {
+          'sunrise': _fetchSunrise(SunRequest.fromJson(call.args)),
+        },
+      'fetchSunset' => {
+          'sunset': _fetchSunset(SunRequest.fromJson(call.args)),
+        },
+      _ => throw UnimplementedError('Function not implemented: ${call.name}')
+    };
+    return FunctionResponse(call.name, result);
+  }
+
+  String _fetchGpsLocation(Location? locParam) {
+    if (locParam != null &&
+        locParam.latitude > 10e-6 &&
+        locParam.longitude > 10e-6) {
+      return 'latitude ${locParam.latitude} longitude ${locParam.longitude}';
+    }
+
+    return 'N/A';
+  }
+
+  int _fetchHeartRate(int heartRateParam) {
+    return heartRateParam;
+  }
+
+  String _fetchSunTime(SunRequest sunRequest, bool sunrise) {
+    final location =
+        DaylightLocation(sunRequest.latitude, sunRequest.longitude);
+    final daylightCalculator = DaylightCalculator(location);
+    final dailyResults = daylightCalculator.calculateForDay(
+      sunRequest.date,
+      Zenith.astronomical,
+    );
+    final sunTime = sunrise ? dailyResults.sunrise : dailyResults.sunset;
+    return sunTime?.toIso8601String() ?? 'N/A';
+  }
+
+  String _fetchSunrise(SunRequest sunRequest) {
+    return _fetchSunTime(sunRequest, true);
+  }
+
+  String _fetchSunset(SunRequest sunRequest) {
+    return _fetchSunTime(sunRequest, false);
   }
 
   @override
@@ -273,6 +398,18 @@ class _UtteranceViewState extends State<UtteranceView>
         _audioRecorder = AudioRecorder(gzip: areSpeechServicesRemote);
         _startRecording();
       }
+
+      final heartRateCubit = context.select((HeartRateCubit cubit) => cubit);
+      heartRateCubit.listenToHeartRate().whenComplete(() {
+        heartRate = heartRateCubit.state;
+      });
+
+      final locationCubit = context.select((LocationCubit cubit) => cubit);
+      locationCubit.obtain().then((loc) {
+        if (loc != null && loc.latitude > 10e-6 && loc.longitude > 10e-6) {
+          gpsLocation = loc;
+        }
+      });
     }
 
     final stateIndex =
