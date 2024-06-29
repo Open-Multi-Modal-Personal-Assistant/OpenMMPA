@@ -7,20 +7,6 @@ class MainCubit extends Cubit<State<String>> {
     stateMachine.start();
 
     final waitingState = stateMachine.newStartState(waitingStateLabel);
-    // final recordingState = stateMachine.newState(recordingStateLabel);
-    // final sttState = stateMachine.newState(sttStateLabel);
-    // final llmState = stateMachine.newState(llmStateLabel);
-    // final ttsState = stateMachine.newState(ttsStateLabel);
-    // final playingState = stateMachine.newState(playingStateLabel);
-    //
-    // stateMap = {
-    //   waitingStateLabel: waitingState,
-    //   recordingStateLabel: recordingState,
-    //   sttStateLabel: sttState,
-    //   llmStateLabel: llmState,
-    //   ttsStateLabel: ttsState,
-    //   playingStateLabel: playingState,
-    // };
 
     stateMap = {
       waitingStateLabel: waitingState,
@@ -29,6 +15,7 @@ class MainCubit extends Cubit<State<String>> {
       llmStateLabel: stateMachine.newState(llmStateLabel),
       ttsStateLabel: stateMachine.newState(ttsStateLabel),
       playingStateLabel: stateMachine.newState(playingStateLabel),
+      errorStateLabel: stateMachine.newState(errorStateLabel),
     };
 
     waitingState.enter();
@@ -41,6 +28,7 @@ class MainCubit extends Cubit<State<String>> {
   static const String llmStateLabel = 'llm';
   static const String ttsStateLabel = 'tts';
   static const String playingStateLabel = 'playing';
+  static const String errorStateLabel = 'error';
 
   Map<String, State<String>> stateMap = {};
   Map<String, int> stateIndexMap = {
@@ -50,6 +38,7 @@ class MainCubit extends Cubit<State<String>> {
     llmStateLabel: 3,
     ttsStateLabel: 4,
     playingStateLabel: 5,
+    errorStateLabel: 6,
   };
 
   String setState(String stateName) {

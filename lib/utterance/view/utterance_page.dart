@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/heart_rate/heart_rate.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
@@ -16,6 +17,7 @@ import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 import 'package:inspector_gadget/preferences/preferences.dart';
 import 'package:inspector_gadget/secrets.dart';
 import 'package:inspector_gadget/stt/cubit/stt_cubit.dart';
+import 'package:inspector_gadget/utterance/cubit/utterance_cubit.dart';
 import 'package:inspector_gadget/utterance/view/constants.dart';
 import 'package:inspector_gadget/utterance/view/transcription_list.dart';
 import 'package:path/path.dart' as p;
@@ -147,27 +149,30 @@ class _UtteranceViewState extends State<UtteranceView>
       await speech?.stop();
     } else {
       final path = await _audioRecorder?.stop();
-
       if (path != null) {
         final recordingFile = File(path);
         final recordingBytes = await recordingFile.readAsBytes();
-        cubit.setState(MainCubit.sttStateLabel);
         if (context.mounted) {
-          await _sttPhase(context, recordingBytes);
+          await _sttPhase(context, cubit, recordingBytes);
         }
       } else {
         final ctx = context;
         if (ctx.mounted) {
           ScaffoldMessenger.of(ctx)
               .showSnackBar(const SnackBar(content: Text('Recording error')));
-          cubit.setState(MainCubit.waitingStateLabel);
-          Navigator.pop(ctx);
         }
+
+        cubit.setState(MainCubit.errorStateLabel);
       }
     }
   }
 
-  Future<void> _sttPhase(BuildContext context, Uint8List recordingBytes) async {
+  Future<void> _sttPhase(
+    BuildContext context,
+    MainCubit cubit,
+    Uint8List recordingBytes,
+  ) async {
+    cubit.setState(MainCubit.sttStateLabel);
     try {
       const queryParameters = '?token=$chirpToken';
       final chirpFullUrl = Uri.parse('$chirpFunction$queryParameters');
@@ -180,14 +185,16 @@ class _UtteranceViewState extends State<UtteranceView>
         final transcriptJson =
             json.decode(transcriptionResponse.body) as Map<String, dynamic>;
         final transcripts = Transcriptions.fromJson(transcriptJson);
-        await _llmPhase(transcripts.merged);
+        if (context.mounted) {
+          await _llmPhase(context, cubit, transcripts.merged);
+        }
+      } else {
+        log(transcriptionResponse.toString());
+        cubit.setState(MainCubit.errorStateLabel);
       }
     } catch (e) {
       log(e.toString());
-    }
-
-    if (context.mounted) {
-      Navigator.pop(context);
+      cubit.setState(MainCubit.errorStateLabel);
     }
   }
 
@@ -195,10 +202,8 @@ class _UtteranceViewState extends State<UtteranceView>
   Future<void> _resultListener(SpeechRecognitionResult result) async {
     log('Result listener final: ${result.finalResult}, '
         'words: ${result.recognizedWords}');
-    context.select(
-      (MainCubit cubit) => cubit.setState(MainCubit.llmStateLabel),
-    );
-    await _llmPhase(result.recognizedWords);
+    final cubit = context.select((MainCubit cubit) => cubit);
+    await _llmPhase(context, cubit, result.recognizedWords);
   }
 
   void _soundLevelListener(double level) {
@@ -207,9 +212,27 @@ class _UtteranceViewState extends State<UtteranceView>
   }
   /* END Android native STT utilities */
 
-  Future<void> _llmPhase(String recognizedText) async {
-    // TODO(MrCsabaToth): call LLM
+  Future<void> _llmPhase(
+    BuildContext context,
+    MainCubit cubit,
+    String prompt,
+  ) async {
+    cubit.setState(MainCubit.llmStateLabel);
+    final modelType =
+        widget.utteranceMode == UtteranceCubit.quickMode ? 'flash' : 'pro';
+    final model = GenerativeModel(
+      model: 'gemini-1.5-$modelType-latest',
+      apiKey: geminiApiKey,
+    );
 
+    // TODO(MrCsabaToth): History: https://github.com/google-gemini/generative-ai-dart/blob/main/samples/dart/bin/advanced_chat.dart
+    final chat = model.startChat();
+    // TODO(MrCsabaToth): Multi modal call?
+    // TODO(MrCsabaToth): Vector DB + embedding for knowledge base
+    // TODO(MrCsabaToth): Tools
+    final response = await chat.sendMessage(Content.text(prompt));
+
+    debugPrint(response.text);
   }
 
   @override
@@ -304,6 +327,16 @@ class _UtteranceViewState extends State<UtteranceView>
               ),
               onTap: () {
                 Navigator.pop(context);
+              },
+            ),
+            // 6: Error phase
+            GestureDetector(
+              child: AnimateStyles.pulse(
+                _animationController,
+                const Icon(Icons.warning, size: 220),
+              ),
+              onTap: () {
+                mainCubit.setState(MainCubit.waitingStateLabel);
               },
             ),
           ],
