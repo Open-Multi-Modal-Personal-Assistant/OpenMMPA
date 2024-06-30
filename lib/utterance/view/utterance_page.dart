@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:dart_helper_utils/dart_helper_utils.dart';
 import 'package:fl_location/fl_location.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -234,9 +235,9 @@ class _UtteranceViewState extends State<UtteranceView>
     // note: chat.sendMessage takes only one content,
     // whereas the last comprehensive call after the function calls
     // supplies an array of content
+    // => we need to roll our own history
     // TODO(MrCsabaToth): Multi modal call?
     // TODO(MrCsabaToth): Vector DB + embedding for knowledge base
-    // TODO(MrCsabaToth): Tools
     final content = [Content.text(prompt)];
     var response = await model.generateContent(content);
 
@@ -252,7 +253,22 @@ class _UtteranceViewState extends State<UtteranceView>
       response = await model.generateContent(content);
     }
 
-    debugPrint(response.text);
+    if (response.text.isNullOrWhiteSpace || !context.mounted) {
+      cubit.setState(MainCubit.errorStateLabel);
+    }
+
+    if (context.mounted) {
+      await _ttsPhase(context, cubit, response.text!);
+    }
+  }
+
+  Future<void> _ttsPhase(
+    BuildContext context,
+    MainCubit cubit,
+    String responseText,
+  ) async {
+    if (areSpeechServicesNative) {
+    }
   }
 
   @override
