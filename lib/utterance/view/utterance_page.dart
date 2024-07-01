@@ -227,16 +227,15 @@ class _UtteranceViewState extends State<UtteranceView>
       apiKey: preferencesState?.geminiApiKey ?? geminiApiKey,
       tools: getTools(),
     );
+    final chat = model.startChat();
 
     // TODO(MrCsabaToth): History: https://github.com/google-gemini/generative-ai-dart/blob/main/samples/dart/bin/advanced_chat.dart
-    // note: chat.sendMessage takes only one content,
-    // whereas the last comprehensive call after the function calls
-    // supplies an array of content
-    // => we need to roll our own history
+    // note: function call is possible with chat as well:
+    // https://ai.google.dev/gemini-api/docs/function-calling/tutorial?lang=dart#generate-function-call
+    // => we still need to roll our own history, because there's no session Id
     // TODO(MrCsabaToth): Multi modal call?
     // TODO(MrCsabaToth): Vector DB + embedding for knowledge base
-    final content = [Content.text(prompt)];
-    var response = await model.generateContent(content);
+    var response = await chat.sendMessage(Content.text(prompt));
 
     List<FunctionCall> functionCalls;
     while ((functionCalls = response.functionCalls.toList()).isNotEmpty) {
@@ -244,10 +243,10 @@ class _UtteranceViewState extends State<UtteranceView>
         for (final functionCall in functionCalls)
           await dispatchFunctionCall(functionCall, gpsLocation, heartRate),
       ];
-      content
-        ..add(response.candidates.first.content)
-        ..add(Content.functionResponses(responses));
-      response = await model.generateContent(content);
+
+      // Maybe switch the order of this?
+      await chat.sendMessage(response.candidates.first.content);
+      response = await chat.sendMessage(Content.functionResponses(responses));
     }
 
     if (response.text.isNullOrWhiteSpace || !context.mounted) {
