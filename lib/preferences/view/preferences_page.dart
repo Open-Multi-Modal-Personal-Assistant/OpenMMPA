@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:dart_helper_utils/dart_helper_utils.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,6 +67,31 @@ class _PreferencesViewState extends State<PreferencesView> {
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'[\w-]+')),
             ],
+          ),
+          PrefButton(
+            onTap: () async {
+              final prefService = PrefService.of(context);
+              final result = await FilePicker.platform.pickFiles();
+              if (result != null && result.files.single.path != null) {
+                final apiKeysCsvFile = File(result.files.single.path!);
+                final csvLines = await apiKeysCsvFile.readAsLines();
+                final preferencesMap = <String, String>{};
+                for (final csvLine in csvLines) {
+                  if (!csvLine.isNullOrWhiteSpace) {
+                    final keyValues = csvLine.split(',');
+                    if (keyValues.length >= 2) {
+                      preferencesMap.putIfAbsent(
+                        keyValues[0],
+                        () => keyValues[1],
+                      );
+                    }
+                  }
+                }
+
+                await prefService.fromMap(preferencesMap);
+              }
+            },
+            child: Text(l10n.preferencesImportApiKeysTitle),
           ),
           PrefCheckbox(
             title: Text(l10n.preferencesSpeechServicesNativeLabel),
