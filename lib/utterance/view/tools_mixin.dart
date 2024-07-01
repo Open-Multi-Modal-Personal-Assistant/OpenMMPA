@@ -154,14 +154,14 @@ mixin ToolsMixin {
   Future<double> _fetchCurrencyExchangeRate(
     CurrencyRequest currencyRequest,
   ) async {
-    const frankfurterBaseUrl = 'https://api.frankfurter.app/';
+    const frankfurterBaseUrl = 'https://api.frankfurter.app';
     final formattedDate = currencyRequest.currencyDate.format('yyyy-MM-dd');
-    final urlParameters = '$formattedDate'
-        '?from=${currencyRequest.currencyFrom}'
-        '&to=${currencyRequest.currencyTo}'
-        '&amount=${currencyRequest.amountFrom}';
-    final exchangeResult =
-        await http.get(Uri.parse('$frankfurterBaseUrl$urlParameters'));
+    final frankfurterUrl = Uri.http(frankfurterBaseUrl, '/$formattedDate', {
+      'from': currencyRequest.currencyFrom,
+      'to': currencyRequest.currencyTo,
+      'amount': currencyRequest.amountFrom,
+    });
+    final exchangeResult = await http.get(frankfurterUrl);
     if (exchangeResult.statusCode == 200) {
       final exchangeJson =
           json.decode(exchangeResult.body) as Map<String, dynamic>;
