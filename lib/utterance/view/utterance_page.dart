@@ -225,7 +225,7 @@ class _UtteranceViewState extends State<UtteranceView>
     final model = GenerativeModel(
       model: 'gemini-1.5-$modelType-latest',
       apiKey: preferencesState?.geminiApiKey ?? geminiApiKey,
-      tools: getTools(),
+      tools: getTools(preferencesState),
     );
     final chat = model.startChat();
 
@@ -241,7 +241,12 @@ class _UtteranceViewState extends State<UtteranceView>
     while ((functionCalls = response.functionCalls.toList()).isNotEmpty) {
       final responses = <FunctionResponse>[
         for (final functionCall in functionCalls)
-          await dispatchFunctionCall(functionCall, gpsLocation, heartRate),
+          await dispatchFunctionCall(
+            functionCall,
+            gpsLocation,
+            heartRate,
+            preferencesState,
+          ),
       ];
 
       // Maybe switch the order of this?

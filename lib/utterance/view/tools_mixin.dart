@@ -5,12 +5,16 @@ import 'package:daylight/daylight.dart';
 import 'package:fl_location/fl_location.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:http/http.dart' as http;
+import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 import 'package:inspector_gadget/utterance/view/currency_request.dart';
 import 'package:inspector_gadget/utterance/view/sun_request.dart';
 
 mixin ToolsMixin {
-  List<Tool> getTools() {
-    return [
+  static const String alphaVantageBaseUrl = 'https://www.alphavantage.co';
+  static const String alphaVantagePath = '/query';
+
+  List<Tool> getTools(PreferencesState? preferences) {
+    final tools = [
       Tool(
         functionDeclarations: [
           FunctionDeclaration(
@@ -23,6 +27,10 @@ mixin ToolsMixin {
             'Returns the heart rate of the user.',
             Schema(SchemaType.integer),
           ),
+        ],
+      ),
+      Tool(
+        functionDeclarations: [
           FunctionDeclaration(
             'fetchSunrise',
             'Returns the sunrise time for a given GPS location and date.',
@@ -59,6 +67,10 @@ mixin ToolsMixin {
               },
             ),
           ),
+        ],
+      ),
+      Tool(
+        functionDeclarations: [
           FunctionDeclaration(
             'fetchCurrencyExchangeRate',
             'Returns exchange rate for currencies between countries.',
@@ -84,6 +96,10 @@ mixin ToolsMixin {
               requiredProperties: ['currencyFrom', 'currencyTo'],
             ),
           ),
+        ],
+      ),
+      Tool(
+        functionDeclarations: [
           FunctionDeclaration(
             'webSearch',
             'Search the web and wikipedia for facts about any topic or '
@@ -102,13 +118,84 @@ mixin ToolsMixin {
         ],
       ),
     ];
+
+    if (!(preferences?.alphaVantageAccessKey.isNullOrWhiteSpace ?? false)) {
+      tools.add(
+        Tool(
+          functionDeclarations: [
+            FunctionDeclaration(
+              'getStockPrice',
+              'Fetch the current stock price of a given company',
+              Schema(
+                SchemaType.number,
+                properties: {
+                  'ticker': Schema.string(
+                    description: 'Stock ticker symbol for a company',
+                  ),
+                },
+                requiredProperties: ['ticker'],
+              ),
+            ),
+            FunctionDeclaration(
+              'getCompanyOverview',
+              'Get company details and other financial data',
+              Schema(
+                SchemaType.string,
+                properties: {
+                  'ticker': Schema.string(
+                    description: 'Stock ticker symbol for a company',
+                  ),
+                },
+                requiredProperties: ['ticker'],
+              ),
+            ),
+            FunctionDeclaration(
+              'getCompanyNews',
+              'Get the latest news headlines for a given company.',
+              Schema(
+                SchemaType.string,
+                properties: {
+                  'ticker': Schema.string(
+                    description: 'Stock ticker symbol for a company',
+                  ),
+                },
+                requiredProperties: ['ticker'],
+              ),
+            ),
+            FunctionDeclaration(
+              'getNewsWithSentiment',
+              'Gets live and historical market news and sentiment data',
+              Schema(
+                SchemaType.string,
+                properties: {
+                  'newsTopic': Schema.string(
+                    description: '''
+News topic to learn about. Supported topics
+include blockchain, earnings, ipo,
+mergers_and_acquisitions, financial_markets,
+economy_fiscal, economy_monetary, economy_macro,
+energy_transportation, finance, life_sciences,
+manufacturing, real_estate, retail_wholesale,
+and technology''',
+                  ),
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return tools;
   }
 
   Future<FunctionResponse> dispatchFunctionCall(
     FunctionCall call,
     Location? location,
     int hr,
+    PreferencesState? preferences,
   ) async {
+    final alphaVantageAccessKey = preferences?.alphaVantageAccessKey ?? '';
     final result = switch (call.name) {
       'fetchGpsLocation' => {
           'gpsLocation': _fetchGpsLocation(location),
@@ -129,6 +216,24 @@ mixin ToolsMixin {
         },
       'webSearch' => {
           'query': await _webSearch(call.args),
+        },
+      'getStockPrice' => {
+          'stockPrice': _getStockPrice(call.args, alphaVantageAccessKey),
+        },
+      'getCompanyOverview' => {
+          'companyOverview': _getCompanyOverview(
+            call.args,
+            alphaVantageAccessKey,
+          ),
+        },
+      'getCompanyNews' => {
+          'companyNews': _getCompanyNews(call.args, alphaVantageAccessKey),
+        },
+      'getNewsWithSentiment' => {
+          'newsWithSentiment': _getNewsWithSentiment(
+            call.args,
+            alphaVantageAccessKey,
+          ),
         },
       _ => throw UnimplementedError('Function not implemented: ${call.name}')
     };
@@ -209,7 +314,7 @@ mixin ToolsMixin {
       'skip_disambig': 1,
     });
 
-    var result = '';
+    var result = 'N/A';
     final searchResult = await http.get(duckDuckGoUrl);
     if (searchResult.statusCode == 200) {
       final resultJson = json.decode(searchResult.body) as Map<String, dynamic>;
@@ -239,5 +344,106 @@ mixin ToolsMixin {
     }
 
     return result;
+  }
+
+  Future<double> _getStockPrice(
+    Map<String, Object?> jsonObject,
+    String alphaVantageAccessKey,
+  ) async {
+    final ticker = (jsonObject['ticker'] ?? '') as String;
+    if (alphaVantageAccessKey.isNullOrWhiteSpace || ticker.isNullOrWhiteSpace) {
+      return 0.0;
+    }
+
+    final alphaVantageUrl = Uri.http(alphaVantageBaseUrl, alphaVantagePath, {
+      'function': 'GLOBAL_QUOTE',
+      'symbol': ticker,
+      'apikey': alphaVantageAccessKey,
+    });
+
+    var stockPrice = 0.0;
+    final queryResult = await http.get(alphaVantageUrl);
+    if (queryResult.statusCode == 200) {
+      // TODO(MrCsabaToth): extract stock price
+      stockPrice = 0.0;
+    }
+
+    return stockPrice;
+  }
+
+  Future<String> _getCompanyOverview(
+    Map<String, Object?> jsonObject,
+    String alphaVantageAccessKey,
+  ) async {
+    final ticker = (jsonObject['ticker'] ?? '') as String;
+    if (alphaVantageAccessKey.isNullOrWhiteSpace || ticker.isNullOrWhiteSpace) {
+      return 'N/A';
+    }
+
+    final alphaVantageUrl = Uri.http(alphaVantageBaseUrl, alphaVantagePath, {
+      'function': 'OVERVIEW',
+      'symbol': ticker,
+      'apikey': alphaVantageAccessKey,
+    });
+
+    final queryResult = await http.get(alphaVantageUrl);
+    if (queryResult.statusCode == 200) {
+      // TODO(MrCsabaToth): extract overview
+      return queryResult.body;
+    }
+
+    return 'N/A';
+  }
+
+  Future<String> _getCompanyNews(
+    Map<String, Object?> jsonObject,
+    String alphaVantageAccessKey,
+  ) async {
+    final ticker = (jsonObject['ticker'] ?? '') as String;
+    if (alphaVantageAccessKey.isNullOrWhiteSpace || ticker.isNullOrWhiteSpace) {
+      return 'N/A';
+    }
+
+    final alphaVantageUrl = Uri.http(alphaVantageBaseUrl, alphaVantagePath, {
+      'function': 'NEWS_SENTIMENT',
+      'tickers': ticker,
+      'limit': 20,
+      'sort': 'RELEVANCE',
+      'apikey': alphaVantageAccessKey,
+    });
+
+    final queryResult = await http.get(alphaVantageUrl);
+    if (queryResult.statusCode == 200) {
+      // TODO(MrCsabaToth): extract news
+      return queryResult.body;
+    }
+
+    return 'N/A';
+  }
+
+  Future<String> _getNewsWithSentiment(
+    Map<String, Object?> jsonObject,
+    String alphaVantageAccessKey,
+  ) async {
+    final newsTopic = (jsonObject['newsTopic'] ?? '') as String;
+    if (newsTopic.isNullOrWhiteSpace) {
+      return 'N/A';
+    }
+
+    final alphaVantageUrl = Uri.http(alphaVantageBaseUrl, alphaVantagePath, {
+      'function': 'NEWS_SENTIMENT',
+      'topics': newsTopic,
+      'limit': 20,
+      'sort': 'RELEVANCE',
+      'apikey': alphaVantageAccessKey,
+    });
+
+    final queryResult = await http.get(alphaVantageUrl);
+    if (queryResult.statusCode == 200) {
+      // TODO(MrCsabaToth): extract news
+      return queryResult.body;
+    }
+
+    return 'N/A';
   }
 }
