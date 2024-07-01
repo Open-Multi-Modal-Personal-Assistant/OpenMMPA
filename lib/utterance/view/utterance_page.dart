@@ -242,7 +242,7 @@ class _UtteranceViewState extends State<UtteranceView>
     while ((functionCalls = response.functionCalls.toList()).isNotEmpty) {
       final responses = <FunctionResponse>[
         for (final functionCall in functionCalls)
-          dispatchFunctionCall(functionCall, gpsLocation, heartRate),
+          await dispatchFunctionCall(functionCall, gpsLocation, heartRate),
       ];
       content
         ..add(response.candidates.first.content)

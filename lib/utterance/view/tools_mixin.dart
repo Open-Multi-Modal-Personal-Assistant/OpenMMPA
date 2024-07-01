@@ -1,6 +1,11 @@
+import 'dart:convert';
+
+import 'package:dart_helper_utils/dart_helper_utils.dart';
 import 'package:daylight/daylight.dart';
 import 'package:fl_location/fl_location.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:http/http.dart' as http;
+import 'package:inspector_gadget/utterance/view/currency_request.dart';
 import 'package:inspector_gadget/utterance/view/sun_request.dart';
 
 mixin ToolsMixin {
@@ -54,16 +59,37 @@ mixin ToolsMixin {
               },
             ),
           ),
+          FunctionDeclaration(
+            'fetchCurrencyExchangeRate',
+            'Returns exchange rate for currencies between countries.',
+            Schema(
+              SchemaType.number,
+              properties: {
+                'currencyDate': Schema.string(
+                  description: 'A date or the value "latest" '
+                      'if a time period is not specified',
+                ),
+                'currencyFrom': Schema.string(
+                  description:
+                      'The currency to convert from in ISO 4217 format',
+                ),
+                'currencyTo': Schema.string(
+                  description: 'The currency to convert to in ISO 4217 format',
+                ),
+              },
+              requiredProperties: ['currencyFrom', 'currencyTo'],
+            ),
+          ),
         ],
       ),
     ];
   }
 
-  FunctionResponse dispatchFunctionCall(
+  Future<FunctionResponse> dispatchFunctionCall(
     FunctionCall call,
     Location? location,
     int hr,
-  ) {
+  ) async {
     final result = switch (call.name) {
       'fetchGpsLocation' => {
           'gpsLocation': _fetchGpsLocation(location),
@@ -76,6 +102,11 @@ mixin ToolsMixin {
         },
       'fetchSunset' => {
           'sunset': _fetchSunset(SunRequest.fromJson(call.args)),
+        },
+      'fetchCurrencyExchangeRate' => {
+          'exchangeRate': await _fetchCurrencyExchangeRate(
+            CurrencyRequest.fromJson(call.args),
+          ),
         },
       _ => throw UnimplementedError('Function not implemented: ${call.name}')
     };
@@ -114,5 +145,30 @@ mixin ToolsMixin {
 
   String _fetchSunset(SunRequest sunRequest) {
     return _fetchSunTime(sunRequest, false);
+  }
+
+  Future<double> _fetchCurrencyExchangeRate(
+    CurrencyRequest currencyRequest,
+  ) async {
+    const frankfurterBaseUrl = 'https://api.frankfurter.app/';
+    final formattedDate = currencyRequest.currencyDate.format('yyyy-MM-dd');
+    final urlParameters = '$formattedDate'
+        '?from=${currencyRequest.currencyFrom}'
+        '&to=${currencyRequest.currencyTo}'
+        '&amount=${currencyRequest.amountFrom}';
+    final exchangeResult =
+        await http.get(Uri.parse('$frankfurterBaseUrl$urlParameters'));
+    if (exchangeResult.statusCode == 200) {
+      final exchangeJson =
+          json.decode(exchangeResult.body) as Map<String, dynamic>;
+      if (exchangeJson.containsKey('rates')) {
+        final rates = exchangeJson['rates'] as Map<String, double>;
+        if (rates.containsKey(currencyRequest.currencyTo)) {
+          return rates[currencyRequest.currencyTo]!;
+        }
+      }
+    }
+
+    return 0.0;
   }
 }
