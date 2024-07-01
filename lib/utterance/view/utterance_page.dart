@@ -14,7 +14,9 @@ import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/heart_rate/heart_rate.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/location/location.dart';
+import 'package:inspector_gadget/main/cubit/main_cubit.dart';
 import 'package:inspector_gadget/main/main.dart';
+import 'package:inspector_gadget/preferences/cubit/preferences_cubit.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 import 'package:inspector_gadget/preferences/preferences.dart';
 import 'package:inspector_gadget/secrets.dart';
@@ -61,12 +63,16 @@ class _UtteranceViewState extends State<UtteranceView>
   late AnimationController _animationController;
   late AudioRecorder? _audioRecorder;
   late SpeechToText? speech;
+  MainCubit? mainCubit;
+  PreferencesState? preferencesState;
   bool areSpeechServicesNative =
       PreferencesState.areSpeechServicesNativeDefault;
   bool areSpeechServicesRemote =
       PreferencesState.areSpeechServicesRemoteDefault;
   bool started = false;
+  HeartRateCubit? heartRateCubit;
   int heartRate = 0;
+  LocationCubit? locationCubit;
   Location? gpsLocation;
 
   @override
@@ -148,7 +154,7 @@ class _UtteranceViewState extends State<UtteranceView>
   }
   /* END Audio Recorder utilities */
 
-  Future<void> _stopRecording(BuildContext context, MainCubit cubit) async {
+  Future<void> _stopRecording(BuildContext context) async {
     if (areSpeechServicesNative) {
       log('speech stop');
       await speech?.stop();
@@ -158,7 +164,7 @@ class _UtteranceViewState extends State<UtteranceView>
         final recordingFile = File(path);
         final recordingBytes = await recordingFile.readAsBytes();
         if (context.mounted) {
-          await _sttPhase(context, cubit, recordingBytes);
+          await _sttPhase(context, recordingBytes);
         }
       } else {
         final ctx = context;
@@ -167,17 +173,13 @@ class _UtteranceViewState extends State<UtteranceView>
               .showSnackBar(const SnackBar(content: Text('Recording error')));
         }
 
-        cubit.setState(MainCubit.errorStateLabel);
+        mainCubit?.setState(MainCubit.errorStateLabel);
       }
     }
   }
 
-  Future<void> _sttPhase(
-    BuildContext context,
-    MainCubit cubit,
-    Uint8List recordingBytes,
-  ) async {
-    cubit.setState(MainCubit.sttStateLabel);
+  Future<void> _sttPhase(BuildContext context, Uint8List recordingBytes) async {
+    mainCubit?.setState(MainCubit.sttStateLabel);
     try {
       const queryParameters = '?token=$chirpToken';
       final chirpFullUrl = Uri.parse('$chirpFunction$queryParameters');
@@ -191,15 +193,15 @@ class _UtteranceViewState extends State<UtteranceView>
             json.decode(transcriptionResponse.body) as Map<String, dynamic>;
         final transcripts = Transcriptions.fromJson(transcriptJson);
         if (context.mounted) {
-          await _llmPhase(context, cubit, transcripts.merged);
+          await _llmPhase(context, transcripts.merged);
         }
       } else {
         log(transcriptionResponse.toString());
-        cubit.setState(MainCubit.errorStateLabel);
+        mainCubit?.setState(MainCubit.errorStateLabel);
       }
     } catch (e) {
       log(e.toString());
-      cubit.setState(MainCubit.errorStateLabel);
+      mainCubit?.setState(MainCubit.errorStateLabel);
     }
   }
 
@@ -207,8 +209,7 @@ class _UtteranceViewState extends State<UtteranceView>
   Future<void> _resultListener(SpeechRecognitionResult result) async {
     log('Result listener final: ${result.finalResult}, '
         'words: ${result.recognizedWords}');
-    final cubit = context.select((MainCubit cubit) => cubit);
-    await _llmPhase(context, cubit, result.recognizedWords);
+    await _llmPhase(context, result.recognizedWords);
   }
 
   void _soundLevelListener(double level) {
@@ -217,12 +218,8 @@ class _UtteranceViewState extends State<UtteranceView>
   }
   /* END Android native STT utilities */
 
-  Future<void> _llmPhase(
-    BuildContext context,
-    MainCubit cubit,
-    String prompt,
-  ) async {
-    cubit.setState(MainCubit.llmStateLabel);
+  Future<void> _llmPhase(BuildContext context, String prompt) async {
+    mainCubit?.setState(MainCubit.llmStateLabel);
     final modelType =
         widget.utteranceMode == UtteranceCubit.quickMode ? 'flash' : 'pro';
     final model = GenerativeModel(
@@ -254,36 +251,34 @@ class _UtteranceViewState extends State<UtteranceView>
     }
 
     if (response.text.isNullOrWhiteSpace || !context.mounted) {
-      cubit.setState(MainCubit.errorStateLabel);
+      mainCubit?.setState(MainCubit.errorStateLabel);
     }
 
     if (context.mounted) {
-      await _ttsPhase(context, cubit, response.text!);
+      await _ttsPhase(context, response.text!);
     }
   }
 
-  Future<void> _ttsPhase(
-    BuildContext context,
-    MainCubit cubit,
-    String responseText,
-  ) async {
-    if (areSpeechServicesNative) {
-    }
+  Future<void> _ttsPhase(BuildContext context, String responseText) async {
+    if (areSpeechServicesNative) {}
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
+    mainCubit = context.select((MainCubit cubit) => cubit);
+    preferencesState = context.select((PreferencesCubit cubit) => cubit.state);
+    heartRateCubit = context.select((HeartRateCubit cubit) => cubit);
+    locationCubit = context.select((LocationCubit cubit) => cubit);
+
     if (!started) {
       started = true;
       final sttState = context.select((SttCubit cubit) => cubit.state);
       speech = sttState.speech;
-      final preferencesState =
-          context.select((PreferencesCubit cubit) => cubit.state);
       areSpeechServicesNative =
-          preferencesState.areSpeechServicesNative && sttState.hasSpeech;
-      areSpeechServicesRemote = preferencesState.areSpeechServicesRemote;
+          preferencesState!.areSpeechServicesNative && sttState.hasSpeech;
+      areSpeechServicesRemote = preferencesState!.areSpeechServicesRemote;
       if (areSpeechServicesNative) {
         final options = SpeechListenOptions(
           onDevice: areSpeechServicesRemote,
@@ -310,13 +305,11 @@ class _UtteranceViewState extends State<UtteranceView>
         _startRecording();
       }
 
-      final heartRateCubit = context.select((HeartRateCubit cubit) => cubit);
-      heartRateCubit.listenToHeartRate().whenComplete(() {
-        heartRate = heartRateCubit.state;
+      heartRateCubit?.listenToHeartRate().whenComplete(() {
+        heartRate = heartRateCubit?.state ?? 0;
       });
 
-      final locationCubit = context.select((LocationCubit cubit) => cubit);
-      locationCubit.obtain().then((loc) {
+      locationCubit?.obtain().then((loc) {
         if (loc != null && loc.latitude > 10e-6 && loc.longitude > 10e-6) {
           gpsLocation = loc;
         }
@@ -325,7 +318,6 @@ class _UtteranceViewState extends State<UtteranceView>
 
     final stateIndex =
         context.select((MainCubit cubit) => cubit.getStateIndex());
-    final mainCubit = context.select((MainCubit cubit) => cubit);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.utteranceAppBarTitle)),
@@ -343,7 +335,7 @@ class _UtteranceViewState extends State<UtteranceView>
                 const Icon(Icons.mic_rounded, size: 220),
               ),
               onTap: () async {
-                await _stopRecording(context, mainCubit);
+                await _stopRecording(context);
               },
             ),
             // 2: STT phase
@@ -384,7 +376,7 @@ class _UtteranceViewState extends State<UtteranceView>
                 const Icon(Icons.warning, size: 220),
               ),
               onTap: () {
-                mainCubit.setState(MainCubit.waitingStateLabel);
+                mainCubit?.setState(MainCubit.waitingStateLabel);
               },
             ),
           ],
