@@ -76,6 +76,10 @@ mixin ToolsMixin {
                 'currencyTo': Schema.string(
                   description: 'The currency to convert to in ISO 4217 format',
                 ),
+                'amountFrom': Schema.number(
+                  description: 'The amount which needs to be converted, '
+                      'defaults to 1.0',
+                ),
               },
               requiredProperties: ['currencyFrom', 'currencyTo'],
             ),
