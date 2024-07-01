@@ -8,9 +8,21 @@
     "@preferencesAppBarTitle": {
         "description": "Texto mostrado en la AppBar de la página de Preferencias"
     },
-    "preferencesApiKeyLabel": "Clave API",
-    "@preferencesApiKeyLabel": {
-        "description": "Texto mostrado en la configuración de preferencias para la clave API"
+    "preferencesGeminiApiKeyLabel": "Clave API de Géminis",
+    "@preferencesGeminiApiKeyLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias para la clave API de Gemini"
+    },
+    "preferencesAlphaVantageAccessKeyLabel": "Clave de acceso Alpha Vantage",
+    "@preferencesAlphaVantageAccessKeyLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias de Alpha Vantage Access Key"
+    },
+    "preferencesTavilyApiKeyLabel": "Clave API de Tavily",
+    "@preferencesTavilyApiKeyLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias para la clave API de Tavily"
+    },
+    "preferencesImportApiKeysTitle": "Importar claves API",
+    "@preferencesImportApiKeysTitle": {
+        "description": "Texto que se muestra en la configuración de preferencias para el botón Importar clave API"
     },
     "preferencesSpeechServicesNativeLabel": "¿STT / TTS Nativo?",
     "@preferencesSpeechServicesNativeLabel": {

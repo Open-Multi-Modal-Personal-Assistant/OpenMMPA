@@ -8,20 +8,4 @@ class PreferencesCubit extends Cubit<PreferencesState> {
   void emitState() {
     emit(state);
   }
-
-  String getApiKey() {
-    return state.apiKey;
-  }
-
-  bool getAreSpeechServicesRemote() {
-    return state.areSpeechServicesRemote;
-  }
-
-  String getInputLocale() {
-    return state.inputLocale;
-  }
-
-  String getOutputLocale() {
-    return state.outputLocale;
-  }
 }

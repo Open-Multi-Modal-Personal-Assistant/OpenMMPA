@@ -44,28 +44,33 @@ class _PreferencesViewState extends State<PreferencesView> {
       body: PrefPage(
         children: [
           PrefText(
-            label: l10n.preferencesApiKeyLabel,
-            pref: PreferencesState.apiKeyTag,
+            label: l10n.preferencesGeminiApiKeyLabel,
+            pref: PreferencesState.geminiApiKeyTag,
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'\w')),
             ],
-            // onChange: (_) {
-            //   context.select((PreferencesCubit cubit) => cubit.emitState());
-            // },
+          ),
+          PrefText(
+            label: l10n.preferencesAlphaVantageAccessKeyLabel,
+            pref: PreferencesState.alphaVantageAccessKeyTag,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'\w')),
+            ],
+          ),
+          PrefText(
+            label: l10n.preferencesTavilyApiKeyLabel,
+            pref: PreferencesState.tavilyApiKeyTag,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[\w-]+')),
+            ],
           ),
           PrefCheckbox(
             title: Text(l10n.preferencesSpeechServicesNativeLabel),
             pref: PreferencesState.areSpeechServicesNativeTag,
-            // onChange: (_) {
-            //   context.select((PreferencesCubit cubit) => cubit.emitState());
-            // },
           ),
           PrefCheckbox(
             title: Text(l10n.preferencesSpeechServicesRemoteLabel),
             pref: PreferencesState.areSpeechServicesRemoteTag,
-            // onChange: (_) {
-            //   context.select((PreferencesCubit cubit) => cubit.emitState());
-            // },
           ),
           PrefDropdown<String>(
             title: Text(l10n.preferencesInputLocaleLabel),

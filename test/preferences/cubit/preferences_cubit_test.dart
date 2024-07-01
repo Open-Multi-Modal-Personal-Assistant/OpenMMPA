@@ -6,8 +6,8 @@ void main() {
   group('PreferencesCubit', () {
     test('initial state is initialState', () {
       expect(
-        PreferencesCubit().state.apiKey,
-        equals(PreferencesState.apiKeyDefault),
+        PreferencesCubit().state.geminiApiKey,
+        equals(PreferencesState.geminiApiKeyDefault),
       );
       expect(
         PreferencesCubit().state.areSpeechServicesRemote,

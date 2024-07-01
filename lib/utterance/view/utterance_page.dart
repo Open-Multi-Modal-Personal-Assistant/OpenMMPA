@@ -224,7 +224,7 @@ class _UtteranceViewState extends State<UtteranceView>
         widget.utteranceMode == UtteranceCubit.quickMode ? 'flash' : 'pro';
     final model = GenerativeModel(
       model: 'gemini-1.5-$modelType-latest',
-      apiKey: geminiApiKey,
+      apiKey: preferencesState?.geminiApiKey ?? geminiApiKey,
       tools: getTools(),
     );
 

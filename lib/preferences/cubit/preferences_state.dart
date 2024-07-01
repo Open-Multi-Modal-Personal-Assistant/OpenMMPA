@@ -3,8 +3,12 @@ import 'package:pref/pref.dart';
 class PreferencesState {
   static BasePrefService? prefService;
 
-  static const String apiKeyTag = 'api_key';
-  static const String apiKeyDefault = '';
+  static const String geminiApiKeyTag = 'gemini_api_key';
+  static const String geminiApiKeyDefault = '';
+  static const String alphaVantageAccessKeyTag = 'alpha_vantage_access_key';
+  static const String alphaVantageAccessKeyDefault = '';
+  static const String tavilyApiKeyTag = 'tavily_api_key';
+  static const String tavilyApiKeyDefault = '';
   static const String areSpeechServicesNativeTag = 'are_speech_services_native';
   static const bool areSpeechServicesNativeDefault = false;
   static const String areSpeechServicesRemoteTag = 'are_speech_services_remote';
@@ -21,7 +25,9 @@ class PreferencesState {
     prefService = await PrefServiceShared.init(
       prefix: prefix,
       defaults: {
-        apiKeyTag: apiKeyDefault,
+        geminiApiKeyTag: geminiApiKeyDefault,
+        alphaVantageAccessKeyTag: alphaVantageAccessKeyDefault,
+        tavilyApiKeyTag: tavilyApiKeyDefault,
         areSpeechServicesNativeTag: areSpeechServicesNativeDefault,
         areSpeechServicesRemoteTag: areSpeechServicesRemoteDefault,
         inputLocaleTag: inputLocaleDefault,
@@ -30,7 +36,13 @@ class PreferencesState {
     );
   }
 
-  String get apiKey => prefService?.get<String>(apiKeyTag) ?? apiKeyDefault;
+  String get geminiApiKey =>
+      prefService?.get<String>(geminiApiKeyTag) ?? geminiApiKeyDefault;
+  String get alphaVantageAccessKey =>
+      prefService?.get<String>(alphaVantageAccessKeyTag) ??
+      alphaVantageAccessKeyDefault;
+  String get tavilyApiKey =>
+      prefService?.get<String>(tavilyApiKeyTag) ?? tavilyApiKeyDefault;
   bool get areSpeechServicesNative =>
       prefService?.get<bool>(areSpeechServicesNativeTag) ??
       areSpeechServicesNativeDefault;
