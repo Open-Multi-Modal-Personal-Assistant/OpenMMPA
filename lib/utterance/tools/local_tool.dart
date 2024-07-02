@@ -56,7 +56,7 @@ class LocalTool implements FunctionTool {
     if (location != null &&
         location.latitude > 10e-6 &&
         location.longitude > 10e-6) {
-      return 'latitude ${location.latitude} longitude ${location.longitude}';
+      return 'latitude: ${location.latitude}, longitude: ${location.longitude}';
     }
 
     return 'N/A';
