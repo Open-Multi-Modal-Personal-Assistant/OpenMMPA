@@ -54,8 +54,7 @@ class LocalTool implements FunctionTool {
 
   String _fetchGpsLocation(Location? location) {
     if (location != null &&
-        location.latitude > 10e-6 &&
-        location.longitude > 10e-6) {
+        (location.latitude.abs() > 10e-6 || location.longitude.abs() > 10e-6)) {
       return 'latitude: ${location.latitude}, longitude: ${location.longitude}';
     }
 
