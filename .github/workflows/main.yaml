@@ -17,18 +17,10 @@ jobs:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/semantic_pull_request.yml@v1
 
   build:
-    runs-on: ${{ inputs.runs_on }}
-    steps:
-      - name: Mock Secrets File
-        run: |
-          echo 'const geminiApiKey = "a";' > lib/secrets.dart
-          echo 'const chirpToken = "a";' >> lib/secrets.dart
-          echo 'const alphaVantageAccessKey = "a";' >> lib/secrets.dart
-          echo 'const tavilyApiKey = "a";' >> lib/secrets.dart
-      - name: VGV build
-        uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
-        with:
-          flutter_channel: stable
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
+    with:
+      flutter_channel: stable
+      setup: echo "const geminiApiKey = 'a';\n'const chirpToken = 'a';\nconst alphaVantageAccessKey = 'a';\nconst tavilyApiKey = 'a';\n" >> lib/secrets.dart
 
   spell-check:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
