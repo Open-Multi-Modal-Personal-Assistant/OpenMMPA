@@ -1,9 +1,9 @@
 import 'package:dart_helper_utils/dart_helper_utils.dart';
 
-class SunRequest {
-  SunRequest(this.latitude, this.longitude, this.date);
+class GeoRequest {
+  GeoRequest(this.latitude, this.longitude, this.date);
 
-  SunRequest.fromJson(Map<String, Object?> jsonObject) {
+  GeoRequest.fromJson(Map<String, Object?> jsonObject) {
     latitude = 0.0;
     longitude = 0.0;
     date = DateTime.now();

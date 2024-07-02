@@ -3,7 +3,7 @@ import 'package:fl_location/fl_location.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 import 'package:inspector_gadget/utterance/tools/function_tool.dart';
-import 'package:inspector_gadget/utterance/tools/sun_request.dart';
+import 'package:inspector_gadget/utterance/tools/geo_request.dart';
 
 class SunTimeTool implements FunctionTool {
   @override
@@ -71,10 +71,10 @@ class SunTimeTool implements FunctionTool {
   ) async {
     final result = switch (call.name) {
       'fetchSunrise' => {
-          'sunrise': _fetchSunrise(SunRequest.fromJson(call.args)),
+          'sunrise': _fetchSunrise(GeoRequest.fromJson(call.args)),
         },
       'fetchSunset' => {
-          'sunset': _fetchSunset(SunRequest.fromJson(call.args)),
+          'sunset': _fetchSunset(GeoRequest.fromJson(call.args)),
         },
       _ => null
     };
@@ -82,23 +82,28 @@ class SunTimeTool implements FunctionTool {
     return FunctionResponse(call.name, result);
   }
 
-  String _fetchSunTime(SunRequest sunRequest, bool sunrise) {
+  String _fetchSunTime(GeoRequest geoRequest, bool sunrise) {
+    if (geoRequest.latitude.abs() < 10e-6 &&
+        geoRequest.longitude.abs() < 10e-6) {
+      return 'N/A';
+    }
+
     final location =
-        DaylightLocation(sunRequest.latitude, sunRequest.longitude);
+        DaylightLocation(geoRequest.latitude, geoRequest.longitude);
     final daylightCalculator = DaylightCalculator(location);
     final dailyResults = daylightCalculator.calculateForDay(
-      sunRequest.date,
+      geoRequest.date,
       Zenith.astronomical,
     );
     final sunTime = sunrise ? dailyResults.sunrise : dailyResults.sunset;
     return sunTime?.toIso8601String() ?? 'N/A';
   }
 
-  String _fetchSunrise(SunRequest sunRequest) {
-    return _fetchSunTime(sunRequest, true);
+  String _fetchSunrise(GeoRequest geoRequest) {
+    return _fetchSunTime(geoRequest, true);
   }
 
-  String _fetchSunset(SunRequest sunRequest) {
-    return _fetchSunTime(sunRequest, false);
+  String _fetchSunset(GeoRequest geoRequest) {
+    return _fetchSunTime(geoRequest, false);
   }
 }
