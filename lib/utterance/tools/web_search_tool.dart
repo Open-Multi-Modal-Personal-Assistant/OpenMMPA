@@ -25,8 +25,8 @@ class WebSearchTool implements FunctionTool {
             SchemaType.string,
             properties: {
               'query': Schema.string(
-                description: 'The web search query or question need to be '
-                    'researched or answered',
+                description: 'The search query or question which need '
+                    'to be researched or answered',
               ),
             },
             requiredProperties: ['query'],
