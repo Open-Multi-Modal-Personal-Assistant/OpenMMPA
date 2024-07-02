@@ -22,8 +22,8 @@ import 'package:inspector_gadget/preferences/preferences.dart';
 import 'package:inspector_gadget/secrets.dart';
 import 'package:inspector_gadget/stt/cubit/stt_cubit.dart';
 import 'package:inspector_gadget/utterance/cubit/utterance_cubit.dart';
+import 'package:inspector_gadget/utterance/tools/tools_mixin.dart';
 import 'package:inspector_gadget/utterance/view/constants.dart';
-import 'package:inspector_gadget/utterance/view/tools_mixin.dart';
 import 'package:inspector_gadget/utterance/view/transcription_list.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -225,7 +225,7 @@ class _UtteranceViewState extends State<UtteranceView>
     final model = GenerativeModel(
       model: 'gemini-1.5-$modelType-latest',
       apiKey: preferencesState?.geminiApiKey ?? geminiApiKey,
-      tools: getTools(preferencesState),
+      tools: getToolDeclarations(preferencesState),
     );
     final chat = model.startChat();
 
@@ -238,15 +238,18 @@ class _UtteranceViewState extends State<UtteranceView>
 
     List<FunctionCall> functionCalls;
     while ((functionCalls = response.functionCalls.toList()).isNotEmpty) {
-      final responses = <FunctionResponse>[
-        for (final functionCall in functionCalls)
-          await dispatchFunctionCall(
-            functionCall,
-            gpsLocation,
-            heartRate,
-            preferencesState,
-          ),
-      ];
+      final responses = <FunctionResponse>[];
+      for (final functionCall in functionCalls) {
+        final response = await dispatchFunctionCall(
+          functionCall,
+          gpsLocation,
+          heartRate,
+          preferencesState,
+        );
+        if (response?.response != null) {
+          responses.add(response!);
+        }
+      }
 
       content = response.candidates.first.content;
       content.parts.addAll(responses);
