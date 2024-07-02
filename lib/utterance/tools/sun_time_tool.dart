@@ -31,6 +31,7 @@ class SunTimeTool implements FunctionTool {
                 description: 'Date of the sunrise observation',
               ),
             },
+            requiredProperties: ['latitude', 'longitude'],
           ),
         ),
         FunctionDeclaration(
@@ -49,6 +50,7 @@ class SunTimeTool implements FunctionTool {
                 description: 'Date of the sunset observation',
               ),
             },
+            requiredProperties: ['latitude', 'longitude'],
           ),
         ),
       ],
