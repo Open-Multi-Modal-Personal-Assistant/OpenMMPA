@@ -125,9 +125,9 @@ mixin ToolsMixin {
           functionDeclarations: [
             FunctionDeclaration(
               'getStockPrice',
-              'Fetch the current stock price of a given company',
+              'Fetch the current stock price of a given company in JSON string',
               Schema(
-                SchemaType.number,
+                SchemaType.string,
                 properties: {
                   'ticker': Schema.string(
                     description: 'Stock ticker symbol for a company',
@@ -138,7 +138,7 @@ mixin ToolsMixin {
             ),
             FunctionDeclaration(
               'getCompanyOverview',
-              'Get company details and other financial data',
+              'Get company details and other financial data in JSON string',
               Schema(
                 SchemaType.string,
                 properties: {
@@ -151,7 +151,7 @@ mixin ToolsMixin {
             ),
             FunctionDeclaration(
               'getCompanyNews',
-              'Get the latest news headlines for a given company.',
+              'Get the latest news headlines for a company as JSON string',
               Schema(
                 SchemaType.string,
                 properties: {
@@ -346,13 +346,13 @@ and technology''',
     return result;
   }
 
-  Future<double> _getStockPrice(
+  Future<String> _getStockPrice(
     Map<String, Object?> jsonObject,
     String alphaVantageAccessKey,
   ) async {
     final ticker = (jsonObject['ticker'] ?? '') as String;
     if (alphaVantageAccessKey.isNullOrWhiteSpace || ticker.isNullOrWhiteSpace) {
-      return 0.0;
+      return 'N/A';
     }
 
     final alphaVantageUrl = Uri.http(alphaVantageBaseUrl, alphaVantagePath, {
@@ -361,14 +361,12 @@ and technology''',
       'apikey': alphaVantageAccessKey,
     });
 
-    var stockPrice = 0.0;
     final queryResult = await http.get(alphaVantageUrl);
     if (queryResult.statusCode == 200) {
-      // TODO(MrCsabaToth): extract stock price
-      stockPrice = 0.0;
+      return queryResult.body;
     }
 
-    return stockPrice;
+    return 'N/A';
   }
 
   Future<String> _getCompanyOverview(
@@ -388,7 +386,6 @@ and technology''',
 
     final queryResult = await http.get(alphaVantageUrl);
     if (queryResult.statusCode == 200) {
-      // TODO(MrCsabaToth): extract overview
       return queryResult.body;
     }
 
@@ -414,7 +411,6 @@ and technology''',
 
     final queryResult = await http.get(alphaVantageUrl);
     if (queryResult.statusCode == 200) {
-      // TODO(MrCsabaToth): extract news
       return queryResult.body;
     }
 
@@ -440,7 +436,6 @@ and technology''',
 
     final queryResult = await http.get(alphaVantageUrl);
     if (queryResult.statusCode == 200) {
-      // TODO(MrCsabaToth): extract news
       return queryResult.body;
     }
 
