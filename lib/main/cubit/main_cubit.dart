@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:statemachine/statemachine.dart';
 
 class MainCubit extends Cubit<State<String>> {
-  MainCubit() : super(Machine<String>().newState('dummy')) {
+  MainCubit() : super(Machine<String>().newState(dummyStateLabel)) {
     // TODO(MrcsabaToth): define valid transitions
     stateMachine.start();
 
@@ -22,6 +22,7 @@ class MainCubit extends Cubit<State<String>> {
   }
 
   Machine<String> stateMachine = Machine<String>();
+  static const String dummyStateLabel = 'dummy';
   static const String waitingStateLabel = 'waiting';
   static const String recordingStateLabel = 'recording';
   static const String sttStateLabel = 'stt';
