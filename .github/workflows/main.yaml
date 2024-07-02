@@ -21,11 +21,10 @@ jobs:
     with:
       flutter_channel: stable
       setup: |
-        echo "const geminiApiKey = 'a';
-        const chirpToken = 'a';
-        const alphaVantageAccessKey = 'a';
-        const tavilyApiKey = 'a';
-        " > lib/secrets.dart
+        echo "const geminiApiKey = 'a';" > lib/secrets.dart
+        echo "const chirpToken = 'a';" >> lib/secrets.dart
+        echo "const alphaVantageAccessKey = 'a';" >> lib/secrets.dart
+        echo "const tavilyApiKey = 'a';" >> lib/secrets.dart
 
   spell-check:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
