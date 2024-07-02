@@ -181,8 +181,8 @@ class _UtteranceViewState extends State<UtteranceView>
   Future<void> _sttPhase(BuildContext context, Uint8List recordingBytes) async {
     mainCubit?.setState(MainCubit.sttStateLabel);
     try {
-      const queryParameters = '?token=$chirpToken';
-      final chirpFullUrl = Uri.parse('$chirpFunction$queryParameters');
+      final chirpFullUrl =
+          Uri.http(functionUrl, chirpEndpoint, {'token': chirpToken});
       final transcriptionResponse = await http.post(
         chirpFullUrl,
         body: recordingBytes,
