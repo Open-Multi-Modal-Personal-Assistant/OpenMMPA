@@ -230,12 +230,11 @@ class _UtteranceViewState extends State<UtteranceView>
     final chat = model.startChat();
 
     // TODO(MrCsabaToth): History: https://github.com/google-gemini/generative-ai-dart/blob/main/samples/dart/bin/advanced_chat.dart
-    // note: function call is possible with chat as well:
-    // https://ai.google.dev/gemini-api/docs/function-calling/tutorial?lang=dart#generate-function-call
-    // => we still need to roll our own history, because there's no session Id
+    // we still need to roll our own history persistence (there's no sessionId)
     // TODO(MrCsabaToth): Multi modal call?
     // TODO(MrCsabaToth): Vector DB + embedding for knowledge base
-    var response = await chat.sendMessage(Content.text(prompt));
+    var content = Content.text(prompt);
+    var response = await chat.sendMessage(content);
 
     List<FunctionCall> functionCalls;
     while ((functionCalls = response.functionCalls.toList()).isNotEmpty) {
@@ -249,9 +248,9 @@ class _UtteranceViewState extends State<UtteranceView>
           ),
       ];
 
-      // Maybe switch the order of this?
-      await chat.sendMessage(response.candidates.first.content);
-      response = await chat.sendMessage(Content.functionResponses(responses));
+      content = response.candidates.first.content;
+      content.parts.addAll(responses);
+      response = await chat.sendMessage(content);
     }
 
     if (response.text.isNullOrWhiteSpace || !context.mounted) {
