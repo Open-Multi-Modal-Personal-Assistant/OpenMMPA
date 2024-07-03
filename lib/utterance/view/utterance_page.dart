@@ -25,6 +25,7 @@ import 'package:inspector_gadget/tts/cubit/tts_cubit.dart';
 import 'package:inspector_gadget/utterance/cubit/utterance_cubit.dart';
 import 'package:inspector_gadget/utterance/tools/tools_mixin.dart';
 import 'package:inspector_gadget/utterance/view/constants.dart';
+import 'package:inspector_gadget/utterance/view/deferred_action.dart';
 import 'package:inspector_gadget/utterance/view/transcription_list.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -76,6 +77,7 @@ class _UtteranceViewState extends State<UtteranceView>
   int heartRate = 0;
   LocationCubit? locationCubit;
   Location? gpsLocation;
+  List<DeferredAction> deferredActionQueue = [];
 
   @override
   void initState() {
@@ -211,11 +213,23 @@ class _UtteranceViewState extends State<UtteranceView>
   Future<void> _resultListener(SpeechRecognitionResult result) async {
     log('Result listener final: ${result.finalResult}, '
         'words: ${result.recognizedWords}');
-    await _llmPhase(context, result.recognizedWords);
+
+    deferredActionQueue.add(
+      DeferredAction(
+        ActionKind.speechTranscripted,
+        text: result.recognizedWords,
+      ),
+    );
   }
 
   void _soundLevelListener(double level) {
-    // TODO(MrCsabaToth): handle audio level setting
+    deferredActionQueue.add(
+      DeferredAction(
+        ActionKind.volumeAdjust,
+        integer: (level * 100).toInt(),
+        floatingPoint: level,
+      ),
+    );
     log('audio level: $level');
   }
   /* END Android native STT utilities */
@@ -271,6 +285,22 @@ class _UtteranceViewState extends State<UtteranceView>
     if (areSpeechServicesNative) {}
   }
 
+  Future<void> _processDeferredActionQueue(BuildContext context) async {
+    if (deferredActionQueue.isNotEmpty) {
+      final queueCopy = [...deferredActionQueue];
+      deferredActionQueue.clear();
+      for (final deferredAction in queueCopy) {
+        switch (deferredAction.actionKind) {
+          case ActionKind.volumeAdjust:
+            await PreferencesState.prefService
+                ?.set(PreferencesState.volumeTag, deferredAction.integer);
+          case ActionKind.speechTranscripted:
+            await _llmPhase(context, deferredAction.text);
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -279,6 +309,8 @@ class _UtteranceViewState extends State<UtteranceView>
     preferencesState = context.select((PreferencesCubit cubit) => cubit.state);
     heartRateCubit = context.select((HeartRateCubit cubit) => cubit);
     locationCubit = context.select((LocationCubit cubit) => cubit);
+
+    _processDeferredActionQueue(context);
 
     if (!started) {
       started = true;
