@@ -1,11 +1,11 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_tts/flutter_tts_web.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
+import 'package:inspector_gadget/state_logging_mixin.dart';
 
-class TTSState {
+class TTSState with StateLoggingMixin {
   final FlutterTts tts = FlutterTts();
   TtsState engineState = TtsState.stopped;
   // List<LocaleName> localeNames = [];
@@ -17,11 +17,11 @@ class TTSState {
 
   Future<void> init() async {
     if (initialized) {
-      log('TTS already initialized');
+      logEvent('TTS already initialized');
       return;
     }
 
-    log('Initializing TTS');
+    logEvent('Initializing TTS');
     await _setAwaitOptions();
 
     if (Platform.isAndroid) {
@@ -31,27 +31,27 @@ class TTSState {
 
     tts
       ..setStartHandler(() {
-        log('TTS Playing');
+        logEvent('TTS Playing');
         engineState = TtsState.playing;
       })
       ..setCompletionHandler(() {
-        log('TTS Complete');
+        logEvent('TTS Complete');
         engineState = TtsState.stopped;
       })
       ..setCancelHandler(() {
-        log('TTS Cancel');
+        logEvent('TTS Cancel');
         engineState = TtsState.stopped;
       })
       ..setPauseHandler(() {
-        log('TTS Paused');
+        logEvent('TTS Paused');
         engineState = TtsState.paused;
       })
       ..setContinueHandler(() {
-        log('TTS Continued');
+        logEvent('TTS Continued');
         engineState = TtsState.continued;
       })
       ..setErrorHandler((msg) {
-        log('TTS error: $msg');
+        logEvent('TTS error: $msg');
         engineState = TtsState.stopped;
       });
   }
@@ -59,14 +59,14 @@ class TTSState {
   Future<void> _getDefaultEngine() async {
     final engine = await tts.getDefaultEngine;
     if (engine != null) {
-      log('TTS Engine: $engine');
+      logEvent('TTS Engine: $engine');
     }
   }
 
   Future<void> _getDefaultVoice() async {
     final voice = await tts.getDefaultVoice;
     if (voice != null) {
-      log('TTS Voice: $voice');
+      logEvent('TTS Voice: $voice');
     }
   }
 

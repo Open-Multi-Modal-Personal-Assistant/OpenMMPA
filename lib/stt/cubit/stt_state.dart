@@ -2,29 +2,29 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
+import 'package:inspector_gadget/state_logging_mixin.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
-class SttState {
+class SttState with StateLoggingMixin {
   final SpeechToText speech = SpeechToText();
   bool hasSpeech = false;
   List<LocaleName> localeNames = [];
   String systemLocale = PreferencesState.inputLocaleDefault;
-  final bool _logEvents = kDebugMode;
   bool initialized = false;
 
   Future<void> init() async {
     if (initialized) {
-      _logEvent('Speech already initialized');
+      logEvent('Speech already initialized');
       return;
     }
 
-    _logEvent('Initializing speech');
+    logEvent('Initializing speech');
     try {
       hasSpeech = await speech.initialize(
         onError: errorListener,
         onStatus: statusListener,
-        debugLogging: _logEvents,
+        debugLogging: kDebugMode,
       );
       if (hasSpeech) {
         localeNames = await speech.locales();
@@ -41,23 +41,14 @@ class SttState {
   }
 
   void errorListener(SpeechRecognitionError error) {
-    _logEvent(
+    logEvent(
       'Received error status: $error, listening: ${speech.isListening}',
     );
   }
 
   void statusListener(String status) {
-    _logEvent(
+    logEvent(
       'Received listener status: $status, listening: ${speech.isListening}',
     );
-  }
-
-  void _logEvent(String eventDescription) {
-    if (_logEvents) {
-      final eventTime = DateTime.now().toIso8601String();
-      final logString = '$eventTime $eventDescription';
-      debugPrint('$eventTime $eventDescription');
-      log(logString, time: DateTime.now());
-    }
   }
 }
