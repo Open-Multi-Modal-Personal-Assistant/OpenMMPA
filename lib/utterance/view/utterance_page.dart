@@ -21,6 +21,7 @@ import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 import 'package:inspector_gadget/preferences/preferences.dart';
 import 'package:inspector_gadget/secrets.dart';
 import 'package:inspector_gadget/stt/cubit/stt_cubit.dart';
+import 'package:inspector_gadget/tts/cubit/tts_cubit.dart';
 import 'package:inspector_gadget/utterance/cubit/utterance_cubit.dart';
 import 'package:inspector_gadget/utterance/tools/tools_mixin.dart';
 import 'package:inspector_gadget/utterance/view/constants.dart';
@@ -43,6 +44,7 @@ class UtterancePage extends StatelessWidget {
         BlocProvider(create: (_) => HeartRateCubit()),
         BlocProvider(create: (_) => LocationCubit()),
         BlocProvider(create: (_) => SttCubit()),
+        BlocProvider(create: (_) => TtsCubit()),
       ],
       child: UtteranceView(utteranceMode),
     );
