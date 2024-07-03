@@ -32,6 +32,10 @@
     "@preferencesSpeechServicesRemoteLabel": {
         "description": "Texto mostrado en la configuración de preferencias de '¿Son remotos los servicios de voz?'"
     },
+    "preferencesVolumeLabel": "Volumen",
+    "@preferencesVolumeLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias de Volumen"
+    },
     "preferencesInputLocaleLabel": "Configuración regional de entrada",
     "@preferencesInputLocaleLabel": {
         "description": "Texto que se muestra en la configuración de preferencias para la configuración regional de entrada"

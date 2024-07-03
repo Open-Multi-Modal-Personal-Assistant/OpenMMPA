@@ -101,6 +101,14 @@ class _PreferencesViewState extends State<PreferencesView> {
             title: Text(l10n.preferencesSpeechServicesRemoteLabel),
             pref: PreferencesState.areSpeechServicesRemoteTag,
           ),
+          PrefSlider<int>(
+            title: Text(l10n.preferencesVolumeLabel),
+            pref: PreferencesState.volumeTag,
+            min: 0,
+            max: 100,
+            divisions: 5,
+            direction: Axis.vertical,
+          ),
           PrefDropdown<String>(
             title: Text(l10n.preferencesInputLocaleLabel),
             subtitle: Text(l10n.preferencesInputLocaleSubLabel),
