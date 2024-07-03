@@ -15,11 +15,11 @@ class SttState {
 
   Future<void> init() async {
     if (initialized) {
-      _logEvent('Speech already initialize');
+      _logEvent('Speech already initialized');
       return;
     }
 
-    _logEvent('Initialize speech');
+    _logEvent('Initializing speech');
     try {
       hasSpeech = await speech.initialize(
         onError: errorListener,
