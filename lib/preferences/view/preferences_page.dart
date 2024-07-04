@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 import 'package:inspector_gadget/stt/cubit/stt_cubit.dart';
+import 'package:inspector_gadget/tts/cubit/tts_cubit.dart';
 import 'package:pref/pref.dart';
 
 class PreferencesPage extends StatelessWidget {
@@ -15,8 +16,11 @@ class PreferencesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => SttCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => SttCubit()),
+        BlocProvider(create: (_) => TtsCubit()),
+      ],
       child: const PreferencesView(),
     );
   }
@@ -34,11 +38,21 @@ class _PreferencesViewState extends State<PreferencesView> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final sttState = context.select((SttCubit cubit) => cubit.state);
-    final localeItems = sttState.localeNames
+    final inputLocales = sttState.localeNames
         .map(
           (localeName) => DropdownMenuItem(
             value: localeName.localeId,
             child: Text(localeName.name),
+          ),
+        )
+        .toList(growable: false);
+
+    final ttsState = context.select((TtsCubit cubit) => cubit.state);
+    final outputLanguages = ttsState.languages
+        .map(
+          (language) => DropdownMenuItem(
+            value: language,
+            child: Text(language),
           ),
         )
         .toList(growable: false);
@@ -113,13 +127,13 @@ class _PreferencesViewState extends State<PreferencesView> {
             title: Text(l10n.preferencesInputLocaleLabel),
             subtitle: Text(l10n.preferencesInputLocaleSubLabel),
             pref: PreferencesState.inputLocaleTag,
-            items: localeItems,
+            items: inputLocales,
           ),
           PrefDropdown<String>(
             title: Text(l10n.preferencesOutputLocaleLabel),
             subtitle: Text(l10n.preferencesOutputLocaleSubLabel),
             pref: PreferencesState.outputLocaleTag,
-            items: localeItems,
+            items: outputLanguages,
           ),
         ],
       ),
