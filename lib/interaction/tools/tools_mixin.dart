@@ -5,7 +5,10 @@ import 'package:inspector_gadget/interaction/tools/alpha_vantage_tool.dart';
 import 'package:inspector_gadget/interaction/tools/exchange_tool.dart';
 import 'package:inspector_gadget/interaction/tools/function_tool.dart';
 import 'package:inspector_gadget/interaction/tools/local_tool.dart';
+import 'package:inspector_gadget/interaction/tools/lyrics_tool.dart';
 import 'package:inspector_gadget/interaction/tools/sun_time_tool.dart';
+import 'package:inspector_gadget/interaction/tools/weather_tool.dart';
+import 'package:inspector_gadget/interaction/tools/web_research_tool.dart';
 import 'package:inspector_gadget/interaction/tools/web_search_tool.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 
@@ -21,10 +24,14 @@ mixin ToolsMixin {
     }
 
     functionTools.addAll([
-      LocalTool(),
-      SunTimeTool(),
+      AlphaVantageTool(),
       ExchangeTool(),
+      LocalTool(),
+      LyricsTool(),
+      SunTimeTool(),
       WebSearchTool(),
+      WebResearchTool(),
+      WeatherTool(),
     ]);
 
     if (!(preferences?.alphaVantageAccessKey.isNullOrWhiteSpace ?? false)) {
