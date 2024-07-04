@@ -5,6 +5,8 @@ import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/main/main.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_cubit.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
+import 'package:inspector_gadget/stt/cubit/stt_cubit.dart';
+import 'package:inspector_gadget/tts/cubit/tts_cubit.dart';
 import 'package:pref/pref.dart';
 
 class App extends StatelessWidget {
@@ -16,17 +18,34 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => MainCubit()),
         BlocProvider(create: (_) => PreferencesCubit()),
+        BlocProvider(create: (_) => SttCubit()),
+        BlocProvider(create: (_) => TtsCubit()),
       ],
-      child: const MainView(),
+      child: const AppView(),
     );
   }
 }
 
-class MainView extends StatelessWidget {
-  const MainView({super.key});
+class AppView extends StatelessWidget {
+  const AppView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final mainCubit = context.select((MainCubit cubit) => cubit);
+    final sttState = context.select((SttCubit cubit) => cubit.state);
+    if (!sttState.initialized) {
+      sttState.init();
+    }
+
+    final ttsState = context.select((TtsCubit cubit) => cubit.state);
+    if (!ttsState.initialized) {
+      ttsState.init();
+    }
+
+    if (mainCubit.state.name == 'dummy') {
+      mainCubit.setState(MainCubit.waitingStateLabel);
+    }
+
     return PrefService(
       service: PreferencesState.prefService!,
       child: MaterialApp(

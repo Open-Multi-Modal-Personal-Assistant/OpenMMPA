@@ -12,18 +12,21 @@ import '../../helpers/helpers.dart';
 class MockMainCubit extends MockCubit<sm.State<String>> implements MainCubit {}
 
 void main() {
-  group('MainPage', () {
-    testWidgets('renders MainView', (tester) async {
-      await tester.pumpApp(const MainPage());
-      expect(find.byType(MainView), findsOneWidget);
-    });
-  });
-
   group('MainView', () {
     late MainCubit mainCubit;
 
     setUp(() {
       mainCubit = MockMainCubit();
+    });
+
+    testWidgets('renders MainPage', (tester) async {
+      await tester.pumpApp(
+        BlocProvider.value(
+          value: mainCubit,
+          child: const MainPage(),
+        ),
+      );
+      expect(find.byType(MainPage), findsOneWidget);
     });
 
     testWidgets('renders four buttons', (tester) async {
@@ -32,14 +35,14 @@ void main() {
       await tester.pumpApp(
         BlocProvider.value(
           value: mainCubit,
-          child: const MainView(),
+          child: const MainPage(),
         ),
       );
-      expect(find.byKey(const Key(MainView.martyMcFlyKey)), findsOneWidget);
-      expect(find.byKey(const Key(MainView.theDocKey)), findsOneWidget);
+      expect(find.byKey(const Key(MainPage.martyMcFlyKey)), findsOneWidget);
+      expect(find.byKey(const Key(MainPage.theDocKey)), findsOneWidget);
       expect(find.widgetWithIcon(IconButton, Icons.translate), findsOneWidget);
-      expect(find.byKey(const Key(MainView.translateKey)), findsOneWidget);
-      expect(find.byKey(const Key(MainView.fluxCapacitorKey)), findsOneWidget);
+      expect(find.byKey(const Key(MainPage.translateKey)), findsOneWidget);
+      expect(find.byKey(const Key(MainPage.fluxCapacitorKey)), findsOneWidget);
     });
 
     testWidgets('navigates to preferences when the pref button is tapped',
@@ -49,10 +52,10 @@ void main() {
       await tester.pumpApp(
         BlocProvider.value(
           value: mainCubit,
-          child: const MainView(),
+          child: const MainPage(),
         ),
       );
-      await tester.tap(find.byKey(const Key(MainView.fluxCapacitorKey)));
+      await tester.tap(find.byKey(const Key(MainPage.fluxCapacitorKey)));
       await tester.pumpAndSettle();
       expect(find.byType(PreferencesView), findsOneWidget);
     });
