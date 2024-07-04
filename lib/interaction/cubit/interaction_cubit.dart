@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 
-class UtteranceCubit extends Cubit<int> {
-  UtteranceCubit() : super(quickMode);
+class InteractionCubit extends Cubit<int> {
+  InteractionCubit() : super(quickMode);
 
   static const int quickMode = 0;
   static const int thoroughMode = 0;

@@ -12,7 +12,7 @@ import 'package:flutter_easy_animations/flutter_easy_animations.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/heart_rate/heart_rate.dart';
-import 'package:inspector_gadget/interaction/cubit/utterance_cubit.dart';
+import 'package:inspector_gadget/interaction/cubit/interaction_cubit.dart';
 import 'package:inspector_gadget/interaction/tools/tools_mixin.dart';
 import 'package:inspector_gadget/interaction/view/constants.dart';
 import 'package:inspector_gadget/interaction/view/deferred_action.dart';
@@ -33,10 +33,10 @@ import 'package:record/record.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
-class UtterancePage extends StatelessWidget {
-  const UtterancePage(this.utteranceMode, {super.key});
+class InteractionPage extends StatelessWidget {
+  const InteractionPage(this.interactionMode, {super.key});
 
-  final int utteranceMode;
+  final int interactionMode;
 
   @override
   Widget build(BuildContext context) {
@@ -47,21 +47,21 @@ class UtterancePage extends StatelessWidget {
         BlocProvider(create: (_) => SttCubit()),
         BlocProvider(create: (_) => TtsCubit()),
       ],
-      child: UtteranceView(utteranceMode),
+      child: InteractionView(interactionMode),
     );
   }
 }
 
-class UtteranceView extends StatefulWidget {
-  const UtteranceView(this.utteranceMode, {super.key});
+class InteractionView extends StatefulWidget {
+  const InteractionView(this.interactionMode, {super.key});
 
-  final int utteranceMode;
+  final int interactionMode;
 
   @override
-  State<UtteranceView> createState() => _UtteranceViewState();
+  State<InteractionView> createState() => _InteractionViewState();
 }
 
-class _UtteranceViewState extends State<UtteranceView>
+class _InteractionViewState extends State<InteractionView>
     with SingleTickerProviderStateMixin, ToolsMixin {
   late AnimationController _animationController;
   late AudioRecorder? _audioRecorder;
@@ -237,7 +237,7 @@ class _UtteranceViewState extends State<UtteranceView>
   Future<void> _llmPhase(BuildContext context, String prompt) async {
     mainCubit?.setState(MainCubit.llmStateLabel);
     final modelType =
-        widget.utteranceMode == UtteranceCubit.quickMode ? 'flash' : 'pro';
+        widget.interactionMode == InteractionCubit.quickMode ? 'flash' : 'pro';
     final model = GenerativeModel(
       model: 'gemini-1.5-$modelType-latest',
       apiKey: preferencesState?.geminiApiKey ?? geminiApiKey,
@@ -362,7 +362,7 @@ class _UtteranceViewState extends State<UtteranceView>
         context.select((MainCubit cubit) => cubit.getStateIndex());
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.utteranceAppBarTitle)),
+      appBar: AppBar(title: Text(l10n.interactionAppBarTitle)),
       body: Center(
         child: IndexedStack(
           index: stateIndex,

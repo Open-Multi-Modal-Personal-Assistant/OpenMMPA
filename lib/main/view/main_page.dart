@@ -18,13 +18,13 @@ class MainPage extends StatelessWidget {
   void navigateWithMode(
     BuildContext context,
     MainCubit mainCubit,
-    int utteranceMode,
+    int interactionMode,
   ) {
     mainCubit.setState(MainCubit.recordingStateLabel);
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (context) => UtterancePage(utteranceMode),
+        builder: (context) => InteractionPage(interactionMode),
       ),
     );
   }
@@ -50,7 +50,7 @@ class MainPage extends StatelessWidget {
                       ? navigateWithMode(
                           context,
                           mainCubit,
-                          UtteranceCubit.quickMode,
+                          InteractionCubit.quickMode,
                         )
                       : null,
             ).withGridPlacement(
@@ -66,7 +66,7 @@ class MainPage extends StatelessWidget {
                       ? navigateWithMode(
                           context,
                           mainCubit,
-                          UtteranceCubit.thoroughMode,
+                          InteractionCubit.thoroughMode,
                         )
                       : null,
             ).withGridPlacement(
@@ -82,7 +82,7 @@ class MainPage extends StatelessWidget {
                       ? navigateWithMode(
                           context,
                           mainCubit,
-                          UtteranceCubit.translateMode,
+                          InteractionCubit.translateMode,
                         )
                       : null,
             ).withGridPlacement(

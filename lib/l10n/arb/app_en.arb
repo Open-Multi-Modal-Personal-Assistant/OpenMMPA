@@ -52,8 +52,8 @@
     "@preferencesOutputLocaleSubLabel": {
         "description": "Text shown in the preferences settings subtitle for Output Locale"
     },
-    "utteranceAppBarTitle": "Press to stop recording:",
-    "@utteranceAppBarTitle": {
-        "description": "Text shown in the AppBar of the Utterance Page"
+    "interactionAppBarTitle": "Press to stop recording:",
+    "@interactionAppBarTitle": {
+        "description": "Text shown in the AppBar of the Interaction Page"
     }
 }
