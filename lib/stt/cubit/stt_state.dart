@@ -28,9 +28,11 @@ class SttState with StateLoggingMixin {
       );
       if (hasSpeech) {
         localeNames = await speech.locales();
+        logEvent('Locale names: $localeNames');
         final systemLocaleName = await speech.systemLocale();
         systemLocale =
             systemLocaleName?.localeId ?? PreferencesState.inputLocaleDefault;
+        logEvent('System locale: $systemLocale');
       }
 
       initialized = true;

@@ -6,6 +6,7 @@ import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/main/main.dart';
 import 'package:inspector_gadget/preferences/preferences.dart';
 import 'package:inspector_gadget/stt/cubit/stt_cubit.dart';
+import 'package:inspector_gadget/tts/cubit/tts_cubit.dart';
 import 'package:inspector_gadget/utterance/utterance.dart';
 
 class MainPage extends StatelessWidget {
@@ -16,6 +17,7 @@ class MainPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => SttCubit()),
+        BlocProvider(create: (_) => TtsCubit()),
         BlocProvider(create: (_) => UtteranceCubit()),
       ],
       child: const MainView(),
@@ -61,6 +63,11 @@ class _MainViewState extends State<MainView> {
     final sttState = context.select((SttCubit cubit) => cubit.state);
     if (!sttState.initialized) {
       sttState.init();
+    }
+
+    final ttsState = context.select((TtsCubit cubit) => cubit.state);
+    if (!ttsState.initialized) {
+      ttsState.init();
     }
 
     if (appState.name == 'dummy') {
