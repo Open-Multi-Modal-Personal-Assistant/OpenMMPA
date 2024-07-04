@@ -279,12 +279,29 @@ class _InteractionViewState extends State<InteractionView>
     }
 
     if (context.mounted) {
-      await _ttsPhase(context, response.text!);
+      if (areSpeechServicesNative) {
+        await _playbackPhase(context, response.text!, '');
+      } else {
+        await _ttsPhase(context, response.text!);
+      }
     }
   }
 
   Future<void> _ttsPhase(BuildContext context, String responseText) async {
-    if (areSpeechServicesNative) {}
+    mainCubit?.setState(MainCubit.ttsStateLabel);
+    // TODO(MrCsabaToth): GCP TTS
+  }
+
+  Future<void> _playbackPhase(
+    BuildContext context,
+    String responseText,
+    String audioPath,
+  ) async {
+    mainCubit?.setState(MainCubit.playingStateLabel);
+    if (responseText.isNotEmpty) {
+      final ttsState = context.select((TtsCubit cubit) => cubit.state);
+      await ttsState.speak(responseText);
+    }
   }
 
   Future<void> _processDeferredActionQueue(BuildContext context) async {
@@ -405,7 +422,7 @@ class _InteractionViewState extends State<InteractionView>
             GestureDetector(
               child: AnimateStyles.shakeY(
                 _animationController,
-                const Icon(Icons.speaker_phone, size: 220),
+                const Icon(Icons.speaker, size: 220),
               ),
               onTap: () {
                 Navigator.pop(context);
