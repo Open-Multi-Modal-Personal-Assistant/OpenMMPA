@@ -7,7 +7,11 @@ import 'package:inspector_gadget/state_logging_mixin.dart';
 class TTSState with StateLoggingMixin {
   final FlutterTts tts = FlutterTts();
   TtsState engineState = TtsState.stopped;
+  String engine = '';
+  String voice = '';
   List<String> languages = [];
+  String language = '';
+  bool isCurrentLanguageInstalled = false;
   List<String> engines = [];
   double volume = 0.5;
   double pitch = 1;
@@ -24,9 +28,9 @@ class TTSState with StateLoggingMixin {
     await _setAwaitOptions();
 
     if (Platform.isAndroid) {
-      final engine = await tts.getDefaultEngine;
+      engine = await tts.getDefaultEngine as String;
       logEvent('Default TTS Engine: $engine');
-      final voice = await tts.getDefaultVoice;
+      voice = await tts.getDefaultVoice as String;
       logEvent('Default TTS Voice: $voice');
       languages = await tts.getLanguages as List<String>;
       logEvent('Languages: $languages');
@@ -61,6 +65,18 @@ class TTSState with StateLoggingMixin {
       });
 
     initialized = true;
+  }
+
+  Future<void> setLanguage(String language) async {
+    await tts.setLanguage(language);
+    if (Platform.isAndroid) {
+      isCurrentLanguageInstalled =
+          await tts.isLanguageInstalled(language) as bool;
+    }
+  }
+
+  Future<void> setEngine(String engine) async {
+    await tts.setEngine(engine);
   }
 
   Future<void> speak(String responseText) async {
