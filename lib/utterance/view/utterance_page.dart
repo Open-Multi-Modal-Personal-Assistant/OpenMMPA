@@ -247,8 +247,10 @@ class _UtteranceViewState extends State<UtteranceView>
 
     // TODO(MrCsabaToth): History: https://github.com/google-gemini/generative-ai-dart/blob/main/samples/dart/bin/advanced_chat.dart
     // we still need to roll our own history persistence (there's no sessionId)
-    // TODO(MrCsabaToth): Multi modal call?
     // TODO(MrCsabaToth): Vector DB + embedding for knowledge base
+    // Note: ObjectBox supports Vector DB now
+    // so we'll use that for both history and RAG
+    // TODO(MrCsabaToth): Multi modal call?
     var content = Content.text(prompt);
     var response = await chat.sendMessage(content);
 
