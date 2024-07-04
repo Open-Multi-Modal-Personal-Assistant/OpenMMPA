@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:inspector_gadget/gen/assets.gen.dart';
+import 'package:inspector_gadget/interaction/utterance.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/main/main.dart';
 import 'package:inspector_gadget/preferences/preferences.dart';
-import 'package:inspector_gadget/utterance/utterance.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});

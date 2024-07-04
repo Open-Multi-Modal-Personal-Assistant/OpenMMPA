@@ -1,13 +1,13 @@
 import 'package:dart_helper_utils/dart_helper_utils.dart';
 import 'package:fl_location/fl_location.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:inspector_gadget/interaction/tools/alpha_vantage_tool.dart';
+import 'package:inspector_gadget/interaction/tools/exchange_tool.dart';
+import 'package:inspector_gadget/interaction/tools/function_tool.dart';
+import 'package:inspector_gadget/interaction/tools/local_tool.dart';
+import 'package:inspector_gadget/interaction/tools/sun_time_tool.dart';
+import 'package:inspector_gadget/interaction/tools/web_search_tool.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
-import 'package:inspector_gadget/utterance/tools/alpha_vantage_tool.dart';
-import 'package:inspector_gadget/utterance/tools/exchange_tool.dart';
-import 'package:inspector_gadget/utterance/tools/function_tool.dart';
-import 'package:inspector_gadget/utterance/tools/local_tool.dart';
-import 'package:inspector_gadget/utterance/tools/sun_time_tool.dart';
-import 'package:inspector_gadget/utterance/tools/web_search_tool.dart';
 
 mixin ToolsMixin {
   static const String alphaVantageBaseUrl = 'https://www.alphavantage.co';

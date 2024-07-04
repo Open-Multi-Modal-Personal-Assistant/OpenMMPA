@@ -1,7 +1,7 @@
 import 'package:fl_location/fl_location.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:inspector_gadget/interaction/tools/function_tool.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
-import 'package:inspector_gadget/utterance/tools/function_tool.dart';
 
 class LocalTool implements FunctionTool {
   @override
