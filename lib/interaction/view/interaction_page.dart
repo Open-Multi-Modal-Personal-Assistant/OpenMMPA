@@ -185,10 +185,10 @@ class _InteractionViewState extends State<InteractionView>
   Future<void> _sttPhase(BuildContext context, Uint8List recordingBytes) async {
     mainCubit?.setState(MainCubit.sttStateLabel);
     try {
-      final chirpFullUrl =
-          Uri.http(functionUrl, chirpEndpoint, {'token': chirpToken});
+      final sttFullUrl =
+          Uri.http(functionUrl, sttEndpoint, {'token': chirpToken});
       final transcriptionResponse = await http.post(
-        chirpFullUrl,
+        sttFullUrl,
         body: recordingBytes,
       );
 
