@@ -27,6 +27,7 @@ import 'package:inspector_gadget/preferences/preferences.dart';
 import 'package:inspector_gadget/secrets.dart';
 import 'package:inspector_gadget/stt/cubit/stt_cubit.dart';
 import 'package:inspector_gadget/tts/cubit/tts_cubit.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
@@ -78,6 +79,7 @@ class _InteractionViewState extends State<InteractionView>
   LocationCubit? locationCubit;
   Location? gpsLocation;
   List<DeferredAction> deferredActionQueue = [];
+  Player? _player;
 
   @override
   void initState() {
@@ -92,6 +94,7 @@ class _InteractionViewState extends State<InteractionView>
   void dispose() {
     _audioRecorder?.dispose();
     _animationController.dispose();
+    _player?.dispose();
     super.dispose();
   }
 
@@ -280,7 +283,7 @@ class _InteractionViewState extends State<InteractionView>
 
     if (context.mounted) {
       if (areSpeechServicesNative) {
-        await _playbackPhase(context, response.text!, '');
+        await _playbackPhase(context, response.text!, null);
       } else {
         await _ttsPhase(context, response.text!);
       }
@@ -289,18 +292,43 @@ class _InteractionViewState extends State<InteractionView>
 
   Future<void> _ttsPhase(BuildContext context, String responseText) async {
     mainCubit?.setState(MainCubit.ttsStateLabel);
-    // TODO(MrCsabaToth): GCP TTS
+    try {
+      final ttsFullUrl = Uri.http(functionUrl, ttsEndpoint, {
+        'token': chirpToken,
+        'languageCode': preferencesState?.outputLocale ?? 'en-US',
+        'text': responseText,
+      });
+      final transcriptionResponse = await http.post(ttsFullUrl);
+
+      if (transcriptionResponse.statusCode == 200) {
+        if (context.mounted) {
+          await _playbackPhase(context, '', transcriptionResponse.bodyBytes);
+        }
+      } else {
+        log(transcriptionResponse.toString());
+        mainCubit?.setState(MainCubit.errorStateLabel);
+      }
+    } catch (e) {
+      log(e.toString());
+      mainCubit?.setState(MainCubit.errorStateLabel);
+    }
   }
 
   Future<void> _playbackPhase(
     BuildContext context,
     String responseText,
-    String audioPath,
+    Uint8List? audioTrack,
   ) async {
     mainCubit?.setState(MainCubit.playingStateLabel);
     if (responseText.isNotEmpty) {
       final ttsState = context.select((TtsCubit cubit) => cubit.state);
       await ttsState.speak(responseText);
+    } else if (audioTrack.isNotEmptyOrNull) {
+      _player ??= Player();
+      final memoryMedia = await Media.memory(audioTrack!);
+      await _player?.open(memoryMedia);
+    } else {
+      mainCubit?.setState(MainCubit.errorStateLabel);
     }
   }
 
