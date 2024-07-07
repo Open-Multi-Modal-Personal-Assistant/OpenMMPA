@@ -1,12 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:flutter_tts/flutter_tts_web.dart';
 import 'package:inspector_gadget/state_logging_mixin.dart';
 
 class TTSState with StateLoggingMixin {
   final FlutterTts tts = FlutterTts();
-  TtsState engineState = TtsState.stopped;
   String engine = '';
   String voice = '';
   List<String> languages = [];
@@ -41,27 +39,21 @@ class TTSState with StateLoggingMixin {
     tts
       ..setStartHandler(() {
         logEvent('TTS Playing');
-        engineState = TtsState.playing;
       })
       ..setCompletionHandler(() {
         logEvent('TTS Complete');
-        engineState = TtsState.stopped;
       })
       ..setCancelHandler(() {
         logEvent('TTS Cancel');
-        engineState = TtsState.stopped;
       })
       ..setPauseHandler(() {
         logEvent('TTS Paused');
-        engineState = TtsState.paused;
       })
       ..setContinueHandler(() {
         logEvent('TTS Continued');
-        engineState = TtsState.continued;
       })
       ..setErrorHandler((msg) {
         logEvent('TTS error: $msg');
-        engineState = TtsState.stopped;
       });
 
     initialized = true;
@@ -95,15 +87,11 @@ class TTSState with StateLoggingMixin {
 
   Future<void> stop() async {
     final result = await tts.stop();
-    if (result == 1) {
-      engineState = TtsState.stopped;
-    }
+    logEvent(result == 1 ? 'TTS Stopped' : 'Error while TTS Stop');
   }
 
   Future<void> pause() async {
     final result = await tts.pause();
-    if (result == 1) {
-      engineState = TtsState.paused;
-    }
+    logEvent(result == 1 ? 'TTS Paused' : 'Error while TTS Pause');
   }
 }
