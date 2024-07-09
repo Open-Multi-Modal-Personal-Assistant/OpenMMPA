@@ -373,7 +373,7 @@ class _InteractionViewState extends State<InteractionView>
       if (areSpeechServicesNative) {
         final options = SpeechListenOptions(
           onDevice: areSpeechServicesRemote,
-          // listenMode: ListenMode.confirmation,
+          listenMode: ListenMode.dictation,
           cancelOnError: true,
           partialResults: false,
           autoPunctuation: true,
