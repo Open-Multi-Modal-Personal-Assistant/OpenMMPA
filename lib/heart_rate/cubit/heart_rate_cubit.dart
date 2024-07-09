@@ -1,20 +1,25 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:heart_rate_flutter/heart_rate_flutter.dart';
 
 class HeartRateCubit extends Cubit<int> {
   HeartRateCubit() : super(0) {
-    _heartRateStream = HeartRateFlutter().heartBeatStream;
+    final heartBeatFlutter = HeartRateFlutter();
+    heartBeatFlutter
+        .getPlatformVersion()
+        .then((platformVersion) => debugPrint('HR $platformVersion'));
+    _heartRateStream = heartBeatFlutter.heartBeatStream;
   }
 
   late Stream<double> _heartRateStream;
-  late StreamSubscription<int>? _heartRateSubscription;
+  StreamSubscription<int>? _heartRateSubscription;
 
   void obtain() => emit(state);
 
   Future<void> listenToHeartRate() async {
-    await _heartRateSubscription!.cancel();
+    await _heartRateSubscription?.cancel();
 
     _heartRateSubscription = _heartRateStream.map<int>((fp) {
       return fp.toInt();
@@ -23,7 +28,7 @@ class HeartRateCubit extends Cubit<int> {
 
   @override
   Future<void> close() async {
-    await _heartRateSubscription!.cancel();
+    await _heartRateSubscription?.cancel();
     return super.close();
   }
 }
