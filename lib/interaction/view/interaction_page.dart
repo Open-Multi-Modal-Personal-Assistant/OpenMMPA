@@ -193,7 +193,7 @@ class _InteractionViewState extends State<InteractionView>
     mainCubit?.setState(MainCubit.sttStateLabel);
     try {
       final sttFullUrl =
-          Uri.http(functionUrl, sttEndpoint, {'token': chirpToken});
+          Uri.https(functionUrl, sttEndpoint, {'token': chirpToken});
       final transcriptionResponse = await http.post(
         sttFullUrl,
         body: recordingBytes,
@@ -297,7 +297,7 @@ class _InteractionViewState extends State<InteractionView>
   Future<void> _ttsPhase(BuildContext context, String responseText) async {
     mainCubit?.setState(MainCubit.ttsStateLabel);
     try {
-      final ttsFullUrl = Uri.http(functionUrl, ttsEndpoint, {
+      final ttsFullUrl = Uri.https(functionUrl, ttsEndpoint, {
         'token': chirpToken,
         'languageCode': preferencesState?.outputLocale ?? 'en-US',
         'text': responseText,

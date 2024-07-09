@@ -98,9 +98,9 @@ class ExchangeTool implements FunctionTool {
   Future<double> _fetchCurrencyExchangeRate(
     CurrencyRequest currencyRequest,
   ) async {
-    const frankfurterBaseUrl = 'https://api.frankfurter.app';
+    const frankfurterBaseUrl = 'api.frankfurter.app';
     final formattedDate = currencyRequest.currencyDate.format('yyyy-MM-dd');
-    final frankfurterUrl = Uri.http(frankfurterBaseUrl, '/$formattedDate', {
+    final frankfurterUrl = Uri.https(frankfurterBaseUrl, '/$formattedDate', {
       'from': currencyRequest.currencyFrom,
       'to': currencyRequest.currencyTo,
       'amount': currencyRequest.amountFrom,
@@ -123,9 +123,9 @@ class ExchangeTool implements FunctionTool {
   Future<double> _fetchCryptoExchangeRate(
     CurrencyRequest currencyRequest,
   ) async {
-    const cryptoCompareBaseUrl = 'https://min-api.cryptocompare.com';
+    const cryptoCompareBaseUrl = 'min-api.cryptocompare.com';
     const cryptoComparePath = '/data/price';
-    final cryptoCompareUrl = Uri.http(cryptoCompareBaseUrl, cryptoComparePath, {
+    final cryptoCompareUrl = Uri.https(cryptoCompareBaseUrl, cryptoComparePath, {
       'fsym': currencyRequest.currencyFrom,
       'tsyms': currencyRequest.currencyTo,
     });

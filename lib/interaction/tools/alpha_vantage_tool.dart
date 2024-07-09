@@ -6,7 +6,7 @@ import 'package:inspector_gadget/interaction/tools/function_tool.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 
 class AlphaVantageTool implements FunctionTool {
-  static const String alphaVantageBaseUrl = 'https://www.alphavantage.co';
+  static const String alphaVantageBaseUrl = 'www.alphavantage.co';
   static const String alphaVantagePath = '/query';
 
   @override
@@ -135,7 +135,7 @@ and technology''',
       return 'N/A';
     }
 
-    final alphaVantageUrl = Uri.http(alphaVantageBaseUrl, alphaVantagePath, {
+    final alphaVantageUrl = Uri.https(alphaVantageBaseUrl, alphaVantagePath, {
       'function': 'GLOBAL_QUOTE',
       'symbol': ticker,
       'apikey': alphaVantageAccessKey,
@@ -158,7 +158,7 @@ and technology''',
       return 'N/A';
     }
 
-    final alphaVantageUrl = Uri.http(alphaVantageBaseUrl, alphaVantagePath, {
+    final alphaVantageUrl = Uri.https(alphaVantageBaseUrl, alphaVantagePath, {
       'function': 'OVERVIEW',
       'symbol': ticker,
       'apikey': alphaVantageAccessKey,
@@ -181,7 +181,7 @@ and technology''',
       return 'N/A';
     }
 
-    final alphaVantageUrl = Uri.http(alphaVantageBaseUrl, alphaVantagePath, {
+    final alphaVantageUrl = Uri.https(alphaVantageBaseUrl, alphaVantagePath, {
       'function': 'NEWS_SENTIMENT',
       'tickers': ticker,
       'limit': 20,
@@ -207,7 +207,7 @@ and technology''',
       return 'N/A';
     }
 
-    final alphaVantageUrl = Uri.http(alphaVantageBaseUrl, alphaVantagePath, {
+    final alphaVantageUrl = Uri.https(alphaVantageBaseUrl, alphaVantagePath, {
       'function': 'NEWS_SENTIMENT',
       'topics': newsTopic,
       'limit': 20,

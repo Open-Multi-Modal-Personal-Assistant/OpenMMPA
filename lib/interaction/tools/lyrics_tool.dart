@@ -66,9 +66,9 @@ class LyricsTool implements FunctionTool {
       return 'N/A';
     }
 
-    const lyricsApiBaseUrl = 'https://api.lyrics.ovh';
+    const lyricsApiBaseUrl = 'api.lyrics.ovh';
     final lyricsApiPath = '/v1/$artist/$title';
-    final lyricsApiUrl = Uri.http(lyricsApiBaseUrl, lyricsApiPath);
+    final lyricsApiUrl = Uri.https(lyricsApiBaseUrl, lyricsApiPath);
 
     final searchResult = await http.get(lyricsApiUrl);
     if (searchResult.statusCode == 200) {

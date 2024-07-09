@@ -67,8 +67,8 @@ class WebResearchTool implements FunctionTool {
       return 'N/A';
     }
 
-    const tavilyBaseUrl = 'https://api.tavily.com';
-    final tavilyUrl = Uri.http(tavilyBaseUrl, '/search');
+    const tavilyBaseUrl = 'api.tavily.com';
+    final tavilyUrl = Uri.https(tavilyBaseUrl, '/search');
 
     var result = 'N/A';
     final searchResult = await http.post(

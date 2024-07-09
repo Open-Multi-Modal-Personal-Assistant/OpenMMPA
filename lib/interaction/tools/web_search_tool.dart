@@ -65,7 +65,7 @@ class WebSearchTool implements FunctionTool {
     }
 
     // https://stackoverflow.com/questions/37012469/duckduckgo-api-getting-search-results
-    const duckDuckGoBaseUrl = 'http://api.duckduckgo.com';
+    const duckDuckGoBaseUrl = 'api.duckduckgo.com';
     final duckDuckGoUrl = Uri.http(duckDuckGoBaseUrl, '/', {
       'q': query,
       'format': 'json',
