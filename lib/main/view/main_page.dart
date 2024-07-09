@@ -92,8 +92,8 @@ class MainPage extends StatelessWidget {
             ),
             IconButton(
               key: const Key(fluxCapacitorKey),
-              icon: Assets.fluxCapacitor.image(),
-              iconSize: 150,
+              icon: const Icon(Icons.settings),
+              iconSize: size.width / 2.5,
               onPressed: () =>
                   mainCubit.state.name == MainCubit.waitingStateLabel
                       ? Navigator.push(
