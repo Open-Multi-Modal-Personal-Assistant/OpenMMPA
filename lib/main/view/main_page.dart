@@ -33,6 +33,7 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final mainCubit = context.select((MainCubit cubit) => cubit);
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.mainAppBarTitle)),
@@ -76,7 +77,7 @@ class MainPage extends StatelessWidget {
             IconButton(
               key: const Key(translateKey),
               icon: const Icon(Icons.translate),
-              iconSize: 110,
+              iconSize: size.width / 3,
               onPressed: () =>
                   mainCubit.state.name == MainCubit.waitingStateLabel
                       ? navigateWithMode(
