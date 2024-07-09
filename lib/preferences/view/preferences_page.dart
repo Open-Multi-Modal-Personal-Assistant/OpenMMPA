@@ -47,8 +47,6 @@ class _PreferencesViewState extends State<PreferencesView> {
         )
         .toList(growable: false);
 
-    debugPrint('InputLocals: $inputLocales');
-
     final ttsState = context.select((TtsCubit cubit) => cubit.state);
     final outputLanguages = ttsState.languages
         .map(
@@ -58,8 +56,6 @@ class _PreferencesViewState extends State<PreferencesView> {
           ),
         )
         .toList(growable: false);
-
-    debugPrint('OutputLocals: $outputLanguages');
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.preferencesAppBarTitle)),
