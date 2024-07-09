@@ -42,6 +42,7 @@ void main() {
       expect(find.byKey(const Key(MainPage.theDocKey)), findsOneWidget);
       expect(find.widgetWithIcon(IconButton, Icons.translate), findsOneWidget);
       expect(find.byKey(const Key(MainPage.translateKey)), findsOneWidget);
+      expect(find.widgetWithIcon(IconButton, Icons.settings), findsOneWidget);
       expect(find.byKey(const Key(MainPage.fluxCapacitorKey)), findsOneWidget);
     });
 

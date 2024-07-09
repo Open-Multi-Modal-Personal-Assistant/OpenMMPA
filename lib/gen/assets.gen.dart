@@ -13,13 +13,11 @@ class Assets {
   Assets._();
 
   static const AssetGenImage doc = AssetGenImage('assets/doc.png');
-  static const AssetGenImage fluxCapacitor =
-      AssetGenImage('assets/flux_capacitor.png');
   static const AssetGenImage martyMcfly =
       AssetGenImage('assets/marty_mcfly.png');
 
   /// List of all assets
-  static List<AssetGenImage> get values => [doc, fluxCapacitor, martyMcfly];
+  static List<AssetGenImage> get values => [doc, martyMcfly];
 }
 
 class AssetGenImage {
