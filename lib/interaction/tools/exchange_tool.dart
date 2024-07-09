@@ -125,7 +125,8 @@ class ExchangeTool implements FunctionTool {
   ) async {
     const cryptoCompareBaseUrl = 'min-api.cryptocompare.com';
     const cryptoComparePath = '/data/price';
-    final cryptoCompareUrl = Uri.https(cryptoCompareBaseUrl, cryptoComparePath, {
+    final cryptoCompareUrl =
+        Uri.https(cryptoCompareBaseUrl, cryptoComparePath, {
       'fsym': currencyRequest.currencyFrom,
       'tsyms': currencyRequest.currencyTo,
     });
