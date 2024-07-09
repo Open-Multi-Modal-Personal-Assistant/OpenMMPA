@@ -158,9 +158,7 @@ class _InteractionViewState extends State<InteractionView>
         await recordFile(_audioRecorder!, config);
       }
     } catch (e) {
-      if (kDebugMode) {
-        debugPrint(e.toString());
-      }
+      log('Error during start recording $e');
     }
   }
   /* END Audio Recorder utilities */
@@ -184,6 +182,7 @@ class _InteractionViewState extends State<InteractionView>
               .showSnackBar(const SnackBar(content: Text('Recording error')));
         }
 
+        log('Error during stop recording, path $path');
         mainCubit?.setState(MainCubit.errorStateLabel);
       }
     }
