@@ -16,12 +16,12 @@ class PreferencesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => SttCubit()),
-        BlocProvider(create: (_) => TtsCubit()),
-      ],
-      child: const PreferencesView(),
+    return BlocProvider.value(
+      value: context.read<SttCubit>(),
+      child: BlocProvider.value(
+        value: context.read<TtsCubit>(),
+        child: const PreferencesView(),
+      ),
     );
   }
 }
@@ -47,6 +47,8 @@ class _PreferencesViewState extends State<PreferencesView> {
         )
         .toList(growable: false);
 
+    debugPrint('InputLocals: $inputLocales');
+
     final ttsState = context.select((TtsCubit cubit) => cubit.state);
     final outputLanguages = ttsState.languages
         .map(
@@ -56,6 +58,8 @@ class _PreferencesViewState extends State<PreferencesView> {
           ),
         )
         .toList(growable: false);
+
+    debugPrint('OutputLocals: $outputLanguages');
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.preferencesAppBarTitle)),
