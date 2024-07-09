@@ -30,12 +30,16 @@ class LocationCubit extends Cubit<Location?> {
 
   Future<Location?> obtain() async {
     if (await _checkAndRequestPermission()) {
-      const timeLimit = Duration(milliseconds: 500);
+      return null;
+    }
+
+    const timeLimit = Duration(milliseconds: 2000);
+    try {
       final location = await FlLocation.getLocation(timeLimit: timeLimit);
       emit(location);
       return location;
+    } catch (e) {
+      return null;
     }
-
-    return null;
   }
 }
