@@ -12,17 +12,18 @@ class Transcription {
 class Transcriptions {
   Transcriptions();
 
-  Transcriptions.fromJson(Map<String, dynamic> json) {
-    if (json['transcripts'] != null) {
-      transcriptions.clear();
-      final typedTranscripts = json['transcripts'] as List<Map<String, String>>;
-      for (final transcriptJson in typedTranscripts) {
-        transcriptions.add(Transcription.fromJson(transcriptJson));
-      }
+  Transcriptions.fromJson(List<dynamic> json) {
+    transcriptions.clear();
+    final stringList = json.map((e) => e as String).toList(growable: false);
+    for (var i = 0; i < stringList.length; i += 2) {
+      final transcript = stringList[i];
+      final language = i + 1 < stringList.length ? stringList[i + 1] : '';
+      transcriptions.add(Transcription(transcript, language));
     }
   }
 
   final List<Transcription> transcriptions = [];
 
+  // TODO(MrCsabaToth): handle mixed languages
   String get merged => transcriptions.map((tr) => tr.transcription).join('. ');
 }

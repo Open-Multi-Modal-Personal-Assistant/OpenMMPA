@@ -201,7 +201,7 @@ class _InteractionViewState extends State<InteractionView>
 
       if (transcriptionResponse.statusCode == 200) {
         final transcriptJson =
-            json.decode(transcriptionResponse.body) as Map<String, dynamic>;
+            json.decode(transcriptionResponse.body) as List<dynamic>;
         final transcripts = Transcriptions.fromJson(transcriptJson);
         if (context.mounted) {
           await _llmPhase(context, transcripts.merged);
