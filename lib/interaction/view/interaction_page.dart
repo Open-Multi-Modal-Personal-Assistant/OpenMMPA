@@ -127,7 +127,7 @@ class _InteractionViewState extends State<InteractionView>
     final dir = await getApplicationDocumentsDirectory();
     return p.join(
       dir.path,
-      'audio_${DateTime.now().millisecondsSinceEpoch}.pcm',
+      'audio_${DateTime.now().millisecondsSinceEpoch}.pcm.gz',
     );
   }
 
@@ -206,7 +206,8 @@ class _InteractionViewState extends State<InteractionView>
           await _llmPhase(context, transcripts.merged);
         }
       } else {
-        log(transcriptionResponse.toString());
+        log('${transcriptionResponse.statusCode} '
+            '${transcriptionResponse.reasonPhrase}');
         mainCubit?.setState(MainCubit.errorStateLabel);
       }
     } catch (e) {
