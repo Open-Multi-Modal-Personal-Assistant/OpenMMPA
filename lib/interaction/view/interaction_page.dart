@@ -172,8 +172,9 @@ class _InteractionViewState extends State<InteractionView>
       if (path != null) {
         final recordingFile = File(path);
         final recordingBytes = await recordingFile.readAsBytes();
+        final gzippedPcm = gzip.encode(recordingBytes);
         if (context.mounted) {
-          await _sttPhase(context, recordingBytes);
+          await _sttPhase(context, gzippedPcm);
         }
       } else {
         final ctx = context;
@@ -188,7 +189,7 @@ class _InteractionViewState extends State<InteractionView>
     }
   }
 
-  Future<void> _sttPhase(BuildContext context, Uint8List recordingBytes) async {
+  Future<void> _sttPhase(BuildContext context, List<int> recordingBytes) async {
     mainCubit?.setState(MainCubit.sttStateLabel);
     try {
       final sttFullUrl =
@@ -392,7 +393,7 @@ class _InteractionViewState extends State<InteractionView>
             )
             .whenComplete(() => log('speech.listen completed'));
       } else {
-        _audioRecorder = AudioRecorder(gzip: areSpeechServicesRemote);
+        _audioRecorder = AudioRecorder();
         _startRecording();
       }
 

@@ -680,11 +680,10 @@ packages:
   record:
     dependency: "direct main"
     description:
-      path: record
-      ref: HEAD
-      resolved-ref: e6c7eec42fd554c9d4e778813cef2d222d958b27
-      url: "https://github.com/CsabaConsulting/record.git"
-    source: git
+      name: record
+      sha256: "4a5cf4d083d1ee49e0878823c4397d073f8eb0a775f31215d388e2bc47a9e867"
+      url: "https://pub.dev"
+    source: hosted
     version: "5.1.2"
   record_android:
     dependency: transitive
