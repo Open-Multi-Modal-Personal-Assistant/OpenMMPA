@@ -127,7 +127,7 @@ class _InteractionViewState extends State<InteractionView>
     final dir = await getApplicationDocumentsDirectory();
     return p.join(
       dir.path,
-      'audio_${DateTime.now().millisecondsSinceEpoch}.pcm.gz',
+      'audio_${DateTime.now().millisecondsSinceEpoch}.wav',
     );
   }
 
@@ -140,7 +140,7 @@ class _InteractionViewState extends State<InteractionView>
   Future<void> _startRecording() async {
     try {
       if (await _audioRecorder?.hasPermission() ?? false) {
-        const encoder = AudioEncoder.pcm16bits;
+        const encoder = AudioEncoder.wav;
 
         if (!await _isEncoderSupported(encoder)) {
           return;
