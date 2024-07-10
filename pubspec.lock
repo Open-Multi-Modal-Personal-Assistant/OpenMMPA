@@ -682,7 +682,7 @@ packages:
     description:
       path: record
       ref: HEAD
-      resolved-ref: bf07198f7cc92f395a264a62b71043653675deee
+      resolved-ref: e6c7eec42fd554c9d4e778813cef2d222d958b27
       url: "https://github.com/CsabaConsulting/record.git"
     source: git
     version: "5.1.2"
