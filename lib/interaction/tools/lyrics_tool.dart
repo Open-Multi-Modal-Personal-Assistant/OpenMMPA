@@ -21,7 +21,7 @@ class LyricsTool implements FunctionTool {
           'lyricsLookup',
           'Look up a lyrics of a song by a given artist and title',
           Schema(
-            SchemaType.string,
+            SchemaType.object,
             properties: {
               'artist': Schema.string(
                 description: 'The artist of the song',

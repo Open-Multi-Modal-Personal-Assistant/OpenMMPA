@@ -22,7 +22,7 @@ class WeatherTool implements FunctionTool {
               'weather forecast of the near future for a given GPS coordinate, '
               'all in JSON format',
           Schema(
-            SchemaType.string,
+            SchemaType.object,
             properties: {
               'latitude': Schema.number(
                 description: 'Latitude of the weather observation and forecast',

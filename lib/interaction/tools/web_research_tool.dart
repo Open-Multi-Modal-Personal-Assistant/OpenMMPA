@@ -21,7 +21,7 @@ class WebResearchTool implements FunctionTool {
           'webResearch',
           'deliver accurate and factual search results quickly and efficiently',
           Schema(
-            SchemaType.string,
+            SchemaType.object,
             properties: {
               'query': Schema.string(
                 description: 'The search query or question which need to be '

@@ -22,7 +22,7 @@ class ExchangeTool implements FunctionTool {
           'fetchCurrencyExchangeRate',
           'Returns exchange rate between fiat currencies.',
           Schema(
-            SchemaType.number,
+            SchemaType.object,
             properties: {
               'currencyDate': Schema.string(
                 description: 'A date or the value "latest" '
@@ -47,7 +47,7 @@ class ExchangeTool implements FunctionTool {
           'Returns the immediate exchange rate between two crypto currencies '
               'or a crypto currency and fiat currency.',
           Schema(
-            SchemaType.number,
+            SchemaType.object,
             properties: {
               'cryptoFromTicker': Schema.string(
                 description:

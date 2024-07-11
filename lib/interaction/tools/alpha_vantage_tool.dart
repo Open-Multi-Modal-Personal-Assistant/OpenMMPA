@@ -25,7 +25,7 @@ class AlphaVantageTool implements FunctionTool {
           'getStockPrice',
           'Fetch the current stock price of a given company in JSON string',
           Schema(
-            SchemaType.string,
+            SchemaType.object,
             properties: {
               'ticker': Schema.string(
                 description: 'Stock ticker symbol for a company',
@@ -38,7 +38,7 @@ class AlphaVantageTool implements FunctionTool {
           'getCompanyOverview',
           'Get company details and other financial data in JSON string',
           Schema(
-            SchemaType.string,
+            SchemaType.object,
             properties: {
               'ticker': Schema.string(
                 description: 'Stock ticker symbol for a company',
@@ -51,7 +51,7 @@ class AlphaVantageTool implements FunctionTool {
           'getCompanyNews',
           'Get the latest news headlines for a company as JSON string',
           Schema(
-            SchemaType.string,
+            SchemaType.object,
             properties: {
               'ticker': Schema.string(
                 description: 'Stock ticker symbol for a company',
@@ -64,7 +64,7 @@ class AlphaVantageTool implements FunctionTool {
           'getNewsWithSentiment',
           'Gets live and historical market news and sentiment data',
           Schema(
-            SchemaType.string,
+            SchemaType.object,
             properties: {
               'newsTopic': Schema.string(
                 description: '''
@@ -77,6 +77,7 @@ manufacturing, real_estate, retail_wholesale,
 and technology''',
               ),
             },
+            requiredProperties: ['newsTopic'],
           ),
         ),
       ];

@@ -22,7 +22,7 @@ class WebSearchTool implements FunctionTool {
           'Search the web and wikipedia for facts about any topic or '
               'gather munition to answer any questions',
           Schema(
-            SchemaType.string,
+            SchemaType.object,
             properties: {
               'query': Schema.string(
                 description: 'The search query or question which need '

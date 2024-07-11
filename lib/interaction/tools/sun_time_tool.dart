@@ -19,7 +19,7 @@ class SunTimeTool implements FunctionTool {
           'fetchSunrise',
           'Returns the sunrise time for a given GPS location and date.',
           Schema(
-            SchemaType.string,
+            SchemaType.object,
             properties: {
               'latitude': Schema.number(
                 description: 'Latitude of the sunrise observer',
@@ -38,7 +38,7 @@ class SunTimeTool implements FunctionTool {
           'fetchSunset',
           'Returns the sunset time for a given GPS location and date.',
           Schema(
-            SchemaType.string,
+            SchemaType.object,
             properties: {
               'latitude': Schema.number(
                 description: 'Latitude of the sunset observer',
