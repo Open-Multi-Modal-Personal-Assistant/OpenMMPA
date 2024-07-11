@@ -77,7 +77,6 @@ class _InteractionViewState extends State<InteractionView>
       PreferencesState.areSpeechServicesNativeDefault;
   bool areSpeechServicesRemote =
       PreferencesState.areSpeechServicesRemoteDefault;
-  bool started = false;
   HeartRateCubit? heartRateCubit;
   int heartRate = 0;
   LocationCubit? locationCubit;
@@ -92,6 +91,15 @@ class _InteractionViewState extends State<InteractionView>
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat(reverse: true);
+
+    deferredActionQueue
+      ..add(DeferredAction(ActionKind.initialize))
+      ..add(
+        DeferredAction(
+          ActionKind.speechTranscripted,
+          text: 'What is the weather today?',
+        ),
+      );
   }
 
   @override
@@ -264,6 +272,16 @@ class _InteractionViewState extends State<InteractionView>
 
     List<FunctionCall> functionCalls;
     while ((functionCalls = response.functionCalls.toList()).isNotEmpty) {
+      final newHeartRate = heartRateCubit?.state ?? 0;
+      if (newHeartRate > 0) {
+        heartRate = newHeartRate;
+      }
+
+      final loc = await locationCubit?.obtain();
+      if (loc != null && (loc.latitude > 10e-6 || loc.longitude > 10e-6)) {
+        gpsLocation = loc;
+      }
+
       final responses = <FunctionResponse>[];
       for (final functionCall in functionCalls) {
         final response = await dispatchFunctionCall(
@@ -303,14 +321,15 @@ class _InteractionViewState extends State<InteractionView>
         'languageCode': preferencesState?.outputLocale ?? 'en-US',
         'text': responseText,
       });
-      final transcriptionResponse = await http.post(ttsFullUrl);
+      final synthetizationResponse = await http.post(ttsFullUrl);
 
-      if (transcriptionResponse.statusCode == 200) {
+      if (synthetizationResponse.statusCode == 200) {
         if (context.mounted) {
-          await _playbackPhase(context, '', transcriptionResponse.bodyBytes);
+          await _playbackPhase(context, '', synthetizationResponse.bodyBytes);
         }
       } else {
-        log(transcriptionResponse.toString());
+        log('${synthetizationResponse.statusCode} '
+            '${synthetizationResponse.reasonPhrase}');
         mainCubit?.setState(MainCubit.errorStateLabel);
       }
     } catch (e) {
@@ -343,9 +362,54 @@ class _InteractionViewState extends State<InteractionView>
       deferredActionQueue.clear();
       for (final deferredAction in queueCopy) {
         switch (deferredAction.actionKind) {
+          case ActionKind.initialize:
+            final sttState = context.select((SttCubit cubit) => cubit.state);
+
+            await heartRateCubit?.listenToHeartRate();
+            final newHeartRate = heartRateCubit?.state ?? 0;
+            if (newHeartRate > 0) {
+              heartRate = newHeartRate;
+            }
+
+            final loc = await locationCubit?.obtain();
+            if (loc != null &&
+                (loc.latitude > 10e-6 || loc.longitude > 10e-6)) {
+              gpsLocation = loc;
+            }
+
+            speech = sttState.speech;
+            areSpeechServicesNative =
+                preferencesState!.areSpeechServicesNative && sttState.hasSpeech;
+            areSpeechServicesRemote = preferencesState!.areSpeechServicesRemote;
+            if (areSpeechServicesNative) {
+              final options = SpeechListenOptions(
+                onDevice: areSpeechServicesRemote,
+                listenMode: ListenMode.dictation,
+                cancelOnError: true,
+                partialResults: false,
+                autoPunctuation: true,
+                enableHapticFeedback: true,
+              );
+              await sttState.speech.listen(
+                onResult: _resultListener,
+                listenFor:
+                    const Duration(seconds: PreferencesState.listenForDefault),
+                pauseFor:
+                    const Duration(seconds: PreferencesState.pauseForDefault),
+                localeId: sttState.systemLocale,
+                onSoundLevelChange: _soundLevelListener,
+                listenOptions: options,
+              );
+            } else {
+              _audioRecorder = AudioRecorder();
+              await _startRecording();
+            }
+
           case ActionKind.volumeAdjust:
+            // TODO(MrCsabaToth): Actually set the volume?
             await PreferencesState.prefService
                 ?.set(PreferencesState.volumeTag, deferredAction.integer);
+
           case ActionKind.speechTranscripted:
             await _llmPhase(context, deferredAction.text);
         }
@@ -363,50 +427,6 @@ class _InteractionViewState extends State<InteractionView>
     locationCubit = context.select((LocationCubit cubit) => cubit);
 
     _processDeferredActionQueue(context);
-
-    if (!started) {
-      started = true;
-      final sttState = context.select((SttCubit cubit) => cubit.state);
-      speech = sttState.speech;
-      areSpeechServicesNative =
-          preferencesState!.areSpeechServicesNative && sttState.hasSpeech;
-      areSpeechServicesRemote = preferencesState!.areSpeechServicesRemote;
-      if (areSpeechServicesNative) {
-        final options = SpeechListenOptions(
-          onDevice: areSpeechServicesRemote,
-          listenMode: ListenMode.dictation,
-          cancelOnError: true,
-          partialResults: false,
-          autoPunctuation: true,
-          enableHapticFeedback: true,
-        );
-        sttState.speech
-            .listen(
-              onResult: _resultListener,
-              listenFor:
-                  const Duration(seconds: PreferencesState.listenForDefault),
-              pauseFor:
-                  const Duration(seconds: PreferencesState.pauseForDefault),
-              localeId: sttState.systemLocale,
-              onSoundLevelChange: _soundLevelListener,
-              listenOptions: options,
-            )
-            .whenComplete(() => log('speech.listen completed'));
-      } else {
-        _audioRecorder = AudioRecorder();
-        _startRecording();
-      }
-
-      heartRateCubit?.listenToHeartRate().whenComplete(() {
-        heartRate = heartRateCubit?.state ?? 0;
-      });
-
-      locationCubit?.obtain().then((loc) {
-        if (loc != null && loc.latitude > 10e-6 && loc.longitude > 10e-6) {
-          gpsLocation = loc;
-        }
-      });
-    }
 
     final stateIndex =
         context.select((MainCubit cubit) => cubit.getStateIndex());

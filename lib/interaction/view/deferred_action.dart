@@ -1,4 +1,5 @@
 enum ActionKind {
+  initialize,
   volumeAdjust,
   speechTranscripted,
 }
