@@ -9,6 +9,8 @@ class AlphaVantageTool implements FunctionTool {
   static const String alphaVantageBaseUrl = 'www.alphavantage.co';
   static const String alphaVantagePath = '/query';
 
+  String alphaVantageAccessKey = '';
+
   @override
   bool isAvailable(PreferencesState? preferences) {
     return !(preferences?.alphaVantageAccessKey.isNullOrWhiteSpace ?? false);
@@ -100,25 +102,19 @@ and technology''',
     int hr,
     PreferencesState? preferences,
   ) async {
-    final alphaVantageAccessKey = preferences?.alphaVantageAccessKey ?? '';
+    alphaVantageAccessKey = preferences?.alphaVantageAccessKey ?? '';
     final result = switch (call.name) {
       'getStockPrice' => {
-          'stockPrice': _getStockPrice(call.args, alphaVantageAccessKey),
+          'stockPrice': _getStockPrice(call.args),
         },
       'getCompanyOverview' => {
-          'companyOverview': _getCompanyOverview(
-            call.args,
-            alphaVantageAccessKey,
-          ),
+          'companyOverview': _getCompanyOverview(call.args),
         },
       'getCompanyNews' => {
-          'companyNews': _getCompanyNews(call.args, alphaVantageAccessKey),
+          'companyNews': _getCompanyNews(call.args),
         },
       'getNewsWithSentiment' => {
-          'newsWithSentiment': _getNewsWithSentiment(
-            call.args,
-            alphaVantageAccessKey,
-          ),
+          'newsWithSentiment': _getNewsWithSentiment(call.args),
         },
       _ => null
     };
@@ -126,10 +122,7 @@ and technology''',
     return FunctionResponse(call.name, result);
   }
 
-  Future<String> _getStockPrice(
-    Map<String, Object?> jsonObject,
-    String alphaVantageAccessKey,
-  ) async {
+  Future<String> _getStockPrice(Map<String, Object?> jsonObject) async {
     final ticker = (jsonObject['ticker'] ?? '') as String;
     if (alphaVantageAccessKey.isNullOrWhiteSpace || ticker.isNullOrWhiteSpace) {
       return 'N/A';
@@ -149,10 +142,7 @@ and technology''',
     return 'N/A';
   }
 
-  Future<String> _getCompanyOverview(
-    Map<String, Object?> jsonObject,
-    String alphaVantageAccessKey,
-  ) async {
+  Future<String> _getCompanyOverview(Map<String, Object?> jsonObject) async {
     final ticker = (jsonObject['ticker'] ?? '') as String;
     if (alphaVantageAccessKey.isNullOrWhiteSpace || ticker.isNullOrWhiteSpace) {
       return 'N/A';
@@ -172,10 +162,7 @@ and technology''',
     return 'N/A';
   }
 
-  Future<String> _getCompanyNews(
-    Map<String, Object?> jsonObject,
-    String alphaVantageAccessKey,
-  ) async {
+  Future<String> _getCompanyNews(Map<String, Object?> jsonObject) async {
     final ticker = (jsonObject['ticker'] ?? '') as String;
     if (alphaVantageAccessKey.isNullOrWhiteSpace || ticker.isNullOrWhiteSpace) {
       return 'N/A';
@@ -197,10 +184,7 @@ and technology''',
     return 'N/A';
   }
 
-  Future<String> _getNewsWithSentiment(
-    Map<String, Object?> jsonObject,
-    String alphaVantageAccessKey,
-  ) async {
+  Future<String> _getNewsWithSentiment(Map<String, Object?> jsonObject) async {
     final newsTopic = (jsonObject['newsTopic'] ?? '') as String;
     if (alphaVantageAccessKey.isNullOrWhiteSpace ||
         newsTopic.isNullOrWhiteSpace) {
