@@ -401,6 +401,7 @@ class _InteractionViewState extends State<InteractionView>
                 listenOptions: options,
               );
             } else {
+              MediaKit.ensureInitialized();
               _audioRecorder = AudioRecorder();
               await _startRecording();
             }
