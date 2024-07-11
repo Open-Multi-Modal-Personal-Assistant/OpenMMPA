@@ -474,7 +474,7 @@ class _InteractionViewState extends State<InteractionView>
             ),
             // 5: Playback phase
             GestureDetector(
-              child: AnimateStyles.shakeY(
+              child: AnimateStyles.pulse(
                 _animationController,
                 const Icon(Icons.speaker, size: 220),
               ),
