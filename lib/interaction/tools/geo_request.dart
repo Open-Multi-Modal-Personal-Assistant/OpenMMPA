@@ -22,9 +22,9 @@ class GeoRequest {
     }
   }
 
-  late final double latitude;
-  late final double longitude;
-  late final DateTime date;
+  late double latitude;
+  late double longitude;
+  late DateTime date;
 
   @override
   String toString() => {
