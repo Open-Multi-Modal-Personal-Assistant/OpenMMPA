@@ -24,7 +24,6 @@ mixin ToolsMixin {
     }
 
     functionTools.addAll([
-      AlphaVantageTool(),
       ExchangeTool(),
       LocalTool(),
       LyricsTool(),
