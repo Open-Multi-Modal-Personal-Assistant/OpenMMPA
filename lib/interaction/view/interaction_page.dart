@@ -304,6 +304,7 @@ class _InteractionViewState extends State<InteractionView>
       response = await chat.sendMessage(content);
     }
 
+    debugPrint('Final: ${response.text}');
     if (response.text.isNullOrWhiteSpace || !context.mounted) {
       mainCubit?.setState(MainCubit.errorStateLabel);
     }
