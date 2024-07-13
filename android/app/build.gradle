@@ -4,6 +4,8 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+def projectName = 'Inspector Gadget'
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -79,17 +81,17 @@ android {
         production {
             dimension "default"
             applicationIdSuffix ""
-            manifestPlaceholders = [appName: "My App"]
+            manifestPlaceholders = [appName: "$projectName"]
         }
         staging {
             dimension "default"
             applicationIdSuffix ".stg"
-            manifestPlaceholders = [appName: "[STG] My App"]
+            manifestPlaceholders = [appName: "[STG] $projectName"]
         }
         development {
             dimension "default"
             applicationIdSuffix ".dev"
-            manifestPlaceholders = [appName: "[DEV] My App"]
+            manifestPlaceholders = [appName: "[DEV] $projectName"]
         }
     }
 
