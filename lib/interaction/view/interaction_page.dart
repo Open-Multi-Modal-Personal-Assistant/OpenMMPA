@@ -255,7 +255,7 @@ class _InteractionViewState extends State<InteractionView>
     final modelType =
         widget.interactionMode == InteractionCubit.quickMode ? 'flash' : 'pro';
     final model = GenerativeModel(
-      model: 'gemini-1.5-$modelType-latest',
+      model: 'gemini-1.5-$modelType',
       apiKey: preferencesState?.geminiApiKey ?? geminiApiKey,
       tools: getToolDeclarations(preferencesState),
     );
