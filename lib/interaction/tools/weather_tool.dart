@@ -70,6 +70,9 @@ class WeatherTool implements FunctionTool {
       return 'N/A';
     }
 
+    // By Doc: https://www.7timer.info/bin/api.pl?lon=-119.8&lat=36.9&product=civil&output=json
+    // Result: https://www.7timer.info/bin/civil.php?lon=-119.8&lat=36.9&ac=0&unit=metric&output=json&tzshift=0
+    // Minimal: https://www.7timer.info/bin/civil.php?lon=-119.8&lat=36.9&output=json
     const weatherApiBaseUrl = 'www.7timer.info';
     const weatherApiPath = '/bin/api.pl';
     final weatherApiUrl = Uri.http(weatherApiBaseUrl, weatherApiPath, {
