@@ -1,3 +1,4 @@
+import 'package:dart_helper_utils/dart_helper_utils.dart';
 import 'package:daylight/daylight.dart';
 import 'package:fl_location/fl_location.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
@@ -98,12 +99,14 @@ class SunTimeTool implements FunctionTool {
     final location =
         DaylightLocation(geoRequest.latitude, geoRequest.longitude);
     final daylightCalculator = DaylightCalculator(location);
-    final dailyResults = daylightCalculator.calculateForDay(
-      geoRequest.date,
-      Zenith.astronomical,
-    );
+    final dailyResults = daylightCalculator.calculateForDay(geoRequest.date);
     final sunTime = sunrise ? dailyResults.sunrise : dailyResults.sunset;
-    return sunTime?.toIso8601String() ?? 'N/A';
+    final offsetted = sunTime?.add(DateTime.now().timeZoneOffset);
+    if (offsetted != null) {
+      return DateFormat('hh:mm a').format(offsetted);
+    }
+
+    return 'N/A';
   }
 
   String _fetchSunrise(GeoRequest geoRequest) {
