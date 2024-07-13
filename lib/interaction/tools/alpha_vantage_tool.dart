@@ -17,57 +17,61 @@ class AlphaVantageTool implements FunctionTool {
   }
 
   @override
-  Tool getTool(PreferencesState? preferences) {
-    var functions = <FunctionDeclaration>[];
-    if (isAvailable(preferences)) {
-      functions = [
-        FunctionDeclaration(
-          'getStockPrice',
-          'Fetch the current stock price of a given company in JSON string',
-          Schema(
-            SchemaType.object,
-            properties: {
-              'ticker': Schema.string(
-                description: 'Stock ticker symbol for a company',
-              ),
-            },
-            requiredProperties: ['ticker'],
-          ),
+  List<FunctionDeclaration> getFunctionDeclarations(
+    PreferencesState? preferences,
+  ) {
+    if (!isAvailable(preferences)) {
+      return [];
+    }
+
+    return [
+      FunctionDeclaration(
+        'getStockPrice',
+        'Fetch the current stock price of a given company in JSON string',
+        Schema(
+          SchemaType.object,
+          properties: {
+            'ticker': Schema.string(
+              description: 'Stock ticker symbol for a company',
+            ),
+          },
+          requiredProperties: ['ticker'],
         ),
-        FunctionDeclaration(
-          'getCompanyOverview',
-          'Get company details and other financial data in JSON string',
-          Schema(
-            SchemaType.object,
-            properties: {
-              'ticker': Schema.string(
-                description: 'Stock ticker symbol for a company',
-              ),
-            },
-            requiredProperties: ['ticker'],
-          ),
+      ),
+      FunctionDeclaration(
+        'getCompanyOverview',
+        'Get company details and other financial data in JSON string',
+        Schema(
+          SchemaType.object,
+          properties: {
+            'ticker': Schema.string(
+              description: 'Stock ticker symbol for a company',
+            ),
+          },
+          requiredProperties: ['ticker'],
         ),
-        FunctionDeclaration(
-          'getCompanyNews',
-          'Get the latest news headlines for a company as JSON string',
-          Schema(
-            SchemaType.object,
-            properties: {
-              'ticker': Schema.string(
-                description: 'Stock ticker symbol for a company',
-              ),
-            },
-            requiredProperties: ['ticker'],
-          ),
+      ),
+      FunctionDeclaration(
+        'getCompanyNews',
+        'Get the latest news headlines for a company as JSON string',
+        Schema(
+          SchemaType.object,
+          properties: {
+            'ticker': Schema.string(
+              description: 'Stock ticker symbol for a company',
+            ),
+          },
+          requiredProperties: ['ticker'],
         ),
-        FunctionDeclaration(
-          'getNewsWithSentiment',
-          'Gets live and historical market news and sentiment data',
-          Schema(
-            SchemaType.object,
-            properties: {
-              'newsTopic': Schema.string(
-                description: '''
+      ),
+      FunctionDeclaration(
+        'getNewsWithSentiment',
+        'Gets live and historical market news and sentiment data',
+        Schema(
+          SchemaType.object,
+          properties: {
+            'newsTopic': Schema.string(
+              description: '''
 News topic to learn about. Supported topics
 include blockchain, earnings, ipo,
 mergers_and_acquisitions, financial_markets,
@@ -75,12 +79,19 @@ economy_fiscal, economy_monetary, economy_macro,
 energy_transportation, finance, life_sciences,
 manufacturing, real_estate, retail_wholesale,
 and technology''',
-              ),
-            },
-            requiredProperties: ['newsTopic'],
-          ),
+            ),
+          },
+          requiredProperties: ['newsTopic'],
         ),
-      ];
+      ),
+    ];
+  }
+
+  @override
+  Tool getTool(PreferencesState? preferences) {
+    var functions = <FunctionDeclaration>[];
+    if (isAvailable(preferences)) {
+      functions = getFunctionDeclarations(preferences);
     }
 
     return Tool(functionDeclarations: functions);

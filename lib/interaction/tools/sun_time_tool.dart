@@ -12,48 +12,55 @@ class SunTimeTool implements FunctionTool {
   }
 
   @override
+  List<FunctionDeclaration> getFunctionDeclarations(
+    PreferencesState? preferences,
+  ) {
+    return [
+      FunctionDeclaration(
+        'fetchSunrise',
+        'Returns the sunrise time for a given GPS location and date.',
+        Schema(
+          SchemaType.object,
+          properties: {
+            'latitude': Schema.number(
+              description: 'Latitude of the sunrise observer',
+            ),
+            'longitude': Schema.number(
+              description: 'Longitude of the sunrise observer',
+            ),
+            'date': Schema.string(
+              description: 'Date of the sunrise observation',
+            ),
+          },
+          requiredProperties: ['latitude', 'longitude'],
+        ),
+      ),
+      FunctionDeclaration(
+        'fetchSunset',
+        'Returns the sunset time for a given GPS location and date.',
+        Schema(
+          SchemaType.object,
+          properties: {
+            'latitude': Schema.number(
+              description: 'Latitude of the sunset observer',
+            ),
+            'longitude': Schema.number(
+              description: 'Longitude of the sunset observer',
+            ),
+            'date': Schema.string(
+              description: 'Date of the sunset observation',
+            ),
+          },
+          requiredProperties: ['latitude', 'longitude'],
+        ),
+      ),
+    ];
+  }
+
+  @override
   Tool getTool(PreferencesState? preferences) {
     return Tool(
-      functionDeclarations: [
-        FunctionDeclaration(
-          'fetchSunrise',
-          'Returns the sunrise time for a given GPS location and date.',
-          Schema(
-            SchemaType.object,
-            properties: {
-              'latitude': Schema.number(
-                description: 'Latitude of the sunrise observer',
-              ),
-              'longitude': Schema.number(
-                description: 'Longitude of the sunrise observer',
-              ),
-              'date': Schema.string(
-                description: 'Date of the sunrise observation',
-              ),
-            },
-            requiredProperties: ['latitude', 'longitude'],
-          ),
-        ),
-        FunctionDeclaration(
-          'fetchSunset',
-          'Returns the sunset time for a given GPS location and date.',
-          Schema(
-            SchemaType.object,
-            properties: {
-              'latitude': Schema.number(
-                description: 'Latitude of the sunset observer',
-              ),
-              'longitude': Schema.number(
-                description: 'Longitude of the sunset observer',
-              ),
-              'date': Schema.string(
-                description: 'Date of the sunset observation',
-              ),
-            },
-            requiredProperties: ['latitude', 'longitude'],
-          ),
-        ),
-      ],
+      functionDeclarations: getFunctionDeclarations(preferences),
     );
   }
 

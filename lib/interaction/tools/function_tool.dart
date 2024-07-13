@@ -5,6 +5,10 @@ import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 abstract class FunctionTool {
   bool isAvailable(PreferencesState? preferences);
 
+  List<FunctionDeclaration> getFunctionDeclarations(
+    PreferencesState? preferences,
+  );
+
   Tool getTool(PreferencesState? preferences);
 
   bool canDispatchFunctionCall(FunctionCall call);

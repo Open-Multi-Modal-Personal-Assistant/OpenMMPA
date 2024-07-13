@@ -14,26 +14,33 @@ class LyricsTool implements FunctionTool {
   }
 
   @override
+  List<FunctionDeclaration> getFunctionDeclarations(
+    PreferencesState? preferences,
+  ) {
+    return [
+      FunctionDeclaration(
+        'lyricsLookup',
+        'Look up a lyrics of a song by a given artist and title',
+        Schema(
+          SchemaType.object,
+          properties: {
+            'artist': Schema.string(
+              description: 'The artist of the song',
+            ),
+            'title': Schema.string(
+              description: 'The title of the song',
+            ),
+          },
+          requiredProperties: ['artist', 'title'],
+        ),
+      ),
+    ];
+  }
+
+  @override
   Tool getTool(PreferencesState? preferences) {
     return Tool(
-      functionDeclarations: [
-        FunctionDeclaration(
-          'lyricsLookup',
-          'Look up a lyrics of a song by a given artist and title',
-          Schema(
-            SchemaType.object,
-            properties: {
-              'artist': Schema.string(
-                description: 'The artist of the song',
-              ),
-              'title': Schema.string(
-                description: 'The title of the song',
-              ),
-            },
-            requiredProperties: ['artist', 'title'],
-          ),
-        ),
-      ],
+      functionDeclarations: getFunctionDeclarations(preferences),
     );
   }
 

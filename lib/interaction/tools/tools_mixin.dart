@@ -53,6 +53,21 @@ mixin ToolsMixin {
     return tools;
   }
 
+  Tool getFunctionDeclarations(PreferencesState? preferences) {
+    final funcTools = initializeFunctionTools(preferences);
+    final functionDeclarations = <FunctionDeclaration>[];
+    for (final funcTool in funcTools) {
+      if (funcTool.isAvailable(preferences)) {
+        functionDeclarations
+            .addAll(funcTool.getFunctionDeclarations(preferences));
+      }
+    }
+
+    return Tool(
+      functionDeclarations: functionDeclarations,
+    );
+  }
+
   Future<FunctionResponse?> dispatchFunctionCall(
     FunctionCall call,
     Location? location,

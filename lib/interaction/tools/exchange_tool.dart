@@ -15,53 +15,59 @@ class ExchangeTool implements FunctionTool {
   }
 
   @override
+  List<FunctionDeclaration> getFunctionDeclarations(
+    PreferencesState? preferences,
+  ) {
+    return [
+      FunctionDeclaration(
+        'fetchCurrencyExchangeRate',
+        'Returns exchange rate between fiat currencies.',
+        Schema(
+          SchemaType.object,
+          properties: {
+            'currencyDate': Schema.string(
+              description: 'A date or the value "latest" '
+                  'if a time period is not specified',
+            ),
+            'currencyFrom': Schema.string(
+              description: 'The currency to convert from in ISO 4217 format',
+            ),
+            'currencyTo': Schema.string(
+              description: 'The currency to convert to in ISO 4217 format',
+            ),
+            'amountFrom': Schema.number(
+              description: 'The amount which needs to be converted, '
+                  'defaults to 1.0',
+            ),
+          },
+          requiredProperties: ['currencyFrom', 'currencyTo'],
+        ),
+      ),
+      FunctionDeclaration(
+        'fetchCryptoExchangeRate',
+        'Returns the immediate exchange rate between two crypto currencies '
+            'or a crypto currency and fiat currency.',
+        Schema(
+          SchemaType.object,
+          properties: {
+            'cryptoFromTicker': Schema.string(
+              description: 'The crypto currency ticker symbol to convert from',
+            ),
+            'currencyToTicker': Schema.string(
+              description: 'The fiat currency to convert to in ISO 4217 '
+                  'format or crypto currency ticker symbol',
+            ),
+          },
+          requiredProperties: ['cryptoFromTicker', 'currencyToTicker'],
+        ),
+      ),
+    ];
+  }
+
+  @override
   Tool getTool(PreferencesState? preferences) {
     return Tool(
-      functionDeclarations: [
-        FunctionDeclaration(
-          'fetchCurrencyExchangeRate',
-          'Returns exchange rate between fiat currencies.',
-          Schema(
-            SchemaType.object,
-            properties: {
-              'currencyDate': Schema.string(
-                description: 'A date or the value "latest" '
-                    'if a time period is not specified',
-              ),
-              'currencyFrom': Schema.string(
-                description: 'The currency to convert from in ISO 4217 format',
-              ),
-              'currencyTo': Schema.string(
-                description: 'The currency to convert to in ISO 4217 format',
-              ),
-              'amountFrom': Schema.number(
-                description: 'The amount which needs to be converted, '
-                    'defaults to 1.0',
-              ),
-            },
-            requiredProperties: ['currencyFrom', 'currencyTo'],
-          ),
-        ),
-        FunctionDeclaration(
-          'fetchCryptoExchangeRate',
-          'Returns the immediate exchange rate between two crypto currencies '
-              'or a crypto currency and fiat currency.',
-          Schema(
-            SchemaType.object,
-            properties: {
-              'cryptoFromTicker': Schema.string(
-                description:
-                    'The crypto currency ticker symbol to convert from',
-              ),
-              'currencyToTicker': Schema.string(
-                description: 'The fiat currency to convert to in ISO 4217 '
-                    'format or crypto currency ticker symbol',
-              ),
-            },
-            requiredProperties: ['cryptoFromTicker', 'currencyToTicker'],
-          ),
-        ),
-      ],
+      functionDeclarations: getFunctionDeclarations(preferences),
     );
   }
 

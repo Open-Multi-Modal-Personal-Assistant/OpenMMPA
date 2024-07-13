@@ -10,20 +10,27 @@ class LocalTool implements FunctionTool {
   }
 
   @override
+  List<FunctionDeclaration> getFunctionDeclarations(
+    PreferencesState? preferences,
+  ) {
+    return [
+      FunctionDeclaration(
+        'fetchGpsLocation',
+        'Returns the latitude and longitude of the current GPS location.',
+        Schema(SchemaType.string),
+      ),
+      FunctionDeclaration(
+        'fetchHeartRate',
+        'Returns the current heart rate measurement.',
+        Schema(SchemaType.integer),
+      ),
+    ];
+  }
+
+  @override
   Tool getTool(PreferencesState? preferences) {
     return Tool(
-      functionDeclarations: [
-        FunctionDeclaration(
-          'fetchGpsLocation',
-          'Returns the GPS location of the user.',
-          Schema(SchemaType.string),
-        ),
-        FunctionDeclaration(
-          'fetchHeartRate',
-          'Returns the heart rate of the user.',
-          Schema(SchemaType.integer),
-        ),
-      ],
+      functionDeclarations: getFunctionDeclarations(preferences),
     );
   }
 

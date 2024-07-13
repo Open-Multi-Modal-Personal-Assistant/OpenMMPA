@@ -14,25 +14,32 @@ class WebSearchTool implements FunctionTool {
   }
 
   @override
+  List<FunctionDeclaration> getFunctionDeclarations(
+    PreferencesState? preferences,
+  ) {
+    return [
+      FunctionDeclaration(
+        'webSearch',
+        'Search the web and wikipedia for facts about any topic or '
+            'gather munition to answer any questions',
+        Schema(
+          SchemaType.object,
+          properties: {
+            'query': Schema.string(
+              description: 'The search query or question which need '
+                  'to be researched or answered',
+            ),
+          },
+          requiredProperties: ['query'],
+        ),
+      ),
+    ];
+  }
+
+  @override
   Tool getTool(PreferencesState? preferences) {
     return Tool(
-      functionDeclarations: [
-        FunctionDeclaration(
-          'webSearch',
-          'Search the web and wikipedia for facts about any topic or '
-              'gather munition to answer any questions',
-          Schema(
-            SchemaType.object,
-            properties: {
-              'query': Schema.string(
-                description: 'The search query or question which need '
-                    'to be researched or answered',
-              ),
-            },
-            requiredProperties: ['query'],
-          ),
-        ),
-      ],
+      functionDeclarations: getFunctionDeclarations(preferences),
     );
   }
 

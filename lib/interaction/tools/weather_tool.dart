@@ -12,30 +12,33 @@ class WeatherTool implements FunctionTool {
   }
 
   @override
+  List<FunctionDeclaration> getFunctionDeclarations(
+    PreferencesState? preferences,
+  ) {
+    return [
+      FunctionDeclaration(
+        'fetchWeatherForecast',
+        'Returns the weather in a given location.',
+        Schema(
+          SchemaType.object,
+          properties: {
+            'latitude': Schema.number(
+              description: 'Latitude of the weather observation and forecast',
+            ),
+            'longitude': Schema.number(
+              description: 'Longitude of the weather observation and forecast',
+            ),
+          },
+          requiredProperties: ['latitude', 'longitude'],
+        ),
+      ),
+    ];
+  }
+
+  @override
   Tool getTool(PreferencesState? preferences) {
     return Tool(
-      functionDeclarations: [
-        FunctionDeclaration(
-          'fetchWeatherForecast',
-          'Fetch the current weather measurements (such as temperature (C), '
-              'wind speed and direction, humidity, precipitation) and also '
-              'weather forecast of the near future for a given GPS coordinate, '
-              'all in JSON format',
-          Schema(
-            SchemaType.object,
-            properties: {
-              'latitude': Schema.number(
-                description: 'Latitude of the weather observation and forecast',
-              ),
-              'longitude': Schema.number(
-                description:
-                    'Longitude of the weather observation and forecast',
-              ),
-            },
-            requiredProperties: ['latitude', 'longitude'],
-          ),
-        ),
-      ],
+      functionDeclarations: getFunctionDeclarations(preferences),
     );
   }
 

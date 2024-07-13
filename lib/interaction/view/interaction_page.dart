@@ -254,10 +254,11 @@ class _InteractionViewState extends State<InteractionView>
     mainCubit?.setState(MainCubit.llmStateLabel);
     final modelType =
         widget.interactionMode == InteractionCubit.quickMode ? 'flash' : 'pro';
+    final tool = getFunctionDeclarations(preferencesState);
     final model = GenerativeModel(
       model: 'gemini-1.5-$modelType',
       apiKey: preferencesState?.geminiApiKey ?? geminiApiKey,
-      tools: getToolDeclarations(preferencesState),
+      tools: [tool],
     );
     final chat = model.startChat();
 

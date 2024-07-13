@@ -14,24 +14,35 @@ class WebResearchTool implements FunctionTool {
   }
 
   @override
+  List<FunctionDeclaration> getFunctionDeclarations(
+    PreferencesState? preferences,
+  ) {
+    if (!isAvailable(preferences)) {
+      return [];
+    }
+
+    return [
+      FunctionDeclaration(
+        'webResearch',
+        'deliver accurate and factual search results quickly and efficiently',
+        Schema(
+          SchemaType.object,
+          properties: {
+            'query': Schema.string(
+              description: 'The search query or question which need to be '
+                  'researched',
+            ),
+          },
+          requiredProperties: ['query'],
+        ),
+      ),
+    ];
+  }
+
+  @override
   Tool getTool(PreferencesState? preferences) {
     return Tool(
-      functionDeclarations: [
-        FunctionDeclaration(
-          'webResearch',
-          'deliver accurate and factual search results quickly and efficiently',
-          Schema(
-            SchemaType.object,
-            properties: {
-              'query': Schema.string(
-                description: 'The search query or question which need to be '
-                    'researched',
-              ),
-            },
-            requiredProperties: ['query'],
-          ),
-        ),
-      ],
+      functionDeclarations: getFunctionDeclarations(preferences),
     );
   }
 
