@@ -69,8 +69,8 @@ class InteractionView extends StatefulWidget {
 class _InteractionViewState extends State<InteractionView>
     with SingleTickerProviderStateMixin, ToolsMixin {
   late AnimationController _animationController;
-  late AudioRecorder? _audioRecorder;
-  late SpeechToText? speech;
+  AudioRecorder? _audioRecorder;
+  SpeechToText? speech;
   MainCubit? mainCubit;
   PreferencesState? preferencesState;
   bool areSpeechServicesNative =
