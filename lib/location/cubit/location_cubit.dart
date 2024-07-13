@@ -29,7 +29,7 @@ class LocationCubit extends Cubit<Location?> {
   }
 
   Future<Location?> obtain() async {
-    if (await _checkAndRequestPermission()) {
+    if (!(await _checkAndRequestPermission())) {
       return null;
     }
 
