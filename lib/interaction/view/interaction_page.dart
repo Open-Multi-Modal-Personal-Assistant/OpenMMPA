@@ -284,12 +284,15 @@ class _InteractionViewState extends State<InteractionView>
 
       final responses = <FunctionResponse>[];
       for (final functionCall in functionCalls) {
+        debugPrint('Function call ${functionCall.name}, '
+            'params: ${functionCall.args}');
         final response = await dispatchFunctionCall(
           functionCall,
           gpsLocation,
           heartRate,
           preferencesState,
         );
+        debugPrint('Function call result ${response?.response}');
         if (response?.response != null) {
           responses.add(response!);
         }
