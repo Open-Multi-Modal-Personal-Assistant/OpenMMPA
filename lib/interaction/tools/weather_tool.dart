@@ -70,8 +70,8 @@ class WeatherTool implements FunctionTool {
     const weatherApiBaseUrl = 'www.7timer.info';
     const weatherApiPath = '/bin/api.pl';
     final weatherApiUrl = Uri.http(weatherApiBaseUrl, weatherApiPath, {
-      'lon': geoRequest.longitude,
-      'lat': geoRequest.latitude,
+      'lon': geoRequest.longitude.toString(),
+      'lat': geoRequest.latitude.toString(),
       'product': 'civil', // meteo is more detailed but way longer
       'output': 'json',
     });

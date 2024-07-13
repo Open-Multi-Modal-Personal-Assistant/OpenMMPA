@@ -103,7 +103,7 @@ class ExchangeTool implements FunctionTool {
     final frankfurterUrl = Uri.https(frankfurterBaseUrl, '/$formattedDate', {
       'from': currencyRequest.currencyFrom,
       'to': currencyRequest.currencyTo,
-      'amount': currencyRequest.amountFrom,
+      'amount': currencyRequest.amountFrom.toString(),
     });
     final exchangeResult = await http.get(frankfurterUrl);
     if (exchangeResult.statusCode == 200) {

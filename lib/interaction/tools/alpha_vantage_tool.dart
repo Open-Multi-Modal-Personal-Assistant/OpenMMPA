@@ -172,7 +172,7 @@ and technology''',
     final alphaVantageUrl = Uri.https(alphaVantageBaseUrl, alphaVantagePath, {
       'function': 'NEWS_SENTIMENT',
       'tickers': ticker,
-      'limit': 20,
+      'limit': '20',
       'sort': 'RELEVANCE',
       'apikey': alphaVantageAccessKey,
     });
@@ -195,7 +195,7 @@ and technology''',
     final alphaVantageUrl = Uri.https(alphaVantageBaseUrl, alphaVantagePath, {
       'function': 'NEWS_SENTIMENT',
       'topics': newsTopic,
-      'limit': 20,
+      'limit': '20',
       'sort': 'RELEVANCE',
       'apikey': alphaVantageAccessKey,
     });

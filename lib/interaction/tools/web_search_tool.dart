@@ -69,8 +69,8 @@ class WebSearchTool implements FunctionTool {
     final duckDuckGoUrl = Uri.http(duckDuckGoBaseUrl, '/', {
       'q': query,
       'format': 'json',
-      'no_html': 1,
-      'skip_disambig': 1,
+      'no_html': '1',
+      'skip_disambig': '1',
     });
 
     var result = 'N/A';
