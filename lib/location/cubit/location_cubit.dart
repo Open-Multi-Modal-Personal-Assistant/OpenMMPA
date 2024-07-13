@@ -33,9 +33,9 @@ class LocationCubit extends Cubit<Location?> {
       return null;
     }
 
-    const timeLimit = Duration(milliseconds: 2000);
     try {
-      final location = await FlLocation.getLocation(timeLimit: timeLimit);
+      final location =
+          await FlLocation.getLocation(accuracy: LocationAccuracy.navigation);
       emit(location);
       return location;
     } catch (e) {
