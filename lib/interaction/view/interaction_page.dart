@@ -279,7 +279,8 @@ class _InteractionViewState extends State<InteractionView>
       }
 
       final loc = await locationCubit?.obtain();
-      if (loc != null && (loc.latitude > 10e-6 || loc.longitude > 10e-6)) {
+      if (loc != null &&
+          (loc.latitude.abs() > 10e-6 || loc.longitude.abs() > 10e-6)) {
         gpsLocation = loc;
       }
 
@@ -381,7 +382,7 @@ class _InteractionViewState extends State<InteractionView>
 
             final loc = await locationCubit?.obtain();
             if (loc != null &&
-                (loc.latitude > 10e-6 || loc.longitude > 10e-6)) {
+                (loc.latitude.abs() > 10e-6 || loc.longitude.abs() > 10e-6)) {
               gpsLocation = loc;
             }
 
