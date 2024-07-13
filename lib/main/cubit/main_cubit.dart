@@ -15,6 +15,7 @@ class MainCubit extends Cubit<State<String>> {
       llmStateLabel: stateMachine.newState(llmStateLabel),
       ttsStateLabel: stateMachine.newState(ttsStateLabel),
       playingStateLabel: stateMachine.newState(playingStateLabel),
+      doneStateLabel: stateMachine.newState(doneStateLabel),
       errorStateLabel: stateMachine.newState(errorStateLabel),
     };
 
@@ -29,6 +30,7 @@ class MainCubit extends Cubit<State<String>> {
   static const String llmStateLabel = 'llm';
   static const String ttsStateLabel = 'tts';
   static const String playingStateLabel = 'playing';
+  static const String doneStateLabel = 'done';
   static const String errorStateLabel = 'error';
 
   Map<String, State<String>> stateMap = {};
@@ -39,7 +41,8 @@ class MainCubit extends Cubit<State<String>> {
     llmStateLabel: 3,
     ttsStateLabel: 4,
     playingStateLabel: 5,
-    errorStateLabel: 6,
+    doneStateLabel: 6,
+    errorStateLabel: 7,
   };
 
   String setState(String stateName) {

@@ -356,7 +356,10 @@ class _InteractionViewState extends State<InteractionView>
       await _player?.open(memoryMedia);
     } else {
       mainCubit?.setState(MainCubit.errorStateLabel);
+      return;
     }
+
+    mainCubit?.setState(MainCubit.doneStateLabel);
   }
 
   Future<void> _processDeferredActionQueue(BuildContext context) async {
@@ -485,7 +488,17 @@ class _InteractionViewState extends State<InteractionView>
                 Navigator.pop(context);
               },
             ),
-            // 6: Error phase
+            // 6: Done phase
+            GestureDetector(
+              child: AnimateStyles.flipInY(
+                _animationController,
+                const Icon(Icons.check, size: 220),
+              ),
+              onTap: () {
+                mainCubit?.setState(MainCubit.waitingStateLabel);
+              },
+            ),
+            // 7: Error phase
             GestureDetector(
               child: AnimateStyles.pulse(
                 _animationController,
