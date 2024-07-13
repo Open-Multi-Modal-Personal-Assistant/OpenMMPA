@@ -4,31 +4,39 @@ class CurrencyRequest {
   CurrencyRequest(this.currencyDate, this.currencyFrom, this.currencyTo);
 
   CurrencyRequest.fromJson(Map<String, Object?> jsonObject) {
-    currencyDate = DateTime.now();
-    currencyFrom = 'USD';
-    currencyTo = 'USD';
-    amountFrom = 1.0;
-    switch (jsonObject) {
-      case {'date': final String dateString}:
-        final parsedDate = dateString.tryToDateAutoFormat();
-        if (parsedDate != null) {
-          currencyDate = parsedDate;
-        }
-      case {'currencyFrom': final String currency}:
-        currencyFrom = currency;
-      case {'currencyTo': final String currency}:
-        currencyTo = currency;
-      case {'amountFrom': final double amount}:
-        amountFrom = amount;
-      default:
-        throw FormatException('Unhandled SunRequest format', jsonObject);
+    for (final mapEntry in jsonObject.entries) {
+      switch (mapEntry.key) {
+        case 'date':
+          final dateString = mapEntry.value as String?;
+          final parsedDate = dateString.tryToDateAutoFormat();
+          if (parsedDate != null) {
+            currencyDate = parsedDate;
+          }
+        case 'currencyFrom':
+          final currency = mapEntry.value as String?;
+          if (currency != null) {
+            currencyFrom = currency;
+          }
+        case 'currencyTo':
+          final currency = mapEntry.value as String?;
+          if (currency != null) {
+            currencyTo = currency;
+          }
+        case 'amountFrom':
+          final amount = mapEntry.value as double?;
+          if (amount != null) {
+            amountFrom = amount;
+          }
+        default:
+          throw FormatException('Unhandled SunRequest format', jsonObject);
+      }
     }
   }
 
-  late final DateTime currencyDate;
-  late final String currencyFrom;
-  late final String currencyTo;
-  late final double amountFrom;
+  DateTime currencyDate = DateTime.now();
+  String currencyFrom = 'USD';
+  String currencyTo = 'USD';
+  double amountFrom = 1;
 
   @override
   String toString() => {
