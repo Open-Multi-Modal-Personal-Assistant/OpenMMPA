@@ -88,6 +88,7 @@ class WeatherTool implements FunctionTool {
       'lat': geoRequest.latitude.toString(),
       'unit': isMetric ? 'metric' : 'british',
       'output': 'json',
+      'tzshift': DateTime.now().timeZoneOffset.inHours.toString(),
     });
 
     final forecastResult = await http.get(weatherApiUrl);
