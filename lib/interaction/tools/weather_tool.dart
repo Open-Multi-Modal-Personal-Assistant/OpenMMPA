@@ -54,9 +54,14 @@ class WeatherTool implements FunctionTool {
     int hr,
     PreferencesState? preferences,
   ) async {
+    final isMetric =
+        preferences?.unitSystem ?? PreferencesState.getUnitSystemDefault();
     final result = switch (call.name) {
       'fetchWeatherForecast' => {
-          'query': await _fetchWeatherForecast(GeoRequest.fromJson(call.args)),
+          'query': await _fetchWeatherForecast(
+            GeoRequest.fromJson(call.args),
+            isMetric,
+          ),
         },
       _ => null
     };
@@ -64,7 +69,10 @@ class WeatherTool implements FunctionTool {
     return FunctionResponse(call.name, result);
   }
 
-  Future<String> _fetchWeatherForecast(GeoRequest geoRequest) async {
+  Future<String> _fetchWeatherForecast(
+    GeoRequest geoRequest,
+    bool isMetric,
+  ) async {
     if (geoRequest.latitude.abs() < 10e-6 &&
         geoRequest.longitude.abs() < 10e-6) {
       return 'N/A';
@@ -79,6 +87,7 @@ class WeatherTool implements FunctionTool {
       'lon': geoRequest.longitude.toString(),
       'lat': geoRequest.latitude.toString(),
       'product': 'civil', // meteo is more detailed but way longer
+      'unit': isMetric ? 'metric' : 'british',
       'output': 'json',
     });
 
