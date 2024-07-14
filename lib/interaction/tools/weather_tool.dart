@@ -82,11 +82,10 @@ class WeatherTool implements FunctionTool {
     // Result: https://www.7timer.info/bin/civil.php?lon=-119.8&lat=36.9&ac=0&unit=metric&output=json&tzshift=0
     // Minimal: https://www.7timer.info/bin/civil.php?lon=-119.8&lat=36.9&output=json
     const weatherApiBaseUrl = 'www.7timer.info';
-    const weatherApiPath = '/bin/api.pl';
+    const weatherApiPath = '/bin/civil.php';
     final weatherApiUrl = Uri.http(weatherApiBaseUrl, weatherApiPath, {
       'lon': geoRequest.longitude.toString(),
       'lat': geoRequest.latitude.toString(),
-      'product': 'civil', // meteo is more detailed but way longer
       'unit': isMetric ? 'metric' : 'british',
       'output': 'json',
     });
