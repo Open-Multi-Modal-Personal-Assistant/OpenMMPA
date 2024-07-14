@@ -68,6 +68,10 @@ class _PreferencesViewState extends State<PreferencesView> {
               FilteringTextInputFormatter.allow(RegExp(r'\w')),
             ],
           ),
+          PrefCheckbox(
+            title: Text(l10n.preferencesFastLlmModeLabel),
+            pref: PreferencesState.fastLlmModeTag,
+          ),
           PrefText(
             label: l10n.preferencesAlphaVantageAccessKeyLabel,
             pref: PreferencesState.alphaVantageAccessKeyTag,

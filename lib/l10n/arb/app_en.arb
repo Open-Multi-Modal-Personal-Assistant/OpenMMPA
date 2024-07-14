@@ -12,6 +12,10 @@
     "@preferencesGeminiApiKeyLabel": {
         "description": "Text shown in the preferences settings for Gemini API Key"
     },
+    "preferencesFastLlmModeLabel": "Fast LLM Mode",
+    "@preferencesFastLlmModeLabel": {
+        "description": "Text shown in the preferences settings for Fast LLM Mode"
+    },
     "preferencesAlphaVantageAccessKeyLabel": "Alpha Vantage Access Key",
     "@preferencesAlphaVantageAccessKeyLabel": {
         "description": "Text shown in the preferences settings for Alpha Vantage Access Key"

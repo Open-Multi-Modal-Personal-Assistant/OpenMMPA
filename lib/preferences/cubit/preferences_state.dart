@@ -7,6 +7,8 @@ class PreferencesState {
 
   static const String geminiApiKeyTag = 'gemini_api_key';
   static const String geminiApiKeyDefault = '';
+  static const String fastLlmModeTag = 'fast_llm_mode';
+  static const bool fastLlmModeDefault = true;
   static const String alphaVantageAccessKeyTag = 'alpha_vantage_access_key';
   static const String alphaVantageAccessKeyDefault = '';
   static const String tavilyApiKeyTag = 'tavily_api_key';
@@ -33,6 +35,7 @@ class PreferencesState {
       prefix: prefix,
       defaults: {
         geminiApiKeyTag: geminiApiKeyDefault,
+        fastLlmModeTag: fastLlmModeDefault,
         alphaVantageAccessKeyTag: alphaVantageAccessKeyDefault,
         tavilyApiKeyTag: tavilyApiKeyDefault,
         areSpeechServicesNativeTag: areSpeechServicesNativeDefault,
@@ -47,6 +50,8 @@ class PreferencesState {
 
   String get geminiApiKey =>
       prefService?.get<String>(geminiApiKeyTag) ?? geminiApiKeyDefault;
+  bool get fastLlmMode =>
+      prefService?.get<bool>(fastLlmModeTag) ?? fastLlmModeDefault;
   String get alphaVantageAccessKey =>
       prefService?.get<String>(alphaVantageAccessKeyTag) ??
       alphaVantageAccessKeyDefault;
