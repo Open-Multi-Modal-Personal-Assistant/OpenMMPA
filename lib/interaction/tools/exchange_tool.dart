@@ -21,7 +21,7 @@ class ExchangeTool implements FunctionTool {
     return [
       FunctionDeclaration(
         'fetchCurrencyExchangeRate',
-        'Returns exchange rate between fiat currencies.',
+        'Returns exchange rate between traditional currencies.',
         Schema(
           SchemaType.object,
           properties: {
@@ -46,7 +46,7 @@ class ExchangeTool implements FunctionTool {
       FunctionDeclaration(
         'fetchCryptoExchangeRate',
         'Returns the immediate exchange rate between two crypto currencies '
-            'or a crypto currency and fiat currency.',
+            'or a crypto currency and a traditional currency.',
         Schema(
           SchemaType.object,
           properties: {
@@ -54,7 +54,7 @@ class ExchangeTool implements FunctionTool {
               description: 'The crypto currency ticker symbol to convert from',
             ),
             'currencyToTicker': Schema.string(
-              description: 'The fiat currency to convert to in ISO 4217 '
+              description: 'The traditional currency to convert to in ISO 4217 '
                   'format or crypto currency ticker symbol',
             ),
           },
