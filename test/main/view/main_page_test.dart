@@ -38,12 +38,58 @@ void main() {
           child: const MainPage(),
         ),
       );
-      expect(find.byKey(const Key(MainPage.martyMcFlyKey)), findsOneWidget);
-      expect(find.byKey(const Key(MainPage.theDocKey)), findsOneWidget);
+      expect(find.widgetWithIcon(IconButton, Icons.chat), findsOneWidget);
       expect(find.widgetWithIcon(IconButton, Icons.translate), findsOneWidget);
-      expect(find.byKey(const Key(MainPage.translateKey)), findsOneWidget);
+      expect(find.widgetWithIcon(IconButton, Icons.voice_chat), findsOneWidget);
+      expect(find.widgetWithIcon(IconButton, Icons.dataset), findsOneWidget);
       expect(find.widgetWithIcon(IconButton, Icons.settings), findsOneWidget);
-      expect(find.byKey(const Key(MainPage.fluxCapacitorKey)), findsOneWidget);
+      expect(find.widgetWithIcon(IconButton, Icons.help), findsOneWidget);
+    });
+
+    testWidgets('navigates to interaction when the uni modal button is tapped',
+        (tester) async {
+      const stateName = MainCubit.waitingStateLabel;
+      when(() => mainCubit.state.name).thenReturn(stateName);
+      await tester.pumpApp(
+        BlocProvider.value(
+          value: mainCubit,
+          child: const MainPage(),
+        ),
+      );
+      await tester.tap(find.byKey(const Key(MainPage.uniModalKey)));
+      await tester.pumpAndSettle();
+      expect(find.byType(PreferencesView), findsOneWidget);
+    });
+
+    testWidgets('navigates to interaction when the translate button is tapped',
+        (tester) async {
+      const stateName = MainCubit.waitingStateLabel;
+      when(() => mainCubit.state.name).thenReturn(stateName);
+      await tester.pumpApp(
+        BlocProvider.value(
+          value: mainCubit,
+          child: const MainPage(),
+        ),
+      );
+      await tester.tap(find.byKey(const Key(MainPage.translateKey)));
+      await tester.pumpAndSettle();
+      expect(find.byType(PreferencesView), findsOneWidget);
+    });
+
+    testWidgets(
+        'navigates to interaction when the multi modal button is tapped',
+        (tester) async {
+      const stateName = MainCubit.waitingStateLabel;
+      when(() => mainCubit.state.name).thenReturn(stateName);
+      await tester.pumpApp(
+        BlocProvider.value(
+          value: mainCubit,
+          child: const MainPage(),
+        ),
+      );
+      await tester.tap(find.byKey(const Key(MainPage.multiModalKey)));
+      await tester.pumpAndSettle();
+      expect(find.byType(PreferencesView), findsOneWidget);
     });
 
     testWidgets('navigates to preferences when the pref button is tapped',
@@ -56,7 +102,7 @@ void main() {
           child: const MainPage(),
         ),
       );
-      await tester.tap(find.byKey(const Key(MainPage.fluxCapacitorKey)));
+      await tester.tap(find.byKey(const Key(MainPage.settingsKey)));
       await tester.pumpAndSettle();
       expect(find.byType(PreferencesView), findsOneWidget);
     });

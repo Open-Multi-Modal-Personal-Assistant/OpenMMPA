@@ -252,8 +252,9 @@ class _InteractionViewState extends State<InteractionView>
 
   Future<void> _llmPhase(BuildContext context, String prompt) async {
     mainCubit?.setState(MainCubit.llmStateLabel);
-    final modelType =
-        widget.interactionMode == InteractionCubit.quickMode ? 'flash' : 'pro';
+    final fastMode =
+        preferencesState?.fastLlmMode ?? PreferencesState.fastLlmModeDefault;
+    final modelType = fastMode ? 'flash' : 'pro';
     final tool = getFunctionDeclarations(preferencesState);
     final model = GenerativeModel(
       model: 'gemini-1.5-$modelType',
