@@ -12,11 +12,13 @@ class CurrencyRequest {
           if (parsedDate != null) {
             currencyDate = parsedDate;
           }
+        case 'cryptoFromTicker':
         case 'currencyFrom':
           final currency = mapEntry.value as String?;
           if (currency != null) {
             currencyFrom = currency;
           }
+        case 'currencyToTicker':
         case 'currencyTo':
           final currency = mapEntry.value as String?;
           if (currency != null) {
