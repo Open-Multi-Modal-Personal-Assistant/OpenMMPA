@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
-import 'package:inspector_gadget/gen/assets.gen.dart';
 import 'package:inspector_gadget/interaction/interaction.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/main/main.dart';
@@ -44,7 +43,7 @@ class MainPage extends StatelessWidget {
           children: [
             IconButton(
               key: const Key(martyMcFlyKey),
-              icon: Assets.martyMcfly.image(),
+              icon: const Icon(Icons.flash_on),
               iconSize: 150,
               onPressed: () =>
                   mainCubit.state.name == MainCubit.waitingStateLabel
@@ -60,7 +59,7 @@ class MainPage extends StatelessWidget {
             ),
             IconButton(
               key: const Key(theDocKey),
-              icon: Assets.doc.image(),
+              icon: const Icon(Icons.lightbulb),
               iconSize: 150,
               onPressed: () =>
                   mainCubit.state.name == MainCubit.waitingStateLabel
