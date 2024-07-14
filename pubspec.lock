@@ -125,10 +125,10 @@ packages:
     dependency: "direct main"
     description:
       name: dart_helper_utils
-      sha256: ad83a1a32c6fa2d341bda7ba36c1819f8dace73dac6bb5ddd53414f93f090425
+      sha256: "3e0cca05ab7dadbc53e2942d3edf0d560440abff409ca3160c5da4df19b150b9"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.0"
   daylight:
     dependency: "direct main"
     description:
