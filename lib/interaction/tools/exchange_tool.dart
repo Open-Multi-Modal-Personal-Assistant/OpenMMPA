@@ -139,9 +139,9 @@ class ExchangeTool implements FunctionTool {
     final exchangeResult = await http.get(cryptoCompareUrl);
     if (exchangeResult.statusCode == 200) {
       final exchangeJson =
-          json.decode(exchangeResult.body) as Map<String, double>;
+          json.decode(exchangeResult.body) as Map<String, dynamic>;
       if (exchangeJson.containsKey(currencyRequest.currencyTo)) {
-        return exchangeJson[currencyRequest.currencyTo]!;
+        return exchangeJson[currencyRequest.currencyTo]! as double;
       }
     }
 
