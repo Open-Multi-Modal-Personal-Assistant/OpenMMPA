@@ -116,9 +116,9 @@ class ExchangeTool implements FunctionTool {
       final exchangeJson =
           json.decode(exchangeResult.body) as Map<String, dynamic>;
       if (exchangeJson.containsKey('rates')) {
-        final rates = exchangeJson['rates'] as Map<String, double>;
+        final rates = exchangeJson['rates'] as Map<String, dynamic>;
         if (rates.containsKey(currencyRequest.currencyTo)) {
-          return rates[currencyRequest.currencyTo]!;
+          return rates[currencyRequest.currencyTo]! as double;
         }
       }
     }
