@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:pref/pref.dart';
 
 class PreferencesState {
@@ -15,6 +17,9 @@ class PreferencesState {
   static const bool areSpeechServicesRemoteDefault = true;
   static const String volumeTag = 'volume';
   static const int volumeDefault = 50;
+  static const String unitSystemTag = 'unit_system';
+  static const bool unitSystemDefault = false;
+  static const imperialCountries = ['US', 'UK', 'LR', 'MM'];
   static const String inputLocaleTag = 'input_locale';
   static const String inputLocaleDefault = 'en';
   static const String outputLocaleTag = 'output_locale';
@@ -33,6 +38,7 @@ class PreferencesState {
         areSpeechServicesNativeTag: areSpeechServicesNativeDefault,
         areSpeechServicesRemoteTag: areSpeechServicesRemoteDefault,
         volumeTag: volumeDefault,
+        unitSystemTag: getUnitSystemDefault(),
         inputLocaleTag: inputLocaleDefault,
         outputLocaleTag: outputLocaleDefault,
       },
@@ -53,8 +59,20 @@ class PreferencesState {
       prefService?.get<bool>(areSpeechServicesRemoteTag) ??
       areSpeechServicesRemoteDefault;
   int get volume => prefService?.get<int>(volumeTag) ?? volumeDefault;
+  bool get unitSystem =>
+      prefService?.get<bool>(unitSystemTag) ?? getUnitSystemDefault();
   String get inputLocale =>
       prefService?.get<String>(inputLocaleTag) ?? inputLocaleDefault;
   String get outputLocale =>
       prefService?.get<String>(outputLocaleTag) ?? outputLocaleDefault;
+
+  static bool getUnitSystemDefault() {
+    final localeName = Platform.localeName;
+    if (localeName.length < 5 || localeName[2] != '_') {
+      return unitSystemDefault;
+    }
+
+    final deviceCountry = localeName.substring(3, 5);
+    return !imperialCountries.contains(deviceCountry);
+  }
 }

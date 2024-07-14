@@ -36,6 +36,14 @@
     "@preferencesVolumeLabel": {
         "description": "Text shown in the preferences settings for Volume"
     },
+    "preferencesUnitSystemLabel": "Unit System",
+    "@preferencesUnitSystemLabel": {
+        "description": "Text shown in the preferences settings for Unit System"
+    },
+    "preferencesUnitSystemDescription": "On: metric (Celsius, km/h, meters), Off: imperial (Fahrenheit, mp/h, miles).",
+    "@preferencesUnitSystemDescription": {
+        "description": "Text shown in the preferences settings for Unit System Description"
+    },
     "preferencesInputLocaleLabel": "Input Locale",
     "@preferencesInputLocaleLabel": {
         "description": "Text shown in the preferences settings for Input Locale"

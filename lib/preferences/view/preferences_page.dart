@@ -115,6 +115,11 @@ class _PreferencesViewState extends State<PreferencesView> {
             title: Text(l10n.preferencesSpeechServicesRemoteLabel),
             pref: PreferencesState.areSpeechServicesRemoteTag,
           ),
+          PrefCheckbox(
+            title: Text(l10n.preferencesUnitSystemLabel),
+            subtitle: Text(l10n.preferencesUnitSystemDescription),
+            pref: PreferencesState.unitSystemTag,
+          ),
           PrefSlider<int>(
             title: Text(l10n.preferencesVolumeLabel),
             pref: PreferencesState.volumeTag,
