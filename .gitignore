@@ -112,3 +112,4 @@ app.*.map.json
 !.idea/runConfigurations/
 
 secrets.dart
+untranslated_messages.txt
