@@ -37,7 +37,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 class InteractionPage extends StatelessWidget {
   const InteractionPage(this.interactionMode, {super.key});
 
-  final int interactionMode;
+  final InteractionMode interactionMode;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class InteractionPage extends StatelessWidget {
 class InteractionView extends StatefulWidget {
   const InteractionView(this.interactionMode, {super.key});
 
-  final int interactionMode;
+  final InteractionMode interactionMode;
 
   @override
   State<InteractionView> createState() => _InteractionViewState();

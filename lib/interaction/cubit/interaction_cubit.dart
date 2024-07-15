@@ -1,11 +1,13 @@
 import 'package:bloc/bloc.dart';
 
-class InteractionCubit extends Cubit<int> {
-  InteractionCubit() : super(uniModalMode);
+enum InteractionMode {
+  uniModalMode,
+  translateMode,
+  multiModalMode,
+}
 
-  static const int uniModalMode = 0;
-  static const int translateMode = 1;
-  static const int multiModalMode = 2;
+class InteractionCubit extends Cubit<InteractionMode> {
+  InteractionCubit() : super(InteractionMode.uniModalMode);
 
-  void setState(int mode) => emit(mode);
+  void setState(InteractionMode mode) => emit(mode);
 }

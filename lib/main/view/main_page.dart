@@ -21,7 +21,7 @@ class MainPage extends StatelessWidget {
   void navigateWithMode(
     BuildContext context,
     MainCubit mainCubit,
-    int interactionMode,
+    InteractionMode interactionMode,
   ) {
     mainCubit.setState(MainCubit.recordingStateLabel);
     Navigator.push(
@@ -70,7 +70,7 @@ class MainPage extends StatelessWidget {
                   ? navigateWithMode(
                       context,
                       mainCubit,
-                      InteractionCubit.uniModalMode,
+                      InteractionMode.uniModalMode,
                     )
                   : null,
             ),
@@ -82,7 +82,7 @@ class MainPage extends StatelessWidget {
                   ? navigateWithMode(
                       context,
                       mainCubit,
-                      InteractionCubit.translateMode,
+                      InteractionMode.translateMode,
                     )
                   : null,
             ),
@@ -94,7 +94,7 @@ class MainPage extends StatelessWidget {
                   ? navigateWithMode(
                       context,
                       mainCubit,
-                      InteractionCubit.multiModalMode,
+                      InteractionMode.multiModalMode,
                     )
                   : null,
             ),
