@@ -67,5 +67,25 @@
     "interactionAppBarTitle": "Presione para detener la grabación:",
     "@interactionAppBarTitle": {
         "description": "Texto que se muestra en la AppBar de la página de expresión"
+    },
+    "uniModalButtonDescription": "Interacción unimodal",
+    "@uniModalButtonDescription": {
+        "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón Unimodal"
+    },
+    "translateButtonDescription": "Traducir interacción",
+    "@translateButtonDescription": {
+        "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón Traducir"
+    },
+    "multiModalButtonDescription": "Interacción multimodal",
+    "@multiModalButtonDescription": {
+        "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón multimodal"
+    },
+    "databaseButtonDescription": "Base de datos de personalización e historial.",
+    "@databaseButtonDescription": {
+        "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón de base de datos"
+    },
+    "preferencesButtonDescription": "Preferencias y configuraciones",
+    "@preferencesButtonDescription": {
+        "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón Preferencias"
     }
 }

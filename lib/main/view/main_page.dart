@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:inspector_gadget/interaction/interaction.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
+import 'package:inspector_gadget/legend_dialog.dart';
 import 'package:inspector_gadget/main/main.dart';
 import 'package:inspector_gadget/preferences/preferences.dart';
+import 'package:tuple/tuple.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -128,14 +130,28 @@ class MainPage extends StatelessWidget {
               key: const Key(helpKey),
               icon: const Icon(Icons.help),
               iconSize: iconSize,
-              onPressed: () => clickableState
-                  ? Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (context) => const PreferencesPage(),
-                      ),
-                    )
-                  : null,
+              onPressed: () async => legendDialog(context, [
+                Tuple2<IconData, String>(
+                  Icons.chat,
+                  l10n.uniModalButtonDescription,
+                ),
+                Tuple2<IconData, String>(
+                  Icons.translate,
+                  l10n.translateButtonDescription,
+                ),
+                Tuple2<IconData, String>(
+                  Icons.video_chat,
+                  l10n.multiModalButtonDescription,
+                ),
+                Tuple2<IconData, String>(
+                  Icons.dataset,
+                  l10n.databaseButtonDescription,
+                ),
+                Tuple2<IconData, String>(
+                  Icons.settings,
+                  l10n.preferencesButtonDescription,
+                ),
+              ]),
             ),
           ],
         ),
