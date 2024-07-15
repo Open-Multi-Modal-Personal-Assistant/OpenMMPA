@@ -43,12 +43,14 @@ class MainPage extends StatelessWidget {
     final columnSizes = [1.fr, 1.fr];
     final rowSizes = [1.fr, 1.fr];
     var iconSize = 1.0;
+    // https://www.geeksforgeeks.org/flutter-set-the-height-of-the-appbar/
+    const appBarHeight = 56;
     if (horizontal) {
       columnSizes.add(1.fr);
-      iconSize = min(size.width / 3, size.height / 2);
+      iconSize = min(size.width / 3, (size.height - appBarHeight) / 2);
     } else {
       rowSizes.add(1.fr);
-      iconSize = min(size.width / 2, size.height / 3);
+      iconSize = min(size.width / 2, (size.height - appBarHeight) / 3);
     }
 
     final clickableState = [
