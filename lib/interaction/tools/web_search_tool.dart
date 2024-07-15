@@ -90,6 +90,10 @@ class WebSearchTool implements FunctionTool {
         result = resultJson['Abstract'] as String;
       }
 
+      if (result.isNullOrWhiteSpace) {
+        return 'N/A';
+      }
+
       if (resultJson.containsKey('AbstractSource') ||
           resultJson.containsKey('AbstractURL')) {
         result += ' (source: ';
