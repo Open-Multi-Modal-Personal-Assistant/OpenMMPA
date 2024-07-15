@@ -26,6 +26,8 @@ class PreferencesState {
   static const String inputLocaleDefault = 'en';
   static const String outputLocaleTag = 'output_locale';
   static const String outputLocaleDefault = 'en';
+  static const String llmDebugModeTag = 'llm_debug_mode';
+  static const bool llmDebugModeDefault = false;
   static const int pauseForDefault = 3;
   static const int listenForDefault = 60;
   static const String prefix = 'ig';
@@ -44,6 +46,7 @@ class PreferencesState {
         unitSystemTag: getUnitSystemDefault(),
         inputLocaleTag: inputLocaleDefault,
         outputLocaleTag: outputLocaleDefault,
+        llmDebugModeTag: llmDebugModeDefault,
       },
     );
   }
@@ -70,6 +73,8 @@ class PreferencesState {
       prefService?.get<String>(inputLocaleTag) ?? inputLocaleDefault;
   String get outputLocale =>
       prefService?.get<String>(outputLocaleTag) ?? outputLocaleDefault;
+  bool get llmDebugMode =>
+      prefService?.get<bool>(llmDebugModeTag) ?? llmDebugModeDefault;
 
   static bool getUnitSystemDefault() {
     final localeName = Platform.localeName;

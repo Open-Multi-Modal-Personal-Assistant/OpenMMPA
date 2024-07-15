@@ -87,5 +87,9 @@
     "preferencesButtonDescription": "Preferencias y configuraciones",
     "@preferencesButtonDescription": {
         "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón Preferencias"
+    },
+    "preferencesLlmDebugModeLabel": "LLM Debug Mode",
+    "@preferencesLlmDebugModeLabel": {
+        "description": "Text shown in the preferences settings for LLM Debug Mode"
     }
 }

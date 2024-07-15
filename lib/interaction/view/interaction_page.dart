@@ -77,6 +77,7 @@ class _InteractionViewState extends State<InteractionView>
       PreferencesState.areSpeechServicesNativeDefault;
   bool areSpeechServicesRemote =
       PreferencesState.areSpeechServicesRemoteDefault;
+  bool llmDebugMode = PreferencesState.llmDebugModeDefault;
   HeartRateCubit? heartRateCubit;
   int heartRate = 0;
   LocationCubit? locationCubit;
@@ -92,14 +93,7 @@ class _InteractionViewState extends State<InteractionView>
       vsync: this,
     )..repeat(reverse: true);
 
-    deferredActionQueue
-      ..add(DeferredAction(ActionKind.initialize))
-      ..add(
-        DeferredAction(
-          ActionKind.speechTranscripted,
-          text: 'What is the weather today?',
-        ),
-      );
+    deferredActionQueue.add(DeferredAction(ActionKind.initialize));
   }
 
   @override
@@ -311,7 +305,9 @@ class _InteractionViewState extends State<InteractionView>
       mainCubit?.setState(MainCubit.errorStateLabel);
     }
 
-    if (context.mounted) {
+    if (llmDebugMode) {
+      mainCubit?.setState(MainCubit.doneStateLabel);
+    } else if (context.mounted) {
       if (areSpeechServicesNative) {
         await _playbackPhase(context, response.text!, null);
       } else {
@@ -391,29 +387,33 @@ class _InteractionViewState extends State<InteractionView>
             areSpeechServicesNative =
                 preferencesState!.areSpeechServicesNative && sttState.hasSpeech;
             areSpeechServicesRemote = preferencesState!.areSpeechServicesRemote;
-            if (areSpeechServicesNative) {
-              final options = SpeechListenOptions(
-                onDevice: areSpeechServicesRemote,
-                listenMode: ListenMode.dictation,
-                cancelOnError: true,
-                partialResults: false,
-                autoPunctuation: true,
-                enableHapticFeedback: true,
-              );
-              await sttState.speech.listen(
-                onResult: _resultListener,
-                listenFor:
-                    const Duration(seconds: PreferencesState.listenForDefault),
-                pauseFor:
-                    const Duration(seconds: PreferencesState.pauseForDefault),
-                localeId: sttState.systemLocale,
-                onSoundLevelChange: _soundLevelListener,
-                listenOptions: options,
-              );
-            } else {
-              MediaKit.ensureInitialized();
-              _audioRecorder = AudioRecorder();
-              await _startRecording();
+            if (!llmDebugMode) {
+              if (areSpeechServicesNative) {
+                final options = SpeechListenOptions(
+                  onDevice: areSpeechServicesRemote,
+                  listenMode: ListenMode.dictation,
+                  cancelOnError: true,
+                  partialResults: false,
+                  autoPunctuation: true,
+                  enableHapticFeedback: true,
+                );
+                await sttState.speech.listen(
+                  onResult: _resultListener,
+                  listenFor: const Duration(
+                    seconds: PreferencesState.listenForDefault,
+                  ),
+                  pauseFor: const Duration(
+                    seconds: PreferencesState.pauseForDefault,
+                  ),
+                  localeId: sttState.systemLocale,
+                  onSoundLevelChange: _soundLevelListener,
+                  listenOptions: options,
+                );
+              } else {
+                MediaKit.ensureInitialized();
+                _audioRecorder = AudioRecorder();
+                await _startRecording();
+              }
             }
 
           case ActionKind.volumeAdjust:
@@ -434,6 +434,17 @@ class _InteractionViewState extends State<InteractionView>
 
     mainCubit = context.select((MainCubit cubit) => cubit);
     preferencesState = context.select((PreferencesCubit cubit) => cubit.state);
+    llmDebugMode =
+        preferencesState?.llmDebugMode ?? PreferencesState.llmDebugModeDefault;
+    if (llmDebugMode) {
+      deferredActionQueue.add(
+        DeferredAction(
+          ActionKind.speechTranscripted,
+          text: 'What is the weather today?',
+        ),
+      );
+    }
+
     heartRateCubit = context.select((HeartRateCubit cubit) => cubit);
     locationCubit = context.select((LocationCubit cubit) => cubit);
 
