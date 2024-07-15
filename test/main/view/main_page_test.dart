@@ -40,7 +40,7 @@ void main() {
       );
       expect(find.widgetWithIcon(IconButton, Icons.chat), findsOneWidget);
       expect(find.widgetWithIcon(IconButton, Icons.translate), findsOneWidget);
-      expect(find.widgetWithIcon(IconButton, Icons.voice_chat), findsOneWidget);
+      expect(find.widgetWithIcon(IconButton, Icons.video_chat), findsOneWidget);
       expect(find.widgetWithIcon(IconButton, Icons.dataset), findsOneWidget);
       expect(find.widgetWithIcon(IconButton, Icons.settings), findsOneWidget);
       expect(find.widgetWithIcon(IconButton, Icons.help), findsOneWidget);

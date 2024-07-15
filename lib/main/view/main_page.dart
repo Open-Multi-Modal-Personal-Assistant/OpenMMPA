@@ -88,7 +88,7 @@ class MainPage extends StatelessWidget {
             ),
             IconButton(
               key: const Key(multiModalKey),
-              icon: const Icon(Icons.voice_chat),
+              icon: const Icon(Icons.video_chat),
               iconSize: iconSize,
               onPressed: () => clickableState
                   ? navigateWithMode(
