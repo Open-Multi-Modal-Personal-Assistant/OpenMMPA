@@ -81,24 +81,48 @@ class WebResearchTool implements FunctionTool {
     const tavilyBaseUrl = 'api.tavily.com';
     final tavilyUrl = Uri.https(tavilyBaseUrl, '/search');
 
-    var result = 'N/A';
+    final requestBodyJson = {
+      'api_key': tavilyApiKey,
+      'query': query,
+      'search_depth': 'basic',
+      'include_answer': false,
+      'include_images': false,
+      'include_raw_content': false,
+      'max_results': 1,
+    };
     final searchResult = await http.post(
       tavilyUrl,
-      body: {
-        'api_key': tavilyApiKey,
-        'query': query,
-        'search_depth': 'basic',
-        'include_answer': false,
-        'include_images': false,
-        'include_raw_content': false,
-        'max_results': 5,
-      },
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(requestBodyJson),
     );
 
+    var result = 'N/A';
     if (searchResult.statusCode == 200) {
       final resultJson = json.decode(searchResult.body) as Map<String, dynamic>;
-      if (resultJson.containsKey('answer')) {
-        result = resultJson['answer'] as String;
+      if (resultJson.containsKey('results')) {
+        final results = resultJson['results'] as List<dynamic>;
+        if (results.isNotEmpty) {
+          final firstResult = results[0] as Map<String, dynamic>;
+          if (firstResult.containsKey('title')) {
+            result = 'Title: ${firstResult['title']}';
+          }
+
+          if (firstResult.containsKey('content')) {
+            if (result.isNotEmpty) {
+              result += ' ';
+            }
+
+            result += 'Details: ${firstResult['content']}';
+          }
+
+          if (firstResult.containsKey('url')) {
+            if (result.isNotEmpty) {
+              result += ' ';
+            }
+
+            result += '(reference: ${firstResult['url']})';
+          }
+        }
       }
     }
 
