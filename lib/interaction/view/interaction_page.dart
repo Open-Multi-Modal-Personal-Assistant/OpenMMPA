@@ -436,11 +436,13 @@ class _InteractionViewState extends State<InteractionView>
     preferencesState = context.select((PreferencesCubit cubit) => cubit.state);
     llmDebugMode =
         preferencesState?.llmDebugMode ?? PreferencesState.llmDebugModeDefault;
-    if (llmDebugMode) {
+    if (llmDebugMode &&
+        deferredActionQueue.isNotEmpty &&
+        deferredActionQueue.first.actionKind == ActionKind.initialize) {
       deferredActionQueue.add(
         DeferredAction(
           ActionKind.speechTranscripted,
-          text: 'What is the weather today?',
+          text: "What is part 121G on O'Reilly Auto Parts?",
         ),
       );
     }
