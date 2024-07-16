@@ -160,7 +160,7 @@ class _InteractionViewState extends State<InteractionView>
         await recordFile(_audioRecorder!, config);
       }
     } catch (e) {
-      log('Error during start recording $e');
+      log('Error during start recording: $e');
     }
   }
   /* END Audio Recorder utilities */
@@ -214,7 +214,7 @@ class _InteractionViewState extends State<InteractionView>
         mainCubit?.setState(MainCubit.errorStateLabel);
       }
     } catch (e) {
-      log(e.toString());
+      log('Exception during transcription: $e');
       mainCubit?.setState(MainCubit.errorStateLabel);
     }
   }
@@ -283,15 +283,21 @@ class _InteractionViewState extends State<InteractionView>
       for (final functionCall in functionCalls) {
         debugPrint('Function call ${functionCall.name}, '
             'params: ${functionCall.args}');
-        final response = await dispatchFunctionCall(
-          functionCall,
-          gpsLocation,
-          heartRate,
-          preferencesState,
-        );
-        debugPrint('Function call result ${response?.response}');
-        if (response?.response != null) {
-          responses.add(response!);
+        try {
+          final response = await dispatchFunctionCall(
+            functionCall,
+            gpsLocation,
+            heartRate,
+            preferencesState,
+          );
+          debugPrint('Function call result ${response?.response}');
+          if (response?.response != null) {
+            responses.add(response!);
+          }
+        } catch (e) {
+          log('Exception during transcription: $e');
+          mainCubit?.setState(MainCubit.errorStateLabel);
+          return;
         }
       }
 
@@ -336,7 +342,7 @@ class _InteractionViewState extends State<InteractionView>
         mainCubit?.setState(MainCubit.errorStateLabel);
       }
     } catch (e) {
-      log(e.toString());
+      log('Error during synthetization: $e');
       mainCubit?.setState(MainCubit.errorStateLabel);
     }
   }
