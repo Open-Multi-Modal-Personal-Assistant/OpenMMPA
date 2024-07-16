@@ -103,25 +103,11 @@ class WebResearchTool implements FunctionTool {
         final results = resultJson['results'] as List<dynamic>;
         if (results.isNotEmpty) {
           final firstResult = results[0] as Map<String, dynamic>;
-          if (firstResult.containsKey('title')) {
-            result = 'Title: ${firstResult['title']}';
-          }
-
-          if (firstResult.containsKey('content')) {
-            if (result.isNotEmpty) {
-              result += ' ';
-            }
-
-            result += 'Details: ${firstResult['content']}';
-          }
-
-          if (firstResult.containsKey('url')) {
-            if (result.isNotEmpty) {
-              result += ' ';
-            }
-
-            result += '(reference: ${firstResult['url']})';
-          }
+          return json.encode({
+            'title': firstResult.tryGetString('title'),
+            'content': firstResult.tryGetString('content'),
+            'url': firstResult.tryGetString('url'),
+          });
         }
       }
     }
