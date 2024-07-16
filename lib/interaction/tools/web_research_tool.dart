@@ -96,7 +96,6 @@ class WebResearchTool implements FunctionTool {
       body: json.encode(requestBodyJson),
     );
 
-    var result = 'N/A';
     if (searchResult.statusCode == 200) {
       final resultJson = json.decode(searchResult.body) as Map<String, dynamic>;
       if (resultJson.containsKey('results')) {
@@ -112,6 +111,6 @@ class WebResearchTool implements FunctionTool {
       }
     }
 
-    return result;
+    return 'N/A';
   }
 }
