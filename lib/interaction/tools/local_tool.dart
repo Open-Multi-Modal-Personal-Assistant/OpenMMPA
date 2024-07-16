@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fl_location/fl_location.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:inspector_gadget/interaction/tools/function_tool.dart';
@@ -62,8 +64,10 @@ class LocalTool implements FunctionTool {
   String _fetchGpsLocation(Location? location) {
     if (location != null &&
         (location.latitude.abs() > 10e-6 || location.longitude.abs() > 10e-6)) {
-      return '{"latitude": ${location.latitude}, '
-          '"longitude": ${location.longitude}}';
+      return json.encode({
+        'latitude': location.latitude,
+        'longitude': location.longitude,
+      });
     }
 
     return 'N/A';
