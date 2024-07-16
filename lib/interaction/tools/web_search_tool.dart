@@ -94,23 +94,11 @@ class WebSearchTool implements FunctionTool {
         return 'N/A';
       }
 
-      if (resultJson.containsKey('AbstractSource') ||
-          resultJson.containsKey('AbstractURL')) {
-        result += ' (source: ';
-        if (resultJson.containsKey('AbstractSource')) {
-          result += resultJson.containsKey('AbstractSource') as String;
-        }
-
-        if (resultJson.containsKey('AbstractURL')) {
-          if (resultJson.containsKey('AbstractSource')) {
-            result += ', url: ';
-          }
-
-          result += resultJson.containsKey('AbstractURL') as String;
-        }
-
-        result += ')';
-      }
+      return json.encode({
+        'text': result,
+        'source': resultJson.tryGetString('AbstractSource'),
+        'url': resultJson.tryGetString('AbstractURL'),
+      });
     }
 
     return result;
