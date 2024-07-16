@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:fl_location/fl_location.dart';
@@ -39,6 +40,7 @@ class LocationCubit extends Cubit<Location?> {
       emit(location);
       return location;
     } catch (e) {
+      log('Exception while obtaining location: $e');
       return null;
     }
   }
