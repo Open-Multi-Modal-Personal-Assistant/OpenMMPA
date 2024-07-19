@@ -4,7 +4,7 @@ version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: ^3.4.0
+  sdk: ^3.4.4
 
 dependency_overrides:
   js: ^0.7.1  # Due to media_kit vs speech_to_text collision
