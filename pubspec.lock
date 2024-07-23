@@ -197,26 +197,26 @@ packages:
     dependency: "direct main"
     description:
       name: fl_location
-      sha256: ef65db6ab481df98b22b81985a4dfb1f9348968c1a974f75ca91d8d7b5292e0d
+      sha256: "416904dd54862126cbfed1930fbed9b770c15282247b5814cbac33251041f84f"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "4.0.0"
   fl_location_platform_interface:
     dependency: transitive
     description:
       name: fl_location_platform_interface
-      sha256: ffb84044f1791ec719477bf43a26b6d347af697dacf624a25f5c28721d3a0ce1
+      sha256: "208d640616535ceb1f872519633ea44aba3bf095fd1bc2a1dd625e6c5abc327b"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0"
+    version: "4.0.0"
   fl_location_web:
     dependency: transitive
     description:
       name: fl_location_web
-      sha256: db4cecc6e120dff002339e350be6a9e59e311925802bfd8c648c8789ed2c1003
+      sha256: "2da9a0ecb56180cfa5bbaa82a2749c59c1bf3d525a0cdf4e25e1f5e849cb4d48"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0"
+    version: "4.0.0"
   flex_color_scheme:
     dependency: "direct main"
     description:
