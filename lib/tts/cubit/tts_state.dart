@@ -11,7 +11,6 @@ class TTSState with StateLoggingMixin {
   String language = '';
   bool isCurrentLanguageInstalled = false;
   List<String> engines = [];
-  double volume = 0.5;
   double pitch = 1;
   double rate = 0.5;
   bool initialized = false;
@@ -76,8 +75,8 @@ class TTSState with StateLoggingMixin {
     await tts.setEngine(engine);
   }
 
-  Future<void> speak(String responseText) async {
-    await tts.setVolume(volume);
+  Future<void> speak(String responseText, int volume) async {
+    await tts.setVolume(volume / 100);
     await tts.setSpeechRate(rate);
     await tts.setPitch(pitch);
 

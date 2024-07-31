@@ -355,7 +355,10 @@ class _InteractionViewState extends State<InteractionView>
     mainCubit?.setState(MainCubit.playingStateLabel);
     if (responseText.isNotEmpty) {
       final ttsState = context.select((TtsCubit cubit) => cubit.state);
-      await ttsState.speak(responseText);
+      await ttsState.speak(
+        responseText,
+        preferencesState?.volume ?? PreferencesState.volumeDefault,
+      );
     } else if (audioTrack.isNotEmptyOrNull) {
       _player ??= Player();
       final memoryMedia = await Media.memory(audioTrack!);
