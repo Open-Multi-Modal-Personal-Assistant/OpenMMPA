@@ -10,8 +10,8 @@ void main() {
         equals(PreferencesState.geminiApiKeyDefault),
       );
       expect(
-        PreferencesCubit().state.areSpeechServicesRemote,
-        equals(PreferencesState.areSpeechServicesRemoteDefault),
+        PreferencesCubit().state.areSpeechServicesNative,
+        equals(PreferencesState.areSpeechServicesNativeDefault),
       );
     });
   });

@@ -16,8 +16,6 @@ class PreferencesState {
   static const String tavilyApiKeyDefault = '';
   static const String areSpeechServicesNativeTag = 'are_speech_services_native';
   static const bool areSpeechServicesNativeDefault = false;
-  static const String areSpeechServicesRemoteTag = 'are_speech_services_remote';
-  static const bool areSpeechServicesRemoteDefault = true;
   static const String volumeTag = 'volume';
   static const int volumeDefault = 50;
   static const String unitSystemTag = 'unit_system';
@@ -42,7 +40,6 @@ class PreferencesState {
         alphaVantageAccessKeyTag: alphaVantageAccessKeyDefault,
         tavilyApiKeyTag: tavilyApiKeyDefault,
         areSpeechServicesNativeTag: areSpeechServicesNativeDefault,
-        areSpeechServicesRemoteTag: areSpeechServicesRemoteDefault,
         volumeTag: volumeDefault,
         unitSystemTag: getUnitSystemDefault(),
         inputLocaleTag: inputLocaleDefault,
@@ -70,9 +67,6 @@ class PreferencesState {
   bool get areSpeechServicesNative =>
       prefService?.get<bool>(areSpeechServicesNativeTag) ??
       areSpeechServicesNativeDefault;
-  bool get areSpeechServicesRemote =>
-      prefService?.get<bool>(areSpeechServicesRemoteTag) ??
-      areSpeechServicesRemoteDefault;
   int get volume => prefService?.get<int>(volumeTag) ?? volumeDefault;
   bool get unitSystem =>
       prefService?.get<bool>(unitSystemTag) ?? getUnitSystemDefault();

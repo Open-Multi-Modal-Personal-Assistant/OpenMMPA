@@ -114,10 +114,6 @@ class _PreferencesViewState extends State<PreferencesView> {
         pref: PreferencesState.areSpeechServicesNativeTag,
       ),
       PrefCheckbox(
-        title: Text(l10n.preferencesSpeechServicesRemoteLabel),
-        pref: PreferencesState.areSpeechServicesRemoteTag,
-      ),
-      PrefCheckbox(
         title: Text(l10n.preferencesUnitSystemLabel),
         subtitle: Text(l10n.preferencesUnitSystemDescription),
         pref: PreferencesState.unitSystemTag,

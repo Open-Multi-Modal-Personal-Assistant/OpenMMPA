@@ -75,8 +75,6 @@ class _InteractionViewState extends State<InteractionView>
   PreferencesState? preferencesState;
   bool areSpeechServicesNative =
       PreferencesState.areSpeechServicesNativeDefault;
-  bool areSpeechServicesRemote =
-      PreferencesState.areSpeechServicesRemoteDefault;
   bool llmDebugMode = PreferencesState.llmDebugModeDefault;
   HeartRateCubit? heartRateCubit;
   int heartRate = 0;
@@ -388,11 +386,9 @@ class _InteractionViewState extends State<InteractionView>
             speech = sttState.speech;
             areSpeechServicesNative =
                 preferencesState!.areSpeechServicesNative && sttState.hasSpeech;
-            areSpeechServicesRemote = preferencesState!.areSpeechServicesRemote;
             if (!llmDebugMode) {
               if (areSpeechServicesNative) {
                 final options = SpeechListenOptions(
-                  onDevice: areSpeechServicesRemote,
                   listenMode: ListenMode.dictation,
                   cancelOnError: true,
                   partialResults: false,
