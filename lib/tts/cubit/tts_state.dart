@@ -21,6 +21,7 @@ class TTSState with StateLoggingMixin {
       return;
     }
 
+    initialized = true;
     logEvent('Initializing TTS');
     await _setAwaitOptions();
 
@@ -59,8 +60,6 @@ class TTSState with StateLoggingMixin {
       ..setErrorHandler((msg) {
         logEvent('TTS error: $msg');
       });
-
-    initialized = true;
   }
 
   Future<void> setLanguage(String language) async {
