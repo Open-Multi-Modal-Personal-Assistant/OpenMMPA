@@ -233,14 +233,7 @@ class _InteractionViewState extends State<InteractionView>
   }
 
   void _soundLevelListener(double level) {
-    deferredActionQueue.add(
-      DeferredAction(
-        ActionKind.volumeAdjust,
-        integer: (level * 100).toInt(),
-        floatingPoint: level,
-      ),
-    );
-    log('audio level: $level');
+    log('audio level change: $level dB');
   }
   /* END Android native STT utilities */
 
