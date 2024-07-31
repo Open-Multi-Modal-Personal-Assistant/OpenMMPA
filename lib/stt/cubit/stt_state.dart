@@ -19,6 +19,7 @@ class SttState with StateLoggingMixin {
       return;
     }
 
+    initialized = true;
     logEvent('Initializing speech');
     try {
       hasSpeech = await speech.initialize(
@@ -33,11 +34,10 @@ class SttState with StateLoggingMixin {
             systemLocaleName?.localeId ?? PreferencesState.inputLocaleDefault;
         logEvent('System locale: $systemLocale');
       }
-
-      initialized = true;
     } catch (e) {
       log('Exception while initializing speech: $e');
       hasSpeech = false;
+      initialized = false;
     }
   }
 
