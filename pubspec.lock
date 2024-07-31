@@ -125,10 +125,10 @@ packages:
     dependency: "direct main"
     description:
       name: dart_helper_utils
-      sha256: "3e0cca05ab7dadbc53e2942d3edf0d560440abff409ca3160c5da4df19b150b9"
+      sha256: "935d5e41c6d9c9a4fe6ba554fe45b4a3c13d074c8f0efa96ceb91c358dd29a75"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.1"
   daylight:
     dependency: "direct main"
     description:
@@ -561,10 +561,10 @@ packages:
     dependency: "direct main"
     description:
       name: path_provider
-      sha256: c9e7d3a4cd1410877472158bee69963a4579f78b68c65a2b7d40d1a7a88bb161
+      sha256: fec0d61223fba3154d87759e3cc27fe2c8dc498f6386c6d6fc80d1afdd1bf378
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.3"
+    version: "2.1.4"
   path_provider_android:
     dependency: transitive
     description:
