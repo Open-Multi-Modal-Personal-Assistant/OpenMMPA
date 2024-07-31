@@ -28,7 +28,14 @@ class SttState with StateLoggingMixin {
         debugLogging: kDebugMode,
       );
       if (hasSpeech) {
-        localeNames = await speech.locales();
+        // https://stackoverflow.com/questions/60347425/how-can-i-distinct-a-complex-object-list-in-dart
+        final idSet = <String>{};
+        for (final locale in await speech.locales()) {
+          if (idSet.add(locale.localeId)) {
+            localeNames.add(locale);
+          }
+        }
+
         final systemLocaleName = await speech.systemLocale();
         systemLocale =
             systemLocaleName?.localeId ?? PreferencesState.inputLocaleDefault;
