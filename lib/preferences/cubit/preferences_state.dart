@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:pref/pref.dart';
@@ -54,9 +53,8 @@ class PreferencesState {
 
     final savedVolume = prefService?.get<int>(volumeTag) ?? volumeDefault;
     if (savedVolume < 0 || savedVolume > 100) {
-      final boundVolume = max(min(savedVolume, 100), 0);
-      debugPrint('Out of bounds volume $savedVolume bound to $boundVolume');
-      prefService?.set(volumeTag, boundVolume);
+      debugPrint('Out of bounds volume $savedVolume reset to $volumeDefault');
+      prefService?.set(volumeTag, volumeDefault);
     }
   }
 
