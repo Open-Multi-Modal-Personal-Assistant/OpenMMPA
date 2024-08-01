@@ -511,7 +511,7 @@ class _InteractionViewState extends State<InteractionView>
             ),
             // 6: Done phase
             GestureDetector(
-              child: AnimateStyles.flipInY(
+              child: AnimateStyles.bounce(
                 _animationController,
                 const Icon(Icons.check, size: 220),
               ),
