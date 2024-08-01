@@ -27,6 +27,7 @@ import 'package:inspector_gadget/preferences/preferences.dart';
 import 'package:inspector_gadget/secrets.dart';
 import 'package:inspector_gadget/stt/cubit/stt_cubit.dart';
 import 'package:inspector_gadget/tts/cubit/tts_cubit.dart';
+import 'package:inspector_gadget/tts/cubit/tts_state.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -71,6 +72,7 @@ class _InteractionViewState extends State<InteractionView>
   late AnimationController _animationController;
   AudioRecorder? _audioRecorder;
   SpeechToText? speech;
+  TTSState? ttsState;
   MainCubit? mainCubit;
   PreferencesState? preferencesState;
   bool areSpeechServicesNative =
@@ -222,12 +224,14 @@ class _InteractionViewState extends State<InteractionView>
     log('Result listener final: ${result.finalResult}, '
         'words: ${result.recognizedWords}');
 
-    deferredActionQueue.add(
-      DeferredAction(
-        ActionKind.speechTranscripted,
-        text: result.recognizedWords,
-      ),
-    );
+    setState(() {
+      deferredActionQueue.add(
+        DeferredAction(
+          ActionKind.speechTranscripted,
+          text: result.recognizedWords,
+        ),
+      );
+    });
   }
 
   void _soundLevelListener(double level) {
@@ -345,8 +349,7 @@ class _InteractionViewState extends State<InteractionView>
   ) async {
     mainCubit?.setState(MainCubit.playingStateLabel);
     if (responseText.isNotEmpty) {
-      final ttsState = context.select((TtsCubit cubit) => cubit.state);
-      await ttsState.speak(
+      await ttsState?.speak(
         responseText,
         preferencesState?.volume ?? PreferencesState.volumeDefault,
       );
@@ -370,6 +373,11 @@ class _InteractionViewState extends State<InteractionView>
         switch (deferredAction.actionKind) {
           case ActionKind.initialize:
             final sttState = context.select((SttCubit cubit) => cubit.state);
+            areSpeechServicesNative =
+                preferencesState!.areSpeechServicesNative && sttState.hasSpeech;
+            if (areSpeechServicesNative) {
+              ttsState = context.select((TtsCubit cubit) => cubit.state);
+            }
 
             await heartRateCubit?.listenToHeartRate();
             final newHeartRate = heartRateCubit?.state ?? 0;
@@ -384,8 +392,6 @@ class _InteractionViewState extends State<InteractionView>
             }
 
             speech = sttState.speech;
-            areSpeechServicesNative =
-                preferencesState!.areSpeechServicesNative && sttState.hasSpeech;
             if (!llmDebugMode) {
               if (areSpeechServicesNative) {
                 final options = SpeechListenOptions(
