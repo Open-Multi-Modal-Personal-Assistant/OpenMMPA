@@ -18,14 +18,14 @@ class LocalTool implements FunctionTool {
     return [
       FunctionDeclaration(
         'fetchGpsLocation',
-        'Returns the latitude and longitude of the current GPS location.',
+        "Returns the current GPS location's latitude and longitude.",
         Schema(SchemaType.string),
       ),
-      FunctionDeclaration(
-        'fetchHeartRate',
-        'Returns the current heart rate measurement.',
-        Schema(SchemaType.integer),
-      ),
+      // FunctionDeclaration(
+      //   'fetchHeartRate',
+      //   'Returns the current heart rate measurement.',
+      //   Schema(SchemaType.integer),
+      // ),
     ];
   }
 
