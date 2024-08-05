@@ -91,6 +91,7 @@ class WebSearchTool implements FunctionTool {
       }
 
       if (result.isNullOrWhiteSpace) {
+        // TODO(MrCsabaToth): Try Cloud Function
         return 'N/A';
       }
 
