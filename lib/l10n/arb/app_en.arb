@@ -72,17 +72,17 @@
     "@uniModalButtonDescription": {
         "description": "Text shown on the legend dialog for Uni Modal Button"
     },
-    "translateButtonDescription": "Translate interaction",
-    "@translateButtonDescription": {
-        "description": "Text shown on the legend dialog for Translate Button"
-    },
     "multiModalButtonDescription": "Multi Modal interaction",
     "@multiModalButtonDescription": {
         "description": "Text shown on the legend dialog for Multi Modal Button"
     },
-    "databaseButtonDescription": "Database of personalization and history",
-    "@databaseButtonDescription": {
-        "description": "Text shown on the legend dialog for Database Button"
+    "translateButtonDescription": "Translate interaction",
+    "@translateButtonDescription": {
+        "description": "Text shown on the legend dialog for Translate Button"
+    },
+    "personalizationButtonDescription": "Personalization statements",
+    "@personalizationButtonDescription": {
+        "description": "Text shown on the legend dialog for Personalization Button"
     },
     "preferencesButtonDescription": "Preferences and Settings",
     "@preferencesButtonDescription": {

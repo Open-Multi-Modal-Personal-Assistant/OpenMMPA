@@ -72,17 +72,17 @@
     "@uniModalButtonDescription": {
         "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón Unimodal"
     },
-    "translateButtonDescription": "Traducir interacción",
-    "@translateButtonDescription": {
-        "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón Traducir"
-    },
     "multiModalButtonDescription": "Interacción multimodal",
     "@multiModalButtonDescription": {
         "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón multimodal"
     },
-    "databaseButtonDescription": "Base de datos de personalización e historial.",
-    "@databaseButtonDescription": {
-        "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón de base de datos"
+    "translateButtonDescription": "Traducir interacción",
+    "@translateButtonDescription": {
+        "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón Traducir"
+    },
+    "personalizationButtonDescription": "Declaraciones de personalización",
+    "@personalizationButtonDescription": {
+        "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón de personalización"
     },
     "preferencesButtonDescription": "Preferencias y configuraciones",
     "@preferencesButtonDescription": {
