@@ -30,12 +30,12 @@ class PersonalizationPage extends StatelessWidget {
           value: context.read<TtsCubit>(),
           child: BlocProvider.value(
             value: context.read<PreferencesCubit>(),
-            child: MultiBlocProvider(
-              providers: [
-                BlocProvider(create: (_) => AiCubit()),
-                BlocProvider(create: (_) => PersonalizationCubit()),
-              ],
-              child: const PersonalizationView(),
+            child: BlocProvider.value(
+              value: context.read<AiCubit>(),
+              child: BlocProvider(
+                create: (_) => PersonalizationCubit(),
+                child: const PersonalizationView(),
+              ),
             ),
           ),
         ),

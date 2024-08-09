@@ -45,12 +45,15 @@ class InteractionPage extends StatelessWidget {
       value: context.read<SttCubit>(),
       child: BlocProvider.value(
         value: context.read<TtsCubit>(),
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (_) => HeartRateCubit()),
-            BlocProvider(create: (_) => LocationCubit()),
-          ],
-          child: InteractionView(interactionMode),
+        child: BlocProvider.value(
+          value: context.read<AiCubit>(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (_) => HeartRateCubit()),
+              BlocProvider(create: (_) => LocationCubit()),
+            ],
+            child: InteractionView(interactionMode),
+          ),
         ),
       ),
     );
