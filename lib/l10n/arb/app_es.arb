@@ -91,5 +91,33 @@
     "preferencesLlmDebugModeLabel": "LLM Debug Mode",
     "@preferencesLlmDebugModeLabel": {
         "description": "Text shown in the preferences settings for LLM Debug Mode"
+    },
+    "personalizationButtonLabel": "Personalización",
+    "@preferencesButtonDescription": {
+        "description": "Texto que se muestra en el botón para navegar a Personalización"
+    },
+    "historyButtonLabel": "Historial de chat",
+    "@preferencesButtonDescription": {
+        "description": "Texto que se muestra en el botón para navegar al Historial de chat"
+    },
+    "areYouSureText": "¿Está seguro?",
+    "@areYouSureText": {
+        "description": "Texto que se muestra en el cuerpo del cuadro de diálogo Aceptar/Cancelar alerta: ¿Está seguro?"
+    },
+    "okLabel": "Aceptar",
+    "@okLabel": {
+        "description": "Texto que se muestra en el botón Aceptar del cuadro de diálogo Aceptar/Cancelar alerta"
+    },
+    "cancelLabel": "Cancelar",
+    "@cancelLabel": {
+        "description": "Texto que se muestra en el botón Cancelar de los cuadros de diálogo Aceptar/Cancelar alerta"
+    },
+    "personalizationAppBarTitle": "Personalización",
+    "@personalizationAppBarTitle": {
+        "description": "Texto que se muestra en la barra de aplicaciones de la página de personalización"
+    },
+    "historyAppBarTitle": "Historia",
+    "@historyAppBarTitle": {
+        "description": "Texto que se muestra en la barra de aplicaciones de la página Historial"
     }
 }

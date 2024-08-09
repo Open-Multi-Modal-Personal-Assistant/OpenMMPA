@@ -446,7 +446,8 @@ class _InteractionViewState extends State<InteractionView>
       deferredActionQueue.add(
         DeferredAction(
           ActionKind.speechTranscripted,
-          text: "What is part 121G on O'Reilly Auto Parts?",
+          // text: "What is part 121G on O'Reilly Auto Parts?",
+          text: 'SpaceX Falcon 9 rocket',
         ),
       );
     }

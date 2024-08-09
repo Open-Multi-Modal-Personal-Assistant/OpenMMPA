@@ -14,9 +14,8 @@ class MainPage extends StatelessWidget {
   const MainPage({super.key});
 
   static const String uniModalKey = 'UniModal';
-  static const String translateKey = 'Translate';
+  // static const String translateKey = 'Translate';
   static const String multiModalKey = 'MultiModal';
-  static const String databaseKey = 'Database';
   static const String settingsKey = 'Settings';
   static const String helpKey = 'Help';
 
@@ -39,19 +38,9 @@ class MainPage extends StatelessWidget {
     final l10n = context.l10n;
     final mainCubit = context.select((MainCubit cubit) => cubit);
     final size = MediaQuery.of(context).size;
-    final horizontal = size.width >= size.height;
-    final columnSizes = [1.fr, 1.fr];
-    final rowSizes = [1.fr, 1.fr];
-    var iconSize = 1.0;
     // https://www.geeksforgeeks.org/flutter-set-the-height-of-the-appbar/
     const appBarHeight = 56;
-    if (horizontal) {
-      columnSizes.add(1.fr);
-      iconSize = min(size.width / 3, (size.height - appBarHeight) / 2);
-    } else {
-      rowSizes.add(1.fr);
-      iconSize = min(size.width / 2, (size.height - appBarHeight) / 3);
-    }
+    final iconSize = min(size.width / 2, (size.height - appBarHeight) / 2);
 
     final clickableState = [
       MainCubit.waitingStateLabel,
@@ -63,8 +52,8 @@ class MainPage extends StatelessWidget {
       appBar: AppBar(title: Text(l10n.mainAppBarTitle)),
       body: Center(
         child: LayoutGrid(
-          columnSizes: columnSizes,
-          rowSizes: rowSizes,
+          columnSizes: [1.fr, 1.fr],
+          rowSizes: [1.fr, 1.fr],
           children: [
             IconButton(
               key: const Key(uniModalKey),
@@ -79,18 +68,6 @@ class MainPage extends StatelessWidget {
                   : null,
             ),
             IconButton(
-              key: const Key(translateKey),
-              icon: const Icon(Icons.translate),
-              iconSize: iconSize,
-              onPressed: () => clickableState
-                  ? navigateWithMode(
-                      context,
-                      mainCubit,
-                      InteractionMode.translateMode,
-                    )
-                  : null,
-            ),
-            IconButton(
               key: const Key(multiModalKey),
               icon: const Icon(Icons.video_chat),
               iconSize: iconSize,
@@ -99,19 +76,6 @@ class MainPage extends StatelessWidget {
                       context,
                       mainCubit,
                       InteractionMode.multiModalMode,
-                    )
-                  : null,
-            ),
-            IconButton(
-              key: const Key(databaseKey),
-              icon: const Icon(Icons.dataset),
-              iconSize: iconSize,
-              onPressed: () => clickableState
-                  ? Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (context) => const PreferencesPage(),
-                      ),
                     )
                   : null,
             ),

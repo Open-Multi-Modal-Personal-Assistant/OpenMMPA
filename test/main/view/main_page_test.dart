@@ -39,9 +39,7 @@ void main() {
         ),
       );
       expect(find.widgetWithIcon(IconButton, Icons.chat), findsOneWidget);
-      expect(find.widgetWithIcon(IconButton, Icons.translate), findsOneWidget);
       expect(find.widgetWithIcon(IconButton, Icons.video_chat), findsOneWidget);
-      expect(find.widgetWithIcon(IconButton, Icons.dataset), findsOneWidget);
       expect(find.widgetWithIcon(IconButton, Icons.settings), findsOneWidget);
       expect(find.widgetWithIcon(IconButton, Icons.help), findsOneWidget);
     });
@@ -57,21 +55,6 @@ void main() {
         ),
       );
       await tester.tap(find.byKey(const Key(MainPage.uniModalKey)));
-      await tester.pumpAndSettle();
-      expect(find.byType(PreferencesView), findsOneWidget);
-    });
-
-    testWidgets('navigates to interaction when the translate button is tapped',
-        (tester) async {
-      const stateName = MainCubit.waitingStateLabel;
-      when(() => mainCubit.state.name).thenReturn(stateName);
-      await tester.pumpApp(
-        BlocProvider.value(
-          value: mainCubit,
-          child: const MainPage(),
-        ),
-      );
-      await tester.tap(find.byKey(const Key(MainPage.translateKey)));
       await tester.pumpAndSettle();
       expect(find.byType(PreferencesView), findsOneWidget);
     });

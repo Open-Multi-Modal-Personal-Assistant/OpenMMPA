@@ -91,5 +91,33 @@
     "preferencesLlmDebugModeLabel": "LLM Debug Mode",
     "@preferencesLlmDebugModeLabel": {
         "description": "Text shown in the preferences settings for LLM Debug Mode"
+    },
+    "personalizationButtonLabel": "Personalization",
+    "@preferencesButtonDescription": {
+        "description": "Text shown on the button to navigate to Personalization"
+    },
+    "historyButtonLabel": "Chat History",
+    "@preferencesButtonDescription": {
+        "description": "Text shown on the button to navigate to Chat History"
+    },
+    "areYouSureText": "Are you sure?",
+    "@areYouSureText": {
+        "description": "Text shown in OK / Cancel alert dialogs' body: Are you sure?"
+    },
+    "okLabel": "OK",
+    "@okLabel": {
+        "description": "Text shown in OK / Cancel alert dialogs' OK button"
+    },
+    "cancelLabel": "Cancel",
+    "@cancelLabel": {
+        "description": "Text shown in OK / Cancel alert dialogs' Cancel button"
+    },
+    "personalizationAppBarTitle": "Personalization",
+    "@personalizationAppBarTitle": {
+        "description": "Text shown in the AppBar of the Personalization Page"
+    },
+    "historyAppBarTitle": "History",
+    "@historyAppBarTitle": {
+        "description": "Text shown in the AppBar of the History Page"
     }
 }

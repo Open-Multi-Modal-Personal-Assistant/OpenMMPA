@@ -1,6 +1,7 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inspector_gadget/database/cubit/database_cubit.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/main/main.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_cubit.dart';
@@ -16,6 +17,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => DatabaseCubit()),
         BlocProvider(create: (_) => MainCubit()),
         BlocProvider(create: (_) => PreferencesCubit()),
         BlocProvider(create: (_) => SttCubit()),
@@ -41,6 +43,8 @@ class AppView extends StatelessWidget {
     if (!ttsState.initialized) {
       ttsState.init();
     }
+
+    context.select((DatabaseCubit cubit) => cubit).initialize();
 
     if (mainCubit.state.name == 'dummy') {
       mainCubit.setState(MainCubit.waitingStateLabel);

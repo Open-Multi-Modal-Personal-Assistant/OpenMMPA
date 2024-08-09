@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inspector_gadget/database/view/personalization_page.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 import 'package:inspector_gadget/stt/cubit/stt_cubit.dart';
@@ -59,6 +60,30 @@ class _PreferencesViewState extends State<PreferencesView> {
         .toList(growable: false);
 
     final preferences = [
+      PrefButton(
+        onTap: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (context) => const PersonalizationPage(),
+            ),
+          );
+        },
+        leading: const Icon(Icons.person_add),
+        child: Text(l10n.personalizationButtonLabel),
+      ),
+      PrefButton(
+        onTap: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (context) => const PersonalizationPage(),
+            ),
+          );
+        },
+        leading: const Icon(Icons.manage_history),
+        child: Text(l10n.historyButtonLabel),
+      ),
       PrefText(
         label: l10n.preferencesGeminiApiKeyLabel,
         pref: PreferencesState.geminiApiKeyTag,
