@@ -76,10 +76,9 @@ class _HistoryViewState extends State<HistoryView>
     final l10n = context.l10n;
     preferencesState = context.select((PreferencesCubit cubit) => cubit.state);
     database = context.select((DatabaseCubit cubit) => cubit);
-    historyCubit =
-        context.select((HistoryCubit cubit) => cubit);
+    historyCubit = context.select((HistoryCubit cubit) => cubit);
     final stateIndex =
-    context.select((HistoryCubit cubit) => cubit.getStateIndex());
+        context.select((HistoryCubit cubit) => cubit.getStateIndex());
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.historyAppBarTitle)),
@@ -92,11 +91,10 @@ class _HistoryViewState extends State<HistoryView>
             key: Key('CLV$_editCount'),
             paginationMode: PaginationMode.page,
             loadingBuilder: (BuildContext context) =>
-            const Center(child: CircularProgressIndicator()),
+                const Center(child: CircularProgressIndicator()),
             adapter: ListAdapter(
               fetchItems: (int page, int limit) async {
-                final data =
-                await database?.historyPaged(page * limit, limit);
+                final data = await database?.historyPaged(page * limit, limit);
                 return ListItems(
                   data,
                   reachedToEnd: (data?.length ?? 0) < limit,
@@ -129,17 +127,15 @@ class _HistoryViewState extends State<HistoryView>
                 ),
                 trailing: IconButton(
                   onPressed: () async {
-                    historyCubit
-                        ?.setState(HistoryCubit.playingStateLabel);
+                    historyCubit?.setState(HistoryCubit.playingStateLabel);
                     final ttsState =
-                    context.select((TtsCubit cubit) => cubit.state);
+                        context.select((TtsCubit cubit) => cubit.state);
                     await ttsState.speak(
                       history.content,
                       preferencesState?.volume ??
                           PreferencesState.volumeDefault,
                     );
-                    historyCubit
-                        ?.setState(HistoryCubit.browsingStateLabel);
+                    historyCubit?.setState(HistoryCubit.browsingStateLabel);
                   },
                   icon: const Icon(Icons.play_arrow),
                 ),

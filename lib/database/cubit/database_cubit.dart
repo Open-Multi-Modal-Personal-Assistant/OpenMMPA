@@ -52,10 +52,7 @@ class DatabaseCubit extends Cubit<ObjectBox?> with StateLoggingMixin {
     return state?.store.box<Personalization>().put(personalization) ?? -1;
   }
 
-  Future<List<History>> historyPaged(
-      int offset,
-      int limit,
-      ) async {
+  Future<List<History>> historyPaged(int offset, int limit) async {
     if (state == null) {
       return [];
     }
@@ -63,7 +60,7 @@ class DatabaseCubit extends Cubit<ObjectBox?> with StateLoggingMixin {
     final box = state!.store.box<History>();
     final query = box
         .query(History_.id.notNull())
-        .order(History_.id)
+        .order(History_.id, flags: Order.descending)
         .build()
       ..offset = offset
       ..limit = limit;
@@ -74,5 +71,21 @@ class DatabaseCubit extends Cubit<ObjectBox?> with StateLoggingMixin {
 
   int addUpdateHistory(Personalization personalization) {
     return state?.store.box<Personalization>().put(personalization) ?? -1;
+  }
+
+  Future<List<History>> limitedHistory() async {
+    if (state == null) {
+      return [];
+    }
+
+    final box = state!.store.box<History>();
+    final query = box
+        .query(History_.id.notNull())
+        .order(History_.id, flags: Order.descending)
+        .build()
+      ..limit = 100;
+    final history = query.find();
+    query.close();
+    return history;
   }
 }

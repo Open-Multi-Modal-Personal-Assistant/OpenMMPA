@@ -4,16 +4,14 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:inspector_gadget/ai/cubit/ai_cubit.dart';
 import 'package:inspector_gadget/database/cubit/database_cubit.dart';
 import 'package:inspector_gadget/database/cubit/personalization_cubit.dart';
 import 'package:inspector_gadget/database/models/personalization.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 import 'package:inspector_gadget/preferences/preferences.dart';
-import 'package:inspector_gadget/secrets.dart';
 import 'package:inspector_gadget/stt/cubit/stt_cubit.dart';
-import 'package:inspector_gadget/stt/cubit/stt_state.dart';
 import 'package:inspector_gadget/tts/cubit/tts_cubit.dart';
 import 'package:listview_utils_plus/listview_utils_plus.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -32,8 +30,11 @@ class PersonalizationPage extends StatelessWidget {
           value: context.read<TtsCubit>(),
           child: BlocProvider.value(
             value: context.read<PreferencesCubit>(),
-            child: BlocProvider(
-              create: (_) => PersonalizationCubit(),
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (_) => AiCubit()),
+                BlocProvider(create: (_) => PersonalizationCubit()),
+              ],
               child: const PersonalizationView(),
             ),
           ),
@@ -55,7 +56,8 @@ class _PersonalizationViewState extends State<PersonalizationView>
   late AnimationController _animationController;
   int _editCount = 0;
   PreferencesState? preferencesState;
-  SttState? sttState;
+  String systemLocale = PreferencesState.inputLocaleDefault;
+  AiCubit? aiCubit;
   DatabaseCubit? database;
   PersonalizationCubit? personalizationCubit;
 
@@ -93,17 +95,11 @@ class _PersonalizationViewState extends State<PersonalizationView>
     if (recorded.isNotEmpty && database != null) {
       personalizationCubit?.setState(PersonalizationCubit.processingStateLabel);
 
-      final model = GenerativeModel(
-        model: 'text-embedding-004',
-        apiKey: preferencesState?.geminiApiKey ?? geminiApiKey,
-      );
-      final content = Content.text(recorded);
-      final embeddingResult = await model.embedContent(content);
+      final embedding =
+          await aiCubit?.obtainEmbedding(recorded, preferencesState) ?? [];
 
-      final personalization = Personalization(
-        recorded,
-        sttState?.systemLocale ?? PreferencesState.inputLocaleDefault,
-      )..embedding = embeddingResult.embedding.values;
+      final personalization = Personalization(recorded, systemLocale)
+        ..embedding = embedding;
       database!.addUpdatePersonalization(personalization);
 
       setState(() {
@@ -122,7 +118,7 @@ class _PersonalizationViewState extends State<PersonalizationView>
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    sttState = context.select((SttCubit cubit) => cubit.state);
+    aiCubit = context.select((AiCubit cubit) => cubit);
     preferencesState = context.select((PreferencesCubit cubit) => cubit.state);
     database = context.select((DatabaseCubit cubit) => cubit);
     personalizationCubit =
@@ -241,7 +237,9 @@ class _PersonalizationViewState extends State<PersonalizationView>
             enableHapticFeedback: true,
           );
 
-          await sttState?.speech.listen(
+          final sttState = context.select((SttCubit cubit) => cubit.state);
+          systemLocale = sttState.systemLocale;
+          await sttState.speech.listen(
             onResult: _resultListener,
             listenFor: const Duration(
               seconds: PreferencesState.listenForDefault,
@@ -249,8 +247,7 @@ class _PersonalizationViewState extends State<PersonalizationView>
             pauseFor: const Duration(
               seconds: PreferencesState.pauseForDefault,
             ),
-            localeId:
-                sttState?.systemLocale ?? PreferencesState.inputLocaleDefault,
+            localeId: systemLocale,
             onSoundLevelChange: _soundLevelListener,
             listenOptions: options,
           );

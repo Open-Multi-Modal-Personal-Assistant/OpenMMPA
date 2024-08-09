@@ -9,11 +9,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:http/http.dart' as http;
+import 'package:inspector_gadget/ai/cubit/ai_cubit.dart';
 import 'package:inspector_gadget/heart_rate/heart_rate.dart';
 import 'package:inspector_gadget/interaction/cubit/interaction_cubit.dart';
-import 'package:inspector_gadget/interaction/tools/tools_mixin.dart';
 import 'package:inspector_gadget/interaction/view/constants.dart';
 import 'package:inspector_gadget/interaction/view/deferred_action.dart';
 import 'package:inspector_gadget/interaction/view/transcription_list.dart';
@@ -68,12 +67,13 @@ class InteractionView extends StatefulWidget {
 }
 
 class _InteractionViewState extends State<InteractionView>
-    with SingleTickerProviderStateMixin, ToolsMixin {
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   AudioRecorder? _audioRecorder;
   SpeechToText? speech;
   TTSState? ttsState;
   MainCubit? mainCubit;
+  AiCubit? aiCubit;
   PreferencesState? preferencesState;
   bool areSpeechServicesNative =
       PreferencesState.areSpeechServicesNativeDefault;
@@ -241,68 +241,29 @@ class _InteractionViewState extends State<InteractionView>
 
   Future<void> _llmPhase(BuildContext context, String prompt) async {
     mainCubit?.setState(MainCubit.llmStateLabel);
-    final fastMode =
-        preferencesState?.fastLlmMode ?? PreferencesState.fastLlmModeDefault;
-    final tools = [getFunctionDeclarations(preferencesState)];
-    final modelType = fastMode ? 'flash' : 'pro';
-    final model = GenerativeModel(
-      model: 'gemini-1.5-$modelType',
-      apiKey: preferencesState?.geminiApiKey ?? geminiApiKey,
-      tools: tools,
-    );
-    final chat = model.startChat();
 
-    // TODO(MrCsabaToth): History: https://github.com/google-gemini/generative-ai-dart/blob/main/samples/dart/bin/advanced_chat.dart
-    // we still need to roll our own history persistence (there's no sessionId)
-    // TODO(MrCsabaToth): Vector DB + embedding for knowledge base
-    // Note: ObjectBox supports Vector DB now
-    // so we'll use that for both history and RAG
-    // TODO(MrCsabaToth): Multi modal call?
-    var content = Content.text(prompt);
-    var response = await chat.sendMessage(content);
-
-    List<FunctionCall> functionCalls;
-    while ((functionCalls = response.functionCalls.toList()).isNotEmpty) {
-      final newHeartRate = heartRateCubit?.state ?? 0;
-      if (newHeartRate > 0) {
-        heartRate = newHeartRate;
-      }
-
-      final loc = await locationCubit?.obtain();
-      if (loc != null &&
-          (loc.latitude.abs() > 10e-6 || loc.longitude.abs() > 10e-6)) {
-        gpsLocation = loc;
-      }
-
-      final responses = <FunctionResponse>[];
-      for (final functionCall in functionCalls) {
-        debugPrint('Function call ${functionCall.name}, '
-            'params: ${functionCall.args}');
-        try {
-          final response = await dispatchFunctionCall(
-            functionCall,
-            gpsLocation,
-            heartRate,
-            preferencesState,
-          );
-          debugPrint('Function call result ${response?.response}');
-          if (response?.response != null) {
-            responses.add(response!);
-          }
-        } catch (e) {
-          log('Exception during transcription: $e');
-          mainCubit?.setState(MainCubit.errorStateLabel);
-          return;
-        }
-      }
-
-      content = response.candidates.first.content;
-      content.parts.addAll(responses);
-      response = await chat.sendMessage(content);
+    final newHeartRate = heartRateCubit?.state ?? 0;
+    if (newHeartRate > 0) {
+      heartRate = newHeartRate;
     }
 
-    debugPrint('Final: ${response.text}');
-    if (response.text.isNullOrWhiteSpace || !context.mounted) {
+    final loc = await locationCubit?.obtain();
+    if (loc != null &&
+        (loc.latitude.abs() > 10e-6 || loc.longitude.abs() > 10e-6)) {
+      gpsLocation = loc;
+    }
+
+    final response = await aiCubit?.chatStep(
+      prompt,
+      preferencesState,
+      heartRate,
+      gpsLocation,
+    );
+
+    debugPrint('Final: ${response?.text}');
+    if (response == null ||
+        response.text.isNullOrWhiteSpace ||
+        !context.mounted) {
       mainCubit?.setState(MainCubit.errorStateLabel);
     }
 
@@ -310,9 +271,9 @@ class _InteractionViewState extends State<InteractionView>
       mainCubit?.setState(MainCubit.doneStateLabel);
     } else if (context.mounted) {
       if (areSpeechServicesNative) {
-        await _playbackPhase(context, response.text!, null);
+        await _playbackPhase(context, response?.text ?? '', null);
       } else {
-        await _ttsPhase(context, response.text!);
+        await _ttsPhase(context, response?.text ?? '');
       }
     }
   }
@@ -437,6 +398,7 @@ class _InteractionViewState extends State<InteractionView>
     final l10n = context.l10n;
 
     mainCubit = context.select((MainCubit cubit) => cubit);
+    aiCubit = context.select((AiCubit cubit) => cubit);
     preferencesState = context.select((PreferencesCubit cubit) => cubit.state);
     llmDebugMode =
         preferencesState?.llmDebugMode ?? PreferencesState.llmDebugModeDefault;

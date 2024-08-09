@@ -2,8 +2,8 @@ import 'package:dart_helper_utils/dart_helper_utils.dart';
 import 'package:daylight/daylight.dart';
 import 'package:fl_location/fl_location.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:inspector_gadget/interaction/tools/function_tool.dart';
-import 'package:inspector_gadget/interaction/tools/geo_request.dart';
+import 'package:inspector_gadget/ai/tools/function_tool.dart';
+import 'package:inspector_gadget/ai/tools/geo_request.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 
 class SunTimeTool implements FunctionTool {
