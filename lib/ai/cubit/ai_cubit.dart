@@ -50,18 +50,18 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     final history = await database?.limitedHistoryString(100) ?? '';
     final resolved =
         await resolvePromptToStandAlone(prompt, history, preferencesState);
-    final embedding = await obtainEmbedding(resolved, preferencesState);
+    final userEmbedding = await obtainEmbedding(resolved, preferencesState);
     database?.addUpdateHistory(
       History(
         'user',
         prompt,
         PreferencesState.inputLocaleDefault,
         resolved,
-        embedding,
+        userEmbedding,
       ),
     );
     final stuffedPrompt = StringBuffer();
-    final nearestHistory = await database?.getNearestHistory(embedding);
+    final nearestHistory = await database?.getNearestHistory(userEmbedding);
     if (nearestHistory != null && nearestHistory.isNotEmpty) {
       stuffedPrompt
         ..writeln(conversationStuffing)
@@ -71,7 +71,7 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     }
 
     final nearestPersonalization =
-        await database?.getNearestPersonalization(embedding);
+        await database?.getNearestPersonalization(userEmbedding);
     if (nearestPersonalization != null && nearestPersonalization.isNotEmpty) {
       stuffedPrompt
         ..writeln(personalizationStuffing)
@@ -116,7 +116,17 @@ class AiCubit extends Cubit<int> with ToolsMixin {
       response = await chat!.sendMessage(content);
     }
 
-    // TODO(MrCsabaToth): Store in history
+    final modelEmbedding =
+        await obtainEmbedding(response.text ?? '', preferencesState);
+    database?.addUpdateHistory(
+      History(
+        'model',
+        response.text ?? '',
+        PreferencesState.inputLocaleDefault,
+        '',
+        modelEmbedding,
+      ),
+    );
 
     return response;
   }
