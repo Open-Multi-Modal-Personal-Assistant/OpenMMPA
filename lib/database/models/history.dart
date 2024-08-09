@@ -10,7 +10,7 @@ class History {
   @Id()
   int id = 0;
 
-  String role; // "system", "user", "image", or function name
+  String role; // "system", "user", "model", "image", or function name
   String content;
   String locale;
   String rewrite = '';
@@ -28,6 +28,8 @@ class History {
         return Icons.computer;
       case 'user':
         return Icons.account_circle;
+      case 'model':
+        return Icons.reply;
       case 'image':
         return Icons.image;
       default:
