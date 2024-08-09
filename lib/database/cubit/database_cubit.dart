@@ -73,7 +73,7 @@ class DatabaseCubit extends Cubit<ObjectBox?> with StateLoggingMixin {
     return state?.store.box<Personalization>().put(personalization) ?? -1;
   }
 
-  Future<List<History>> limitedHistory() async {
+  Future<List<History>> limitedHistory(int limit) async {
     if (state == null) {
       return [];
     }
@@ -83,9 +83,19 @@ class DatabaseCubit extends Cubit<ObjectBox?> with StateLoggingMixin {
         .query(History_.id.notNull())
         .order(History_.id, flags: Order.descending)
         .build()
-      ..limit = 100;
+      ..limit = limit;
     final history = query.find();
     query.close();
     return history;
+  }
+
+  Future<String> limitedHistoryString(int limit) async {
+    final historyList = await limitedHistory(limit);
+    final buffer = StringBuffer();
+    for (final utterance in historyList) {
+      buffer.writeln('${utterance.role}: ${utterance.content}');
+    }
+
+    return buffer.toString();
   }
 }
