@@ -36,7 +36,11 @@ class AiCubit extends Cubit<int> with ToolsMixin {
         tools: tools,
       );
 
-      chat = model.startChat();
+      final stuffedInstruction = systemInstruction.replaceAll(
+        '%%%',
+        getFunctionCallPromptStuffing(preferencesState),
+      );
+      chat = model.startChat(history: [Content.system(stuffedInstruction)]);
     }
 
     if (chat == null) {
