@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:inspector_gadget/state_logging_mixin.dart';
 
-class TTSState with StateLoggingMixin {
+class TtsState with StateLoggingMixin {
   final FlutterTts tts = FlutterTts();
   String engine = '';
   Map<String, String> voice = {};

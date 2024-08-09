@@ -78,7 +78,7 @@ class _InteractionViewState extends State<InteractionView>
   late AnimationController _animationController;
   AudioRecorder? _audioRecorder;
   SpeechToText? speech;
-  TTSState? ttsState;
+  TtsState? ttsState;
   MainCubit? mainCubit;
   AiCubit? aiCubit;
   DatabaseCubit? databaseCubit;
