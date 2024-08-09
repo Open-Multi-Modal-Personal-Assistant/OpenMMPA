@@ -237,13 +237,14 @@ obx_int.ModelDefinition getObjectBoxModel() {
               .vTableGet(buffer, rootOffset, 8, '');
           final localeParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 10, '');
-          final object = History(roleParam, contentParam, localeParam)
+          final rewriteParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 12, '');
+          final embeddingParam =
+              const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
+                  .vTableGetNullable(buffer, rootOffset, 14);
+          final object = History(roleParam, contentParam, localeParam,
+              rewriteParam, embeddingParam)
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
-            ..rewrite = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 12, '')
-            ..embedding =
-                const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
-                    .vTableGetNullable(buffer, rootOffset, 14)
             ..dateTime = DateTime.fromMillisecondsSinceEpoch(
                 const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0));
 
