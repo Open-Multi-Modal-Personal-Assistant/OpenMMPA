@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
 import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/ai/cubit/ai_cubit.dart';
+import 'package:inspector_gadget/database/cubit/database_cubit.dart';
 import 'package:inspector_gadget/heart_rate/heart_rate.dart';
 import 'package:inspector_gadget/interaction/cubit/interaction_cubit.dart';
 import 'package:inspector_gadget/interaction/view/constants.dart';
@@ -47,12 +48,15 @@ class InteractionPage extends StatelessWidget {
         value: context.read<TtsCubit>(),
         child: BlocProvider.value(
           value: context.read<AiCubit>(),
-          child: MultiBlocProvider(
-            providers: [
-              BlocProvider(create: (_) => HeartRateCubit()),
-              BlocProvider(create: (_) => LocationCubit()),
-            ],
-            child: InteractionView(interactionMode),
+          child: BlocProvider.value(
+            value: context.read<DatabaseCubit>(),
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (_) => HeartRateCubit()),
+                BlocProvider(create: (_) => LocationCubit()),
+              ],
+              child: InteractionView(interactionMode),
+            ),
           ),
         ),
       ),
@@ -77,6 +81,7 @@ class _InteractionViewState extends State<InteractionView>
   TTSState? ttsState;
   MainCubit? mainCubit;
   AiCubit? aiCubit;
+  DatabaseCubit? databaseCubit;
   PreferencesState? preferencesState;
   bool areSpeechServicesNative =
       PreferencesState.areSpeechServicesNativeDefault;
@@ -258,6 +263,7 @@ class _InteractionViewState extends State<InteractionView>
 
     final response = await aiCubit?.chatStep(
       prompt,
+      databaseCubit,
       preferencesState,
       heartRate,
       gpsLocation,
@@ -402,6 +408,7 @@ class _InteractionViewState extends State<InteractionView>
 
     mainCubit = context.select((MainCubit cubit) => cubit);
     aiCubit = context.select((AiCubit cubit) => cubit);
+    databaseCubit = context.select((DatabaseCubit cubit) => cubit);
     preferencesState = context.select((PreferencesCubit cubit) => cubit.state);
     llmDebugMode =
         preferencesState?.llmDebugMode ?? PreferencesState.llmDebugModeDefault;

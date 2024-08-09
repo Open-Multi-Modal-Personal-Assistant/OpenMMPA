@@ -3,7 +3,13 @@ import 'package:objectbox/objectbox.dart';
 
 @Entity()
 class History {
-  History(this.role, this.content, this.locale) {
+  History(
+    this.role,
+    this.content,
+    this.locale, [
+    this.rewrite = '',
+    this.embedding,
+  ]) {
     dateTime = DateTime.now();
   }
 

@@ -55,7 +55,7 @@ What is the population of Denmark?
 
 Actual input
 INPUT
-%%%%
+%%%
 
 OUTPUT:
 """;

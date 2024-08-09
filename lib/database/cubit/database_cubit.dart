@@ -52,6 +52,26 @@ class DatabaseCubit extends Cubit<ObjectBox?> with StateLoggingMixin {
     return state?.store.box<Personalization>().put(personalization) ?? -1;
   }
 
+  Future<List<ObjectWithScore<Personalization>>> getNearestPersonalization(
+    List<double> embedding, [
+    int bigLimit = 20,
+    int littleLimit = 5,
+  ]) async {
+    if (state == null) {
+      return [];
+    }
+
+    final box = state!.store.box<Personalization>();
+    final query = box
+        .query(
+          Personalization_.embedding.nearestNeighborsF32(embedding, bigLimit),
+        )
+        .build()
+      ..limit = littleLimit;
+    // TODO(MrCsabaToth): Weaviate style auto-cut and also slash too low scores
+    return query.findWithScores();
+  }
+
   Future<List<History>> historyPaged(int offset, int limit) async {
     if (state == null) {
       return [];
@@ -69,8 +89,8 @@ class DatabaseCubit extends Cubit<ObjectBox?> with StateLoggingMixin {
     return history;
   }
 
-  int addUpdateHistory(Personalization personalization) {
-    return state?.store.box<Personalization>().put(personalization) ?? -1;
+  int addUpdateHistory(History history) {
+    return state?.store.box<History>().put(history) ?? -1;
   }
 
   Future<List<History>> limitedHistory(int limit) async {
@@ -97,5 +117,23 @@ class DatabaseCubit extends Cubit<ObjectBox?> with StateLoggingMixin {
     }
 
     return buffer.toString();
+  }
+
+  Future<List<ObjectWithScore<History>>> getNearestHistory(
+    List<double> embedding, [
+    int bigLimit = 20,
+    int littleLimit = 5,
+  ]) async {
+    if (state == null) {
+      return [];
+    }
+
+    final box = state!.store.box<History>();
+    final query = box
+        .query(History_.embedding.nearestNeighborsF32(embedding, bigLimit))
+        .build()
+      ..limit = littleLimit;
+    // TODO(MrCsabaToth): Weaviate style auto-cut and also slash too low scores
+    return query.findWithScores();
   }
 }

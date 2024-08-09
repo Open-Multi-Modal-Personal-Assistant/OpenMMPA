@@ -5,7 +5,11 @@ import 'package:fl_location/fl_location.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:inspector_gadget/ai/prompts/resolver_few_shot.dart';
+import 'package:inspector_gadget/ai/prompts/stuffed_user_utterance.dart';
+import 'package:inspector_gadget/ai/prompts/system.dart';
 import 'package:inspector_gadget/ai/tools/tools_mixin.dart';
+import 'package:inspector_gadget/database/cubit/database_cubit.dart';
+import 'package:inspector_gadget/database/models/history.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 import 'package:inspector_gadget/secrets.dart';
 
@@ -16,6 +20,7 @@ class AiCubit extends Cubit<int> with ToolsMixin {
 
   Future<GenerateContentResponse?> chatStep(
     String prompt,
+    DatabaseCubit? database,
     PreferencesState? preferencesState,
     int heartRate,
     Location? gpsLocation,
@@ -38,11 +43,44 @@ class AiCubit extends Cubit<int> with ToolsMixin {
       return null;
     }
 
-    // TODO(MrCsabaToth): History: https://github.com/google-gemini/generative-ai-dart/blob/main/samples/dart/bin/advanced_chat.dart
-    // we still need to roll our own history persistence (there's no sessionId)
-    // TODO(MrCsabaToth): Vector DB + embedding for knowledge base
+    final history = await database?.limitedHistoryString(100) ?? '';
+    final resolved =
+        await resolvePromptToStandAlone(prompt, history, preferencesState);
+    final embedding = await obtainEmbedding(resolved, preferencesState);
+    database?.addUpdateHistory(
+      History(
+        'user',
+        prompt,
+        PreferencesState.inputLocaleDefault,
+        resolved,
+        embedding,
+      ),
+    );
+    final stuffedPrompt = StringBuffer();
+    final nearestHistory = await database?.getNearestHistory(embedding);
+    if (nearestHistory != null && nearestHistory.isNotEmpty) {
+      stuffedPrompt
+        ..writeln(conversationStuffing)
+        ..writeln(
+          nearestHistory.map((h) => '${h.object.role}: ${h.object.content}'),
+        );
+    }
+
+    final nearestPersonalization =
+        await database?.getNearestPersonalization(embedding);
+    if (nearestPersonalization != null && nearestPersonalization.isNotEmpty) {
+      stuffedPrompt
+        ..writeln(personalizationStuffing)
+        ..writeln(nearestPersonalization.map((p) => '* ${p.object.content}'));
+    }
+
+    if (stuffedPrompt.isNotEmpty) {
+      stuffedPrompt.write(questionStuffing);
+    }
+
+    stuffedPrompt.write(prompt);
     // TODO(MrCsabaToth): Multi modal call?
-    var content = Content.text(prompt);
+    var content = Content.text(stuffedPrompt.toString());
     var response = await chat!.sendMessage(content);
 
     List<FunctionCall> functionCalls;
@@ -70,8 +108,11 @@ class AiCubit extends Cubit<int> with ToolsMixin {
 
       content = response.candidates.first.content;
       content.parts.addAll(responses);
+      // TODO(MrCsabaToth): Store in history?
       response = await chat!.sendMessage(content);
     }
+
+    // TODO(MrCsabaToth): Store in history
 
     return response;
   }
@@ -114,7 +155,7 @@ class AiCubit extends Cubit<int> with ToolsMixin {
 
     final nearHistory = historyToString(chat?.history ?? []);
     final fullHistory = history + nearHistory;
-    final stuffedPrompt = resolverFewShotPrompt.replaceAll('%%%%', fullHistory);
+    final stuffedPrompt = resolverFewShotPrompt.replaceAll('%%%', fullHistory);
     final content = Content.text(stuffedPrompt);
     final response = await model.generateContent([content]);
 
