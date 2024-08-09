@@ -24,6 +24,6 @@ class Transcriptions {
 
   final List<Transcription> transcriptions = [];
 
-  // TODO(MrCsabaToth): handle mixed languages
+  // TODO(MrCsabaToth): How handle mixed languages?
   String get merged => transcriptions.map((tr) => tr.transcription).join('. ');
 }
