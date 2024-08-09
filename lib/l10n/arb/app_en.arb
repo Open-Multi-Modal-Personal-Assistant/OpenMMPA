@@ -52,7 +52,7 @@
     "@preferencesInputLocaleLabel": {
         "description": "Text shown in the preferences settings for Input Locale"
     },
-    "preferencesInputLocaleSubLabel": "For native TTS only",
+    "preferencesInputLocaleSubLabel": "For native TTS or translation language #1",
     "@preferencesInputLocaleSubLabel": {
         "description": "Text shown in the preferences settings subtitle for Input Locale"
     },
@@ -60,7 +60,7 @@
     "@preferencesOutputLocaleLabel": {
         "description": "Text shown in the preferences settings for Output Locale"
     },
-    "preferencesOutputLocaleSubLabel": "For native STT only",
+    "preferencesOutputLocaleSubLabel": "For native STT or translation language #2",
     "@preferencesOutputLocaleSubLabel": {
         "description": "Text shown in the preferences settings subtitle for Output Locale"
     },

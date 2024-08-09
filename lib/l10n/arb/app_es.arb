@@ -52,7 +52,7 @@
     "@preferencesInputLocaleLabel": {
         "description": "Texto que se muestra en la configuración de preferencias para la configuración regional de entrada"
     },
-    "preferencesInputLocaleSubLabel": "Solo para TTS nativo",
+    "preferencesInputLocaleSubLabel": "Para TTS nativo o idioma de traducción n.° 1",
     "@preferencesInputLocaleSubLabel": {
         "description": "Texto que se muestra en el subtítulo de configuración de preferencias para la configuración regional de entrada"
     },
@@ -60,7 +60,7 @@
     "@preferencesOutputLocaleLabel": {
         "description": "Texto que se muestra en la configuración de preferencias para la configuración regional de salida"
     },
-    "preferencesOutputLocaleSubLabel": "Solo para STT nativo",
+    "preferencesOutputLocaleSubLabel": "Para STT nativo o idioma de traducción n.° 2",
     "@preferencesOutputLocaleSubLabel": {
         "description": "Texto que se muestra en el subtítulo de configuración de preferencias para la configuración regional de salida"
     },
