@@ -1,3 +1,4 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
@@ -148,6 +149,22 @@ class _HistoryViewState extends State<HistoryView>
             const Icon(Icons.speaker, size: 220),
           ),
         ],
+      ),
+      floatingActionButton: IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: () async {
+          final result = await showOkCancelAlertDialog(
+            context: context,
+            message: l10n.areYouSureText,
+            okLabel: l10n.okLabel,
+            cancelLabel: l10n.cancelLabel,
+            defaultType: OkCancelAlertDefaultType.cancel,
+          );
+
+          if (result == OkCancelResult.ok) {
+            database?.clearHistory();
+          }
+        },
       ),
     );
   }

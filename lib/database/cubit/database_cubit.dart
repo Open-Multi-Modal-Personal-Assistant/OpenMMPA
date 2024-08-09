@@ -119,6 +119,11 @@ class DatabaseCubit extends Cubit<ObjectBox?> with StateLoggingMixin {
     return buffer.toString();
   }
 
+  int clearHistory() {
+    final box = state!.store.box<History>();
+    return box.removeAll();
+  }
+
   Future<List<ObjectWithScore<History>>> getNearestHistory(
     List<double> embedding, [
     int bigLimit = 20,
