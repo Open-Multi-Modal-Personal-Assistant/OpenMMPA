@@ -7,11 +7,13 @@ environment:
   sdk: ^3.5.0
 
 dependency_overrides:
+  collection: ^1.19.0  # Flutter SDK (flutter_test pinned it)
   js: ^0.7.1  # Due to media_kit vs speech_to_text collision
 
 dependencies:
   adaptive_dialog: ^2.1.0
   bloc: ^8.1.3
+  collection: ^1.19.0
   dart_helper_utils: ^2.3.0
   daylight: ^3.1.0
   file_picker: ^8.0.7

@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 class Transcription {
   Transcription(this.transcription, this.language);
 
@@ -24,6 +26,24 @@ class Transcriptions {
 
   final List<Transcription> transcriptions = [];
 
-  // TODO(MrCsabaToth): How handle mixed languages?
   String get merged => transcriptions.map((tr) => tr.transcription).join('. ');
+
+  String localeMode() {
+    final groupedData = groupBy(transcriptions, (tr) => tr.language);
+    final reduced = groupedData.map(
+      (lang, trs) => MapEntry(
+        lang,
+        trs.map((tr) => 1).reduce((a, b) => a + b),
+      ),
+    );
+
+    final mode = reduced.entries.reduce((a, b) {
+      final aValue = a.value;
+      final bValue = b.value;
+
+      return aValue > bValue ? a : b;
+    }).key;
+
+    return mode;
+  }
 }
