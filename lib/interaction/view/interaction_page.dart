@@ -275,8 +275,13 @@ class _InteractionViewState extends State<InteractionView>
         // Also covers matchedLocale == outputLocale
         targetLocale = inputLocale;
       }
+
+      debugPrint('targetLocale: $targetLocale');
+      response =
+          await aiCubit?.translate(prompt, targetLocale, preferencesState);
     } else {
       targetLocale = inputLocale;
+      debugPrint('targetLocale: $targetLocale');
       final newHeartRate = heartRateCubit?.state ?? 0;
       if (newHeartRate > 0) {
         heartRate = newHeartRate;
