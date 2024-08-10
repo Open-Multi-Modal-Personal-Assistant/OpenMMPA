@@ -125,6 +125,8 @@ class _PersonalizationViewState extends State<PersonalizationView>
         context.select((PersonalizationCubit cubit) => cubit);
     final stateIndex =
         context.select((PersonalizationCubit cubit) => cubit.getStateIndex());
+    final sttState = context.select((SttCubit cubit) => cubit.state);
+    final ttsState = context.select((TtsCubit cubit) => cubit.state);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.personalizationAppBarTitle)),
@@ -170,8 +172,6 @@ class _PersonalizationViewState extends State<PersonalizationView>
                   onPressed: () async {
                     personalizationCubit
                         ?.setState(PersonalizationCubit.playingStateLabel);
-                    final ttsState =
-                        context.select((TtsCubit cubit) => cubit.state);
                     if (await ttsState.setLanguage(p13n.locale)) {
                       await ttsState.speak(
                         p13n.content,
@@ -240,7 +240,6 @@ class _PersonalizationViewState extends State<PersonalizationView>
             enableHapticFeedback: true,
           );
 
-          final sttState = context.select((SttCubit cubit) => cubit.state);
           inputLocaleId =
               preferencesState?.inputLocale ?? sttState.systemLocale;
           await sttState.speech.listen(
