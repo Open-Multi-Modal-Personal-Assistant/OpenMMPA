@@ -392,7 +392,7 @@ class _InteractionViewState extends State<InteractionView>
                 preferencesState!.areSpeechServicesNative &&
                     sttState.hasSpeech &&
                     widget.interactionMode != InteractionMode.translateMode;
-            if (areSpeechServicesNative) {
+            if (!areSpeechServicesNative) {
               ttsState = context.select((TtsCubit cubit) => cubit.state);
             }
 
