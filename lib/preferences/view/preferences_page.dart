@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inspector_gadget/database/view/history_page.dart';
 import 'package:inspector_gadget/database/view/personalization_page.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
@@ -77,7 +78,7 @@ class _PreferencesViewState extends State<PreferencesView> {
           await Navigator.push(
             context,
             MaterialPageRoute<void>(
-              builder: (context) => const PersonalizationPage(),
+              builder: (context) => const HistoryPage(),
             ),
           );
         },
