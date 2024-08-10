@@ -37,8 +37,11 @@ and RAG (Retrieval Augmented Generation) to turn your existing devices into inte
 * Business insights with Alpha Vantage (API key required)
 * Song lyric lookup
 
-## Future Possibilities:
+### Future Possibilities:
 * Expand your AI's toolkit with SerpAPI integration
+* Calendar integration
+* Email integration
+* SMS / Text message, call, and Contacts integration
 
 ## Join the AI Revolution:
 
