@@ -80,6 +80,7 @@ class _HistoryViewState extends State<HistoryView>
     historyCubit = context.select((HistoryCubit cubit) => cubit);
     final stateIndex =
         context.select((HistoryCubit cubit) => cubit.getStateIndex());
+    final ttsState = context.select((TtsCubit cubit) => cubit.state);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.historyAppBarTitle)),
@@ -129,8 +130,6 @@ class _HistoryViewState extends State<HistoryView>
                 trailing: IconButton(
                   onPressed: () async {
                     historyCubit?.setState(HistoryCubit.playingStateLabel);
-                    final ttsState =
-                        context.select((TtsCubit cubit) => cubit.state);
                     await ttsState.speak(
                       history.content,
                       preferencesState?.volume ??
