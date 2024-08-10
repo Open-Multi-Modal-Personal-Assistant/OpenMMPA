@@ -489,6 +489,7 @@ class _InteractionViewState extends State<InteractionView>
                 const Icon(Icons.check, size: 220),
               ),
               onTap: () {
+                deferredActionQueue.add(DeferredAction(ActionKind.initialize));
                 mainCubit?.setState(MainCubit.waitingStateLabel);
               },
             ),
@@ -499,6 +500,7 @@ class _InteractionViewState extends State<InteractionView>
                 const Icon(Icons.warning, size: 220),
               ),
               onTap: () {
+                deferredActionQueue.add(DeferredAction(ActionKind.initialize));
                 mainCubit?.setState(MainCubit.waitingStateLabel);
               },
             ),
