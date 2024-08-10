@@ -329,7 +329,7 @@ class _InteractionViewState extends State<InteractionView>
     try {
       final ttsFullUrl = Uri.https(functionUrl, ttsEndpoint, {
         'token': chirpToken,
-        'languageCode': preferencesState?.outputLocale ?? 'en-US',
+        'languageCode': locale,
         'text': responseText,
       });
       final synthetizationResponse = await http.post(ttsFullUrl);
