@@ -36,6 +36,8 @@ class SttState with StateLoggingMixin {
           }
         }
 
+        localeNames.sort((a, b) => a.name.compareTo(b.name));
+
         final systemLocaleName = await speech.systemLocale();
         systemLocale =
             systemLocaleName?.localeId ?? PreferencesState.inputLocaleDefault;

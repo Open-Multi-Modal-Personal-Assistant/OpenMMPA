@@ -35,6 +35,7 @@ class TtsState with StateLoggingMixin {
       languages = (await tts.getLanguages as List<Object?>)
           .map((o) => o! as String)
           .toList(growable: false);
+      languages.sort((a, b) => a.compareTo(b));
       logEvent('Languages: $languages');
       engines = (await tts.getEngines as List<Object?>)
           .map((o) => o! as String)
