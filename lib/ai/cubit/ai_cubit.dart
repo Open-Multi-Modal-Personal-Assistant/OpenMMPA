@@ -20,7 +20,8 @@ class AiCubit extends Cubit<int> with ToolsMixin {
   ChatSession? chat;
 
   GenerativeModel getModel(
-    PreferencesState? preferencesState, {
+    PreferencesState? preferencesState,
+    String systemInstruction, {
     bool withTools = true,
   }) {
     final fastMode =
@@ -29,6 +30,7 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     return GenerativeModel(
       model: 'gemini-1.5-$modelType',
       apiKey: preferencesState?.geminiApiKey ?? geminiApiKey,
+      systemInstruction: Content.text(systemInstruction),
       tools: withTools ? [getFunctionDeclarations(preferencesState)] : null,
     );
   }
@@ -41,7 +43,7 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     Location? gpsLocation,
   ) async {
     if (chat != null) {
-      final model = getModel(preferencesState);
+      final model = getModel(preferencesState, systemInstruction);
       final stuffedInstruction = systemInstruction.replaceAll(
         '%%%',
         getFunctionCallPromptStuffing(preferencesState),
@@ -187,7 +189,11 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     String targetLocale,
     PreferencesState? preferencesState,
   ) async {
-    final model = getModel(preferencesState, withTools: false);
+    final model = getModel(
+      preferencesState,
+      translateSystemInstruction,
+      withTools: false,
+    );
     final stuffedPrompt = translateInstruction.replaceAll('%%%', targetLocale);
     final content = Content.text(stuffedPrompt + transcript);
     final response = await model.generateContent([content]);
