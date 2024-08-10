@@ -66,7 +66,7 @@ class TtsState with StateLoggingMixin {
 
   String matchLanguage(String language) {
     var partialMatch = '';
-    if (language.length >= 5) {
+    if (language.length >= 2) {
       final langCode = language.left(2).toLowerCase();
       final countryCode = language.right(2).toUpperCase();
       for (final lang in languages) {
