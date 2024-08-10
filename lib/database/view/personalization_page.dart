@@ -56,7 +56,7 @@ class _PersonalizationViewState extends State<PersonalizationView>
   late AnimationController _animationController;
   int _editCount = 0;
   PreferencesState? preferencesState;
-  String systemLocale = PreferencesState.inputLocaleDefault;
+  String inputLocaleId = PreferencesState.inputLocaleDefault;
   AiCubit? aiCubit;
   DatabaseCubit? database;
   PersonalizationCubit? personalizationCubit;
@@ -94,11 +94,9 @@ class _PersonalizationViewState extends State<PersonalizationView>
     final recorded = result.recognizedWords.trim();
     if (recorded.isNotEmpty && database != null) {
       personalizationCubit?.setState(PersonalizationCubit.processingStateLabel);
-
       final embedding =
           await aiCubit?.obtainEmbedding(recorded, preferencesState) ?? [];
-
-      final personalization = Personalization(recorded, systemLocale)
+      final personalization = Personalization(recorded, inputLocaleId)
         ..embedding = embedding;
       database!.addUpdatePersonalization(personalization);
 
@@ -120,6 +118,8 @@ class _PersonalizationViewState extends State<PersonalizationView>
     final l10n = context.l10n;
     aiCubit = context.select((AiCubit cubit) => cubit);
     preferencesState = context.select((PreferencesCubit cubit) => cubit.state);
+    inputLocaleId =
+        preferencesState?.inputLocale ?? PreferencesState.inputLocaleDefault;
     database = context.select((DatabaseCubit cubit) => cubit);
     personalizationCubit =
         context.select((PersonalizationCubit cubit) => cubit);
@@ -172,11 +172,14 @@ class _PersonalizationViewState extends State<PersonalizationView>
                         ?.setState(PersonalizationCubit.playingStateLabel);
                     final ttsState =
                         context.select((TtsCubit cubit) => cubit.state);
-                    await ttsState.speak(
-                      p13n.content,
-                      preferencesState?.volume ??
-                          PreferencesState.volumeDefault,
-                    );
+                    if (await ttsState.setLanguage(p13n.locale)) {
+                      await ttsState.speak(
+                        p13n.content,
+                        preferencesState?.volume ??
+                            PreferencesState.volumeDefault,
+                      );
+                    }
+
                     personalizationCubit
                         ?.setState(PersonalizationCubit.browsingStateLabel);
                   },
@@ -238,7 +241,8 @@ class _PersonalizationViewState extends State<PersonalizationView>
           );
 
           final sttState = context.select((SttCubit cubit) => cubit.state);
-          systemLocale = sttState.systemLocale;
+          inputLocaleId =
+              preferencesState?.inputLocale ?? sttState.systemLocale;
           await sttState.speech.listen(
             onResult: _resultListener,
             listenFor: const Duration(
@@ -247,7 +251,7 @@ class _PersonalizationViewState extends State<PersonalizationView>
             pauseFor: const Duration(
               seconds: PreferencesState.pauseForDefault,
             ),
-            localeId: systemLocale,
+            localeId: inputLocaleId,
             onSoundLevelChange: _soundLevelListener,
             listenOptions: options,
           );

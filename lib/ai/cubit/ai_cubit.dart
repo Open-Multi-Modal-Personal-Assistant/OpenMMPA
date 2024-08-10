@@ -6,7 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:inspector_gadget/ai/prompts/resolver_few_shot.dart';
 import 'package:inspector_gadget/ai/prompts/stuffed_user_utterance.dart';
-import 'package:inspector_gadget/ai/prompts/system.dart';
+import 'package:inspector_gadget/ai/prompts/system_instruction.dart';
+import 'package:inspector_gadget/ai/prompts/translate_instruction.dart';
 import 'package:inspector_gadget/ai/tools/tools_mixin.dart';
 import 'package:inspector_gadget/database/cubit/database_cubit.dart';
 import 'package:inspector_gadget/database/models/history.dart';
@@ -18,6 +19,20 @@ class AiCubit extends Cubit<int> with ToolsMixin {
 
   ChatSession? chat;
 
+  GenerativeModel getModel(
+    PreferencesState? preferencesState, {
+    bool withTools = true,
+  }) {
+    final fastMode =
+        preferencesState?.fastLlmMode ?? PreferencesState.fastLlmModeDefault;
+    final modelType = fastMode ? 'flash' : 'pro';
+    return GenerativeModel(
+      model: 'gemini-1.5-$modelType',
+      apiKey: preferencesState?.geminiApiKey ?? geminiApiKey,
+      tools: withTools ? [getFunctionDeclarations(preferencesState)] : null,
+    );
+  }
+
   Future<GenerateContentResponse?> chatStep(
     String prompt,
     DatabaseCubit? database,
@@ -26,16 +41,7 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     Location? gpsLocation,
   ) async {
     if (chat != null) {
-      final fastMode =
-          preferencesState?.fastLlmMode ?? PreferencesState.fastLlmModeDefault;
-      final tools = [getFunctionDeclarations(preferencesState)];
-      final modelType = fastMode ? 'flash' : 'pro';
-      final model = GenerativeModel(
-        model: 'gemini-1.5-$modelType',
-        apiKey: preferencesState?.geminiApiKey ?? geminiApiKey,
-        tools: tools,
-      );
-
+      final model = getModel(preferencesState);
       final stuffedInstruction = systemInstruction.replaceAll(
         '%%%',
         getFunctionCallPromptStuffing(preferencesState),
@@ -174,5 +180,17 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     final response = await model.generateContent([content]);
 
     return response.text ?? '';
+  }
+
+  Future<GenerateContentResponse?> translate(
+    String transcript,
+    String targetLocale,
+    PreferencesState? preferencesState,
+  ) async {
+    final model = getModel(preferencesState, withTools: false);
+    final stuffedPrompt = translateInstruction.replaceAll('%%%', targetLocale);
+    final content = Content.text(stuffedPrompt);
+    final response = await model.generateContent([content]);
+    return response;
   }
 }

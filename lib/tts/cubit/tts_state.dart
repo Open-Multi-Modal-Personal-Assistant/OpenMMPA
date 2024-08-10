@@ -2,13 +2,14 @@ import 'dart:io';
 
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:inspector_gadget/state_logging_mixin.dart';
+import 'package:strings/strings.dart';
 
 class TtsState with StateLoggingMixin {
   final FlutterTts tts = FlutterTts();
   String engine = '';
   Map<String, String> voice = {};
   List<String> languages = [];
-  String language = '';
+  String lastLanguage = '';
   bool isCurrentLanguageInstalled = false;
   List<String> engines = [];
   double pitch = 1;
@@ -62,12 +63,37 @@ class TtsState with StateLoggingMixin {
       });
   }
 
-  Future<void> setLanguage(String language) async {
-    await tts.setLanguage(language);
-    if (Platform.isAndroid) {
-      isCurrentLanguageInstalled =
-          await tts.isLanguageInstalled(language) as bool;
+  String matchLanguage(String language) {
+    var partialMatch = '';
+    if (language.length >= 5) {
+      final langCode = language.left(2).toLowerCase();
+      final countryCode = language.right(2).toUpperCase();
+      for (final lang in languages) {
+        if (lang.left(2).toLowerCase() == langCode) {
+          if (lang.right(2).toUpperCase() == countryCode) {
+            return lang;
+          } else {
+            partialMatch = lang;
+          }
+        }
+      }
     }
+
+    return partialMatch;
+  }
+
+  Future<bool> setLanguage(String language) async {
+    final matchedLanguage = matchLanguage(language);
+    if (matchedLanguage.isNotEmpty && matchedLanguage != lastLanguage) {
+      lastLanguage = matchLanguage(language);
+      await tts.setLanguage(language);
+      if (Platform.isAndroid) {
+        isCurrentLanguageInstalled =
+            await tts.isLanguageInstalled(language) as bool;
+      }
+    }
+
+    return matchedLanguage.isNotEmpty && isCurrentLanguageInstalled;
   }
 
   Future<void> setEngine(String engine) async {

@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/ai/cubit/ai_cubit.dart';
 import 'package:inspector_gadget/database/cubit/database_cubit.dart';
@@ -25,6 +26,7 @@ import 'package:inspector_gadget/preferences/cubit/preferences_cubit.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 import 'package:inspector_gadget/preferences/preferences.dart';
 import 'package:inspector_gadget/secrets.dart';
+import 'package:inspector_gadget/string_ex.dart';
 import 'package:inspector_gadget/stt/cubit/stt_cubit.dart';
 import 'package:inspector_gadget/tts/cubit/tts_cubit.dart';
 import 'package:inspector_gadget/tts/cubit/tts_state.dart';
@@ -214,7 +216,11 @@ class _InteractionViewState extends State<InteractionView>
             json.decode(transcriptionResponse.body) as List<dynamic>;
         final transcripts = Transcriptions.fromJson(transcriptJson);
         if (context.mounted) {
-          await _llmPhase(context, transcripts.merged);
+          await _llmPhase(
+            context,
+            transcripts.merged,
+            transcripts.localeMode(),
+          );
         }
       } else {
         log('${transcriptionResponse.statusCode} '
@@ -247,27 +253,49 @@ class _InteractionViewState extends State<InteractionView>
   }
   /* END Android native STT utilities */
 
-  Future<void> _llmPhase(BuildContext context, String prompt) async {
+  Future<void> _llmPhase(
+    BuildContext context,
+    String prompt,
+    String locale,
+  ) async {
     mainCubit?.setState(MainCubit.llmStateLabel);
 
-    final newHeartRate = heartRateCubit?.state ?? 0;
-    if (newHeartRate > 0) {
-      heartRate = newHeartRate;
-    }
+    GenerateContentResponse? response;
+    var targetLocale = '';
+    final inputLocale =
+        (preferencesState?.inputLocale ?? PreferencesState.inputLocaleDefault)
+            .replaceAll('_', '-');
+    final outputLocale =
+        preferencesState?.outputLocale ?? PreferencesState.outputLocaleDefault;
+    if (widget.interactionMode == InteractionMode.translateMode) {
+      final matchedLocale = ttsState?.matchLanguage(locale) ?? outputLocale;
+      if (matchedLocale.localeMatch(inputLocale)) {
+        targetLocale = outputLocale;
+      } else {
+        // Also covers matchedLocale == outputLocale
+        targetLocale = inputLocale;
+      }
+    } else {
+      targetLocale = inputLocale;
+      final newHeartRate = heartRateCubit?.state ?? 0;
+      if (newHeartRate > 0) {
+        heartRate = newHeartRate;
+      }
 
-    final loc = await locationCubit?.obtain();
-    if (loc != null &&
-        (loc.latitude.abs() > 10e-6 || loc.longitude.abs() > 10e-6)) {
-      gpsLocation = loc;
-    }
+      final loc = await locationCubit?.obtain();
+      if (loc != null &&
+          (loc.latitude.abs() > 10e-6 || loc.longitude.abs() > 10e-6)) {
+        gpsLocation = loc;
+      }
 
-    final response = await aiCubit?.chatStep(
-      prompt,
-      databaseCubit,
-      preferencesState,
-      heartRate,
-      gpsLocation,
-    );
+      response = await aiCubit?.chatStep(
+        prompt,
+        databaseCubit,
+        preferencesState,
+        heartRate,
+        gpsLocation,
+      );
+    }
 
     debugPrint('Final: ${response?.text}');
     if (response == null ||
@@ -280,14 +308,18 @@ class _InteractionViewState extends State<InteractionView>
       mainCubit?.setState(MainCubit.doneStateLabel);
     } else if (context.mounted) {
       if (areSpeechServicesNative) {
-        await _playbackPhase(context, response?.text ?? '', null);
+        await _playbackPhase(context, response?.text ?? '', null, targetLocale);
       } else {
-        await _ttsPhase(context, response?.text ?? '');
+        await _ttsPhase(context, response?.text ?? '', targetLocale);
       }
     }
   }
 
-  Future<void> _ttsPhase(BuildContext context, String responseText) async {
+  Future<void> _ttsPhase(
+    BuildContext context,
+    String responseText,
+    String locale,
+  ) async {
     mainCubit?.setState(MainCubit.ttsStateLabel);
     try {
       final ttsFullUrl = Uri.https(functionUrl, ttsEndpoint, {
@@ -299,7 +331,12 @@ class _InteractionViewState extends State<InteractionView>
 
       if (synthetizationResponse.statusCode == 200) {
         if (context.mounted) {
-          await _playbackPhase(context, '', synthetizationResponse.bodyBytes);
+          await _playbackPhase(
+            context,
+            '',
+            synthetizationResponse.bodyBytes,
+            locale,
+          );
         }
       } else {
         log('${synthetizationResponse.statusCode} '
@@ -316,13 +353,16 @@ class _InteractionViewState extends State<InteractionView>
     BuildContext context,
     String responseText,
     Uint8List? audioTrack,
+    String locale,
   ) async {
     mainCubit?.setState(MainCubit.playingStateLabel);
     if (responseText.isNotEmpty) {
-      await ttsState?.speak(
-        responseText,
-        preferencesState?.volume ?? PreferencesState.volumeDefault,
-      );
+      if (await ttsState?.setLanguage(locale) ?? false) {
+        await ttsState?.speak(
+          responseText,
+          preferencesState?.volume ?? PreferencesState.volumeDefault,
+        );
+      }
     } else if (audioTrack.isNotEmptyOrNull) {
       _player ??= Player();
       final memoryMedia = await Media.memory(audioTrack!);
@@ -344,7 +384,9 @@ class _InteractionViewState extends State<InteractionView>
           case ActionKind.initialize:
             final sttState = context.select((SttCubit cubit) => cubit.state);
             areSpeechServicesNative =
-                preferencesState!.areSpeechServicesNative && sttState.hasSpeech;
+                preferencesState!.areSpeechServicesNative &&
+                    sttState.hasSpeech &&
+                    widget.interactionMode != InteractionMode.translateMode;
             if (areSpeechServicesNative) {
               ttsState = context.select((TtsCubit cubit) => cubit.state);
             }
@@ -396,7 +438,12 @@ class _InteractionViewState extends State<InteractionView>
                 ?.set(PreferencesState.volumeTag, deferredAction.integer);
 
           case ActionKind.speechTranscripted:
-            await _llmPhase(context, deferredAction.text);
+            final sttState = context.select((SttCubit cubit) => cubit.state);
+            await _llmPhase(
+              context,
+              deferredAction.text,
+              sttState.systemLocale,
+            );
         }
       }
     }
@@ -418,8 +465,7 @@ class _InteractionViewState extends State<InteractionView>
       deferredActionQueue.add(
         DeferredAction(
           ActionKind.speechTranscripted,
-          // text: "What is part 121G on O'Reilly Auto Parts?",
-          text: 'SpaceX Falcon 9 rocket',
+          text: "What is part 121G on O'Reilly Auto Parts?",
         ),
       );
     }

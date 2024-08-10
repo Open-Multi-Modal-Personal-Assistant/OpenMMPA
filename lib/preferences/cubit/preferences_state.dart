@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:pref/pref.dart';
+import 'package:strings/strings.dart';
 
 class PreferencesState {
   static BasePrefService? prefService;
@@ -24,7 +25,7 @@ class PreferencesState {
   static const String inputLocaleTag = 'input_locale';
   static const String inputLocaleDefault = 'en_US';
   static const String outputLocaleTag = 'output_locale';
-  static const String outputLocaleDefault = 'en';
+  static const String outputLocaleDefault = 'en-US';
   static const String llmDebugModeTag = 'llm_debug_mode';
   static const bool llmDebugModeDefault = false;
   static const int pauseForDefault = 3;
@@ -79,11 +80,7 @@ class PreferencesState {
 
   static bool getUnitSystemDefault() {
     final localeName = Platform.localeName;
-    if (localeName.length < 5 || localeName[2] != '_') {
-      return unitSystemDefault;
-    }
-
-    final deviceCountry = localeName.substring(3, 5);
+    final deviceCountry = localeName.right(2).toUpperCase();
     return !imperialCountries.contains(deviceCountry);
   }
 }
