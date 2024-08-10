@@ -189,7 +189,7 @@ class AiCubit extends Cubit<int> with ToolsMixin {
   ) async {
     final model = getModel(preferencesState, withTools: false);
     final stuffedPrompt = translateInstruction.replaceAll('%%%', targetLocale);
-    final content = Content.text(stuffedPrompt);
+    final content = Content.text(stuffedPrompt + transcript);
     final response = await model.generateContent([content]);
     return response;
   }
