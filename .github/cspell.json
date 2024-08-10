@@ -10,7 +10,7 @@
     },
     {
       "name": "vgv_forbidden",
-      "path": "https://raw.githubusercontent.com/verygoodopensource/very_good_dictionaries/main/forbidden.txt",
+      "path": "https://raw.githubusercontent.com/CsabaConsulting/very_good_dictionaries/main/forbidden.txt",
       "description": "Forbidden VGV Spellings"
     }
   ],
@@ -20,6 +20,7 @@
     "localizable",
     "mostrado",
     "página",
-    "Texto"
+    "Texto",
+    "open-source"
   ]
 }
