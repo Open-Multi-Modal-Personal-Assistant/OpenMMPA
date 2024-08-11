@@ -19,6 +19,7 @@ jobs:
   build:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
+      min_coverage: 10
       flutter_channel: stable
       setup: |
         echo "const geminiApiKey = 'a';" > lib/secrets.dart
