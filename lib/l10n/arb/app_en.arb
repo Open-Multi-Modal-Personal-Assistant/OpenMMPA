@@ -68,25 +68,25 @@
     "@interactionAppBarTitle": {
         "description": "Text shown in the AppBar of the Interaction Page"
     },
-    "uniModalButtonDescription": "Uni Modal interaction",
+    "uniModalButtonDescription": "Voice chat",
     "@uniModalButtonDescription": {
         "description": "Text shown on the legend dialog for Uni Modal Button"
     },
-    "multiModalButtonDescription": "Multi Modal interaction",
+    "multiModalButtonDescription": "Image chat",
     "@multiModalButtonDescription": {
         "description": "Text shown on the legend dialog for Multi Modal Button"
     },
-    "translateButtonDescription": "Translate interaction",
+    "translateButtonDescription": "Translation",
     "@translateButtonDescription": {
         "description": "Text shown on the legend dialog for Translate Button"
     },
-    "personalizationButtonDescription": "Personalization statements",
+    "personalizationButtonDescription": "Personalization",
     "@personalizationButtonDescription": {
         "description": "Text shown on the legend dialog for Personalization Button"
     },
-    "preferencesButtonDescription": "Preferences and Settings",
+    "preferencesButtonDescription": "Settings",
     "@preferencesButtonDescription": {
-        "description": "Text shown on the legend dialog for Preferences Button"
+        "description": "Text shown on the legend dialog for Preferences and Settings Button"
     },
     "preferencesLlmDebugModeLabel": "LLM Debug Mode",
     "@preferencesLlmDebugModeLabel": {

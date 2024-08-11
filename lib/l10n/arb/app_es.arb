@@ -68,25 +68,25 @@
     "@interactionAppBarTitle": {
         "description": "Texto que se muestra en la AppBar de la página de expresión"
     },
-    "uniModalButtonDescription": "Interacción unimodal",
+    "uniModalButtonDescription": "Chat de voz",
     "@uniModalButtonDescription": {
         "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón Unimodal"
     },
-    "multiModalButtonDescription": "Interacción multimodal",
+    "multiModalButtonDescription": "Chat de imagen",
     "@multiModalButtonDescription": {
         "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón multimodal"
     },
-    "translateButtonDescription": "Traducir interacción",
+    "translateButtonDescription": "Traducción",
     "@translateButtonDescription": {
         "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón Traducir"
     },
-    "personalizationButtonDescription": "Declaraciones de personalización",
+    "personalizationButtonDescription": "Personalización",
     "@personalizationButtonDescription": {
         "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón de personalización"
     },
-    "preferencesButtonDescription": "Preferencias y configuraciones",
+    "preferencesButtonDescription": "Ajustes",
     "@preferencesButtonDescription": {
-        "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón Preferencias"
+        "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón Preferencias y configuraciones"
     },
     "preferencesLlmDebugModeLabel": "LLM Debug Mode",
     "@preferencesLlmDebugModeLabel": {
