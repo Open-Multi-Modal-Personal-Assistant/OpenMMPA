@@ -1,9 +1,11 @@
+import 'dart:developer';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inspector_gadget/camera/cubit/capture_cubit.dart';
 import 'package:inspector_gadget/camera/cubit/image_cubit.dart';
+import 'package:inspector_gadget/l10n/l10n.dart';
 
 class CameraPage extends StatelessWidget {
   const CameraPage({super.key});
@@ -44,8 +46,7 @@ IconData getCameraLensIcon(CameraLensDirection direction) {
 }
 
 void _logError(String code, String? message) {
-  // ignore: avoid_print
-  print('Error: $code${message == null ? '' : '\nError Message: $message'}');
+  log('Error: $code${message == null ? '' : '\nError Message: $message'}');
 }
 
 class _CameraViewState extends State<CameraView>
@@ -104,9 +105,11 @@ class _CameraViewState extends State<CameraView>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Camera example'),
+        title: Text(l10n.captureAppBarTitle),
       ),
       body: Expanded(
         child: Padding(
@@ -126,14 +129,7 @@ class _CameraViewState extends State<CameraView>
     final cameraController = controller;
 
     if (cameraController == null || !cameraController.value.isInitialized) {
-      return const Text(
-        'Tap a camera',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 24,
-          fontWeight: FontWeight.w900,
-        ),
-      );
+      return Container();
     } else {
       return Listener(
         onPointerDown: (_) => _pointers++,
@@ -179,10 +175,8 @@ class _CameraViewState extends State<CameraView>
     final toggles = <Widget>[];
 
     if (_cameras.isEmpty) {
-      SchedulerBinding.instance.addPostFrameCallback((_) async {
-        showInSnackBar('No camera found.');
-      });
-      return const Text('None');
+      log('Error: No camera found.');
+      return Container();
     } else {
       for (final cameraDescription in _cameras) {
         toggles.add(
@@ -198,11 +192,6 @@ class _CameraViewState extends State<CameraView>
   }
 
   String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
-
-  void showInSnackBar(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-  }
 
   void onViewFinderTap(TapDownDetails details, BoxConstraints constraints) {
     if (controller == null) {
@@ -246,9 +235,7 @@ class _CameraViewState extends State<CameraView>
         setState(() {});
       }
       if (cameraController.value.hasError) {
-        showInSnackBar(
-          'Camera error ${cameraController.value.errorDescription}',
-        );
+        log('Camera error ${cameraController.value.errorDescription}');
       }
     });
 
@@ -265,23 +252,23 @@ class _CameraViewState extends State<CameraView>
     } on CameraException catch (e) {
       switch (e.code) {
         case 'CameraAccessDenied':
-          showInSnackBar('You have denied camera access.');
+          log('You have denied camera access.');
         case 'CameraAccessDeniedWithoutPrompt':
           // iOS only
-          showInSnackBar('Please go to Settings app to enable camera access.');
+          log('Please go to Settings app to enable camera access.');
         case 'CameraAccessRestricted':
           // iOS only
-          showInSnackBar('Camera access is restricted.');
+          log('Camera access is restricted.');
         case 'AudioAccessDenied':
-          showInSnackBar('You have denied audio access.');
+          log('You have denied audio access.');
         case 'AudioAccessDeniedWithoutPrompt':
           // iOS only
-          showInSnackBar('Please go to Settings app to enable audio access.');
+          log('Please go to Settings app to enable audio access.');
         case 'AudioAccessRestricted':
           // iOS only
-          showInSnackBar('Audio access is restricted.');
+          log('Audio access is restricted.');
         default:
-          _showCameraException(e);
+          _logError(e.code, e.description);
           break;
       }
     }
@@ -298,7 +285,7 @@ class _CameraViewState extends State<CameraView>
           imageFile = file;
         });
         if (file != null) {
-          showInSnackBar('Picture saved to ${file.path}');
+          log('Picture saved to ${file.path}');
         }
       }
     });
@@ -307,7 +294,7 @@ class _CameraViewState extends State<CameraView>
   Future<XFile?> takePicture() async {
     final cameraController = controller;
     if (cameraController == null || !cameraController.value.isInitialized) {
-      showInSnackBar('Error: select a camera first.');
+      log('Error: select a camera first.');
       return null;
     }
 
@@ -320,13 +307,8 @@ class _CameraViewState extends State<CameraView>
       final file = await cameraController.takePicture();
       return file;
     } on CameraException catch (e) {
-      _showCameraException(e);
+      _logError(e.code, e.description);
       return null;
     }
-  }
-
-  void _showCameraException(CameraException e) {
-    _logError(e.code, e.description);
-    showInSnackBar('Error: ${e.code}\n${e.description}');
   }
 }

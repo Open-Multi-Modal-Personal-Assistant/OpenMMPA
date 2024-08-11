@@ -119,5 +119,9 @@
     "historyAppBarTitle": "History",
     "@historyAppBarTitle": {
         "description": "Text shown in the AppBar of the History Page"
+    },
+    "captureAppBarTitle": "Tap to capture",
+    "@captureAppBarTitle": {
+        "description": "Text shown in the AppBar of the Image Capture Page"
     }
 }
