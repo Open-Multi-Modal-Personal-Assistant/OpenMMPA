@@ -133,6 +133,7 @@ class _PreferencesViewState extends State<PreferencesView> {
             await prefService.fromMap(preferencesMap);
           }
         },
+        leading: const Icon(Icons.cloud_download),
         child: Text(l10n.preferencesImportApiKeysTitle),
       ),
       PrefCheckbox(
