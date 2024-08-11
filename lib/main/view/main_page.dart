@@ -68,95 +68,107 @@ class MainPage extends StatelessWidget {
           columnSizes: columnSizes,
           rowSizes: rowSizes,
           children: [
-            IconButton(
-              key: const Key(uniModalKey),
-              icon: const Icon(Icons.chat),
-              iconSize: iconSize,
-              onPressed: () => clickableState
-                  ? navigateWithMode(
-                      context,
-                      mainCubit,
-                      InteractionMode.uniModalMode,
-                    )
-                  : null,
+            Card(
+              child: IconButton(
+                key: const Key(uniModalKey),
+                icon: const Icon(Icons.chat),
+                iconSize: iconSize,
+                onPressed: () => clickableState
+                    ? navigateWithMode(
+                        context,
+                        mainCubit,
+                        InteractionMode.uniModalMode,
+                      )
+                    : null,
+              ),
             ),
-            IconButton(
-              key: const Key(multiModalKey),
-              icon: const Icon(Icons.video_chat),
-              iconSize: iconSize,
-              onPressed: () => clickableState
-                  ? Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (context) => const CameraPage(),
-                      ),
-                    )
-                  : null,
+            Card(
+              child: IconButton(
+                key: const Key(multiModalKey),
+                icon: const Icon(Icons.video_chat),
+                iconSize: iconSize,
+                onPressed: () => clickableState
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (context) => const CameraPage(),
+                        ),
+                      )
+                    : null,
+              ),
             ),
-            IconButton(
-              key: const Key(translateKey),
-              icon: const Icon(Icons.translate),
-              iconSize: iconSize,
-              onPressed: () => clickableState
-                  ? navigateWithMode(
-                      context,
-                      mainCubit,
-                      InteractionMode.translateMode,
-                    )
-                  : null,
+            Card(
+              child: IconButton(
+                key: const Key(translateKey),
+                icon: const Icon(Icons.translate),
+                iconSize: iconSize,
+                onPressed: () => clickableState
+                    ? navigateWithMode(
+                        context,
+                        mainCubit,
+                        InteractionMode.translateMode,
+                      )
+                    : null,
+              ),
             ),
-            IconButton(
-              key: const Key(personalizationKey),
-              icon: const Icon(Icons.person_add),
-              iconSize: iconSize,
-              onPressed: () => clickableState
-                  ? Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (context) => const PersonalizationPage(),
-                      ),
-                    )
-                  : null,
+            Card(
+              child: IconButton(
+                key: const Key(personalizationKey),
+                icon: const Icon(Icons.person_add),
+                iconSize: iconSize,
+                onPressed: () => clickableState
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (context) => const PersonalizationPage(),
+                        ),
+                      )
+                    : null,
+              ),
             ),
-            IconButton(
-              key: const Key(settingsKey),
-              icon: const Icon(Icons.settings),
-              iconSize: iconSize,
-              onPressed: () => clickableState
-                  ? Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (context) => const PreferencesPage(),
-                      ),
-                    )
-                  : null,
+            Card(
+              child: IconButton(
+                key: const Key(settingsKey),
+                icon: const Icon(Icons.settings),
+                iconSize: iconSize,
+                onPressed: () => clickableState
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (context) => const PreferencesPage(),
+                        ),
+                      )
+                    : null,
+              ),
             ),
-            IconButton(
-              key: const Key(helpKey),
-              icon: const Icon(Icons.help),
-              iconSize: iconSize,
-              onPressed: () async => legendDialog(context, [
-                Tuple2<IconData, String>(
-                  Icons.chat,
-                  l10n.uniModalButtonDescription,
-                ),
-                Tuple2<IconData, String>(
-                  Icons.video_chat,
-                  l10n.multiModalButtonDescription,
-                ),
-                Tuple2<IconData, String>(
-                  Icons.translate,
-                  l10n.translateButtonDescription,
-                ),
-                Tuple2<IconData, String>(
-                  Icons.person_add,
-                  l10n.personalizationButtonDescription,
-                ),
-                Tuple2<IconData, String>(
-                  Icons.settings,
-                  l10n.preferencesButtonDescription,
-                ),
-              ]),
+            Card(
+              child: IconButton(
+                key: const Key(helpKey),
+                icon: const Icon(Icons.help),
+                iconSize: iconSize,
+                onPressed: () async => legendDialog(context, [
+                  Tuple2<IconData, String>(
+                    Icons.chat,
+                    l10n.uniModalButtonDescription,
+                  ),
+                  Tuple2<IconData, String>(
+                    Icons.video_chat,
+                    l10n.multiModalButtonDescription,
+                  ),
+                  Tuple2<IconData, String>(
+                    Icons.translate,
+                    l10n.translateButtonDescription,
+                  ),
+                  Tuple2<IconData, String>(
+                    Icons.person_add,
+                    l10n.personalizationButtonDescription,
+                  ),
+                  Tuple2<IconData, String>(
+                    Icons.settings,
+                    l10n.preferencesButtonDescription,
+                  ),
+                ]),
+              ),
             ),
           ],
         ),
