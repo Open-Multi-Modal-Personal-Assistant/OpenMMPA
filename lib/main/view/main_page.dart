@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
+import 'package:inspector_gadget/camera/view/camera_page.dart';
 import 'package:inspector_gadget/database/view/personalization_page.dart';
 import 'package:inspector_gadget/interaction/interaction.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
@@ -84,10 +85,11 @@ class MainPage extends StatelessWidget {
               icon: const Icon(Icons.video_chat),
               iconSize: iconSize,
               onPressed: () => clickableState
-                  ? navigateWithMode(
+                  ? Navigator.push(
                       context,
-                      mainCubit,
-                      InteractionMode.multiModalMode,
+                      MaterialPageRoute<void>(
+                        builder: (context) => const CameraPage(),
+                      ),
                     )
                   : null,
             ),

@@ -2,6 +2,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inspector_gadget/ai/ai.dart';
+import 'package:inspector_gadget/camera/cubit/image_cubit.dart';
 import 'package:inspector_gadget/database/cubit/database_cubit.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/main/main.dart';
@@ -20,6 +21,7 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => AiCubit()),
         BlocProvider(create: (_) => DatabaseCubit()),
+        BlocProvider(create: (_) => ImageCubit()),
         BlocProvider(create: (_) => MainCubit()),
         BlocProvider(create: (_) => PreferencesCubit()),
         BlocProvider(create: (_) => SttCubit()),
