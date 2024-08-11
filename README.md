@@ -18,7 +18,7 @@ and RAG (Retrieval Augmented Generation) to turn your existing devices into inte
 * **Versatile Modes**:
   - **Natural Voice Chat**: Engage in dynamic conversations like you would with a friend.
   - **Translation Mode**: Break down language barriers with real-time translation powered by Chirp.
-  - **Multimodal Exploration**: Ask questions about anything you see through your camera, unlocking a new dimension of interaction.
+  - **Multi-modal Exploration**: Ask questions about anything you see through your camera, unlocking a new dimension of interaction.
 
 ## Advanced Capabilities:
 
