@@ -180,7 +180,7 @@ class _CameraViewState extends State<CameraView>
     } else {
       for (final cameraDescription in _cameras) {
         toggles.add(
-          IconButton(
+          IconButton.filledTonal(
             onPressed: () => onNewCameraSelected(cameraDescription),
             icon: Icon(getCameraLensIcon(cameraDescription.lensDirection)),
           ),
