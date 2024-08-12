@@ -71,7 +71,7 @@ mixin ToolsMixin {
     for (final funcTool in funcTools) {
       if (funcTool.isAvailable(preferences)) {
         for (final function in funcTool.getFunctionDeclarations(preferences)) {
-          buffer.writeln('* ${function.name}: ${function.description}');
+          buffer.writeln('- ${function.name}: ${function.description}');
         }
       }
     }
