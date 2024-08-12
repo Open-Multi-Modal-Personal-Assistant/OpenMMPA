@@ -45,7 +45,7 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     Location? gpsLocation,
   ) async {
     log('prompt: $prompt');
-    if (chat != null) {
+    if (chat == null) {
       final stuffedInstruction = systemInstruction.replaceAll(
         '%%%',
         getFunctionCallPromptStuffing(preferencesState),
