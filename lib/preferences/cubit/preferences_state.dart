@@ -39,10 +39,10 @@ class PreferencesState {
   static const String themeSelectionDark = 'dark';
   static const String themeSelectionDefault = themeSelectionSystem;
   static const int ragThresholdMinimum = 0;
-  static const int ragThresholdDefault = 50;
-  static const int ragThresholdMaximum = 200;
+  static const int ragThresholdDefault = 170;
+  static const int ragThresholdMaximum = 300;
   static const int ragThresholdDivisions =
-      (ragThresholdMaximum - ragThresholdMinimum + 1) ~/ 5;
+      (ragThresholdMaximum - ragThresholdMinimum + 1) ~/ 10;
   static const String personalizationRagThresholdTag =
       'personalization_rag_threshold';
   static const String historyRagThresholdTag = 'history_rag_threshold';
