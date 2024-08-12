@@ -13,6 +13,7 @@ class PersonalizationCubit extends Cubit<State<String>> {
       playingStateLabel: stateMachine.newState(playingStateLabel),
       recordingStateLabel: stateMachine.newState(recordingStateLabel),
       processingStateLabel: stateMachine.newState(processingStateLabel),
+      errorStateLabel: stateMachine.newState(errorStateLabel),
     };
 
     browsingState.enter();
@@ -24,6 +25,7 @@ class PersonalizationCubit extends Cubit<State<String>> {
   static const String playingStateLabel = 'playing';
   static const String recordingStateLabel = 'recording';
   static const String processingStateLabel = 'processing';
+  static const String errorStateLabel = 'error';
 
   Map<String, State<String>> stateMap = {};
   Map<String, int> stateIndexMap = {
@@ -31,6 +33,7 @@ class PersonalizationCubit extends Cubit<State<String>> {
     playingStateLabel: 1,
     recordingStateLabel: 2,
     processingStateLabel: 3,
+    errorStateLabel: 4,
   };
 
   String setState(String stateName) {
