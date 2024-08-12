@@ -88,7 +88,7 @@ class _PersonalizationViewState extends State<PersonalizationView>
 
   /* BEGIN Android native STT utilities */
   Future<void> _resultListener(SpeechRecognitionResult result) async {
-    log('Result listener final: ${result.finalResult}, '
+    debugPrint('Result listener final: ${result.finalResult}, '
         'words: ${result.recognizedWords}');
 
     final recorded = result.recognizedWords.trim();

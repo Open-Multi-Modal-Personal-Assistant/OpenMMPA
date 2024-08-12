@@ -182,7 +182,7 @@ class _InteractionViewState extends State<InteractionView>
 
   Future<void> _stopRecording(BuildContext context) async {
     if (areSpeechServicesNative) {
-      log('speech stop');
+      debugPrint('speech stop');
       await speech?.stop();
     } else {
       final path = await _audioRecorder?.stop();
@@ -240,7 +240,7 @@ class _InteractionViewState extends State<InteractionView>
 
   /* BEGIN Android native STT utilities */
   Future<void> _resultListener(SpeechRecognitionResult result) async {
-    log('Result listener final: ${result.finalResult}, '
+    debugPrint('Result listener final: ${result.finalResult}, '
         'words: ${result.recognizedWords}');
 
     setState(() {
