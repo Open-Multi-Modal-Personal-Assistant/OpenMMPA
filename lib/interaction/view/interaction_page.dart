@@ -454,6 +454,25 @@ class _InteractionViewState extends State<InteractionView>
     }
   }
 
+  Widget outlinedIcon(
+    BuildContext context,
+    IconData iconData,
+    double iconSize,
+  ) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Stack(
+      children: [
+        Center(
+          child:
+              Icon(iconData, size: iconSize * 1.1, color: colorScheme.shadow),
+        ),
+        Center(
+          child: Icon(iconData, size: iconSize, color: colorScheme.primary),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -496,7 +515,7 @@ class _InteractionViewState extends State<InteractionView>
             GestureDetector(
               child: AnimateStyles.pulse(
                 _animationController,
-                const Icon(Icons.mic_rounded, size: 220),
+                outlinedIcon(context, Icons.mic_rounded, 200),
               ),
               onTap: () async {
                 await _stopRecording(context);
@@ -506,28 +525,28 @@ class _InteractionViewState extends State<InteractionView>
             GestureDetector(
               child: AnimateStyles.rotateIn(
                 _animationController,
-                const Icon(Icons.text_fields, size: 220),
+                outlinedIcon(context, Icons.text_fields, 200),
               ),
             ),
             // 3: LLM phase
             GestureDetector(
               child: AnimateStyles.swing(
                 _animationController,
-                const Icon(Icons.science, size: 220),
+                outlinedIcon(context, Icons.science, 200),
               ),
             ),
             // 4: TTS phase: convert LLM response to speech locally or remote
             GestureDetector(
               child: AnimateStyles.pulse(
                 _animationController,
-                const Icon(Icons.transcribe, size: 220),
+                outlinedIcon(context, Icons.transcribe, 200),
               ),
             ),
             // 5: Playback phase
             GestureDetector(
               child: AnimateStyles.pulse(
                 _animationController,
-                const Icon(Icons.speaker, size: 220),
+                outlinedIcon(context, Icons.speaker, 200),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -537,7 +556,7 @@ class _InteractionViewState extends State<InteractionView>
             GestureDetector(
               child: AnimateStyles.bounce(
                 _animationController,
-                const Icon(Icons.check, size: 220),
+                outlinedIcon(context, Icons.check, 200),
               ),
               onTap: () {
                 deferredActionQueue.add(DeferredAction(ActionKind.initialize));
@@ -548,7 +567,7 @@ class _InteractionViewState extends State<InteractionView>
             GestureDetector(
               child: AnimateStyles.pulse(
                 _animationController,
-                const Icon(Icons.warning, size: 220),
+                outlinedIcon(context, Icons.warning, 200),
               ),
               onTap: () {
                 deferredActionQueue.add(DeferredAction(ActionKind.initialize));
