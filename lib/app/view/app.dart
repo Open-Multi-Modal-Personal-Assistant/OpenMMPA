@@ -54,6 +54,9 @@ class AppView extends StatelessWidget {
       mainCubit.setState(MainCubit.waitingStateLabel);
     }
 
+    final preferencesState =
+        context.select((PreferencesCubit cubit) => cubit.state);
+
     return PrefService(
       service: PreferencesState.prefService!,
       child: MaterialApp(
@@ -68,7 +71,7 @@ class AppView extends StatelessWidget {
           useMaterial3: true,
           swapLegacyOnMaterial3: true,
         ),
-        // themeMode: ThemeMode.light,
+        themeMode: preferencesState.themeSelection(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: const MainPage(),

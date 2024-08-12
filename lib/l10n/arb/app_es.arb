@@ -123,5 +123,21 @@
     "captureAppBarTitle": "Tap to capture",
     "@captureAppBarTitle": {
         "description": "Text shown in the AppBar of the Image Capture Page"
+    },
+    "themeSelectionLabel": "Selección de tema:",
+    "@themeSelectionLabel": {
+        "description": "Texto que se muestra en la etiqueta principal de Preferencias para la selección de temas"
+    },
+    "themeSelectionSystemLabel": "Tema del sistema",
+    "@themeSelectionSystemLabel": {
+        "description": "Texto que se muestra en la casilla de verificación de selección de tema del sistema de preferencias"
+    },
+    "themeSelectionLightLabel": "Tema claro",
+    "@themeSelectionSystemLabel": {
+        "description": "Texto que se muestra en la casilla de verificación de selección de tema claro de Preferencias"
+    },
+    "themeSelectionDarkLabel": "Tema oscuro",
+    "@themeSelectionSystemLabel": {
+        "description": "Texto que se muestra en la casilla de verificación de selección de tema oscuro de Preferencias"
     }
 }

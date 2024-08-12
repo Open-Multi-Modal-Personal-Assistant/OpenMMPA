@@ -40,6 +40,7 @@ class _PreferencesViewState extends State<PreferencesView> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final textTheme = Theme.of(context).textTheme;
     final sttState = context.select((SttCubit cubit) => cubit.state);
     final inputLocales = sttState.localeNames
         .map(
@@ -164,6 +165,28 @@ class _PreferencesViewState extends State<PreferencesView> {
         subtitle: Text(l10n.preferencesOutputLocaleSubLabel),
         pref: PreferencesState.outputLocaleTag,
         items: outputLanguages,
+      ),
+      PrefLabel(
+        title: Text(
+          l10n.themeSelectionLabel,
+          style: textTheme.headlineSmall,
+          maxLines: 3,
+        ),
+      ),
+      PrefRadio<String>(
+        title: Text(l10n.themeSelectionSystemLabel),
+        value: PreferencesState.themeSelectionSystem,
+        pref: PreferencesState.themeSelectionTag,
+      ),
+      PrefRadio<String>(
+        title: Text(l10n.themeSelectionLightLabel),
+        value: PreferencesState.themeSelectionLight,
+        pref: PreferencesState.themeSelectionTag,
+      ),
+      PrefRadio<String>(
+        title: Text(l10n.themeSelectionDarkLabel),
+        value: PreferencesState.themeSelectionDark,
+        pref: PreferencesState.themeSelectionTag,
       ),
     ];
 

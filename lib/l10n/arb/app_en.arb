@@ -123,5 +123,21 @@
     "captureAppBarTitle": "Tap to capture",
     "@captureAppBarTitle": {
         "description": "Text shown in the AppBar of the Image Capture Page"
+    },
+    "themeSelectionLabel": "Theme Selection:",
+    "@themeSelectionLabel": {
+        "description": "Text shown in the Preferences for Theme Selection lead label"
+    },
+    "themeSelectionSystemLabel": "System's theme",
+    "@themeSelectionSystemLabel": {
+        "description": "Text shown in the Preferences for System theme selection checkbox"
+    },
+    "themeSelectionLightLabel": "Light theme",
+    "@themeSelectionSystemLabel": {
+        "description": "Text shown in the Preferences for Light theme selection checkbox"
+    },
+    "themeSelectionDarkLabel": "Dark theme",
+    "@themeSelectionSystemLabel": {
+        "description": "Text shown in the Preferences for Dark theme selection checkbox"
     }
 }

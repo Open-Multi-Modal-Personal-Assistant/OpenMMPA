@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:pref/pref.dart';
 import 'package:strings/strings.dart';
 
@@ -30,7 +30,12 @@ class PreferencesState {
   static const bool llmDebugModeDefault = false;
   static const int pauseForDefault = 3;
   static const int listenForDefault = 60;
-  static const String prefix = 'ig';
+  static const String themeSelectionTag = 'theme_selection';
+  static const String themeSelectionSystem = 'system';
+  static const String themeSelectionLight = 'light';
+  static const String themeSelectionDark = 'dark';
+  static const String themeSelectionDefault = themeSelectionSystem;
+  static const String prefix = 'ig'; // Inspector Gadget
 
   static Future<void> init() async {
     prefService = await PrefServiceShared.init(
@@ -46,6 +51,7 @@ class PreferencesState {
         inputLocaleTag: inputLocaleDefault,
         outputLocaleTag: outputLocaleDefault,
         llmDebugModeTag: llmDebugModeDefault,
+        themeSelectionTag: themeSelectionDefault,
       },
     );
 
@@ -77,6 +83,17 @@ class PreferencesState {
       prefService?.get<String>(outputLocaleTag) ?? outputLocaleDefault;
   bool get llmDebugMode =>
       prefService?.get<bool>(llmDebugModeTag) ?? llmDebugModeDefault;
+  ThemeMode themeSelection() {
+    final theme =
+        prefService?.get<String>(themeSelectionTag) ?? themeSelectionDefault;
+    if (theme == themeSelectionLight) {
+      return ThemeMode.light;
+    } else if (theme == themeSelectionDark) {
+      return ThemeMode.dark;
+    } else {
+      return ThemeMode.system;
+    }
+  }
 
   static bool getUnitSystemDefault() {
     final localeName = Platform.localeName;
