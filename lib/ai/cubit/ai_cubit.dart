@@ -100,10 +100,11 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     final stuffed = stuffedPrompt.toString();
     log('stuffed: $stuffed');
     var message = Content.text('');
+    log('imagePath: $imagePath');
     if (imagePath.isEmpty) {
       message = Content.text(stuffed);
     } else {
-      Content.multi([
+      message = Content.multi([
         TextPart(stuffed),
         // TODO(MrCsabaToth): other image formats (png, jpg, webp, heic, heif)
         DataPart('image/jpeg', await File(imagePath).readAsBytes()),
