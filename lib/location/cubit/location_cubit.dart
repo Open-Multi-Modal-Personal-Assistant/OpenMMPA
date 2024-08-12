@@ -35,8 +35,24 @@ class LocationCubit extends Cubit<Location?> {
     }
 
     try {
-      final location =
-          await FlLocation.getLocation(accuracy: LocationAccuracy.navigation);
+      // final now = DateTime.now();
+      // final location = Location(
+      //   latitude: 36.7420,
+      //   longitude: -119.7702,
+      //   accuracy: 0,
+      //   altitude: 94,
+      //   heading: 0,
+      //   speed: 0,
+      //   speedAccuracy: 0,
+      //   millisecondsSinceEpoch: now.millisecondsSinceEpoch.toDouble(),
+      //   timestamp: now,
+      //   isMock: true,
+      // );
+
+      final location = await FlLocation.getLocation(
+        accuracy: LocationAccuracy.navigation,
+        timeLimit: const Duration(milliseconds: 500),
+      );
       emit(location);
       return location;
     } catch (e) {
