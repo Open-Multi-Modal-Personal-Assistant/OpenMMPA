@@ -43,7 +43,7 @@ class _PreferencesViewState extends State<PreferencesView> {
     final l10n = context.l10n;
     final textTheme = Theme.of(context).textTheme;
     final sttState = context.select((SttCubit cubit) => cubit.state);
-    var inputLocales = sttState.localeNames
+    final inputLocales = sttState.localeNames
         .map(
           (localeName) => DropdownMenuItem(
             value: localeName.localeId,
@@ -53,7 +53,7 @@ class _PreferencesViewState extends State<PreferencesView> {
         .toList(growable: false);
 
     final ttsState = context.select((TtsCubit cubit) => cubit.state);
-    final outputLanguages = ttsState.languages
+    var outputLanguages = ttsState.languages
         .map(
           (language) => DropdownMenuItem(
             value: language,
@@ -62,13 +62,12 @@ class _PreferencesViewState extends State<PreferencesView> {
         )
         .toList(growable: false);
 
-    if (inputLocales.isEmpty && outputLanguages.isNotEmpty) {
-      inputLocales = ttsState.languages
-          .map((lang) => lang.replaceAll('-', '_'))
+    if (inputLocales.isNotEmpty && outputLanguages.isNotEmpty) {
+      outputLanguages = sttState.localeNames
           .map(
-            (language) => DropdownMenuItem(
-              value: language,
-              child: Text(language),
+            (localeName) => DropdownMenuItem(
+              value: localeName.localeId.replaceAll('_', '-'),
+              child: Text(localeName.name),
             ),
           )
           .toList(growable: false);
