@@ -287,10 +287,10 @@ class _InteractionViewState extends State<InteractionView>
     } else {
       targetLocale = inputLocale;
       debugPrint('targetLocale: $targetLocale');
-      final newHeartRate = heartRateCubit?.state ?? 0;
-      if (newHeartRate > 0) {
-        heartRate = newHeartRate;
-      }
+      // final newHeartRate = heartRateCubit?.state ?? 0;
+      // if (newHeartRate > 0) {
+      //   heartRate = newHeartRate;
+      // }
 
       final loc = await locationCubit?.obtain();
       if (loc != null &&
