@@ -113,13 +113,18 @@ class _CameraViewState extends State<CameraView>
       appBar: AppBar(
         title: Text(l10n.captureAppBarTitle),
       ),
-      body: Expanded(
-        child: Padding(
-          padding: const EdgeInsets.all(1),
-          child: Center(
-            child: _cameraPreviewWidget(),
+      body: Flex(
+        direction: Axis.vertical,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(1),
+              child: Center(
+                child: _cameraPreviewWidget(),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
       floatingActionButton: _cameraTogglesRowWidget(context),
     );
