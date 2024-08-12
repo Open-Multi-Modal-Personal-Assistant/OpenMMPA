@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math' as m;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -120,7 +121,7 @@ class _CameraViewState extends State<CameraView>
           ),
         ),
       ),
-      floatingActionButton: _cameraTogglesRowWidget(),
+      floatingActionButton: _cameraTogglesRowWidget(context),
     );
   }
 
@@ -172,18 +173,26 @@ class _CameraViewState extends State<CameraView>
 
   /// Display a row of toggle to select the camera
   /// (or a message if no camera is available).
-  Widget _cameraTogglesRowWidget() {
+  Widget _cameraTogglesRowWidget(BuildContext context) {
     final toggles = <Widget>[];
 
     if (_cameras.isEmpty) {
       log('Error: No camera found.');
       return Container();
     } else {
+      final size = MediaQuery.of(context).size;
+      const appBarHeight = 56;
+      // https://www.geeksforgeeks.org/flutter-set-the-height-of-the-appbar/
+      final iconSize = m.min(size.width, size.height - appBarHeight) / 3;
+
       for (final cameraDescription in _cameras) {
         toggles.add(
           IconButton.filledTonal(
             onPressed: () => onNewCameraSelected(cameraDescription),
-            icon: Icon(getCameraLensIcon(cameraDescription.lensDirection)),
+            icon: Icon(
+              getCameraLensIcon(cameraDescription.lensDirection),
+              size: iconSize,
+            ),
           ),
         );
       }
