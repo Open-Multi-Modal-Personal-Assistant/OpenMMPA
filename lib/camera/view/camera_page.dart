@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inspector_gadget/camera/cubit/capture_cubit.dart';
 import 'package:inspector_gadget/camera/cubit/image_cubit.dart';
+import 'package:inspector_gadget/interaction/interaction.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
+import 'package:inspector_gadget/main/cubit/main_cubit.dart';
 
 class CameraPage extends StatelessWidget {
   const CameraPage({super.key});
@@ -53,7 +55,6 @@ class _CameraViewState extends State<CameraView>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   List<CameraDescription> _cameras = <CameraDescription>[];
   CameraController? controller;
-  XFile? imageFile;
   bool enableAudio = false;
   double _minAvailableZoom = 1;
   double _maxAvailableZoom = 1;
@@ -144,7 +145,7 @@ class _CameraViewState extends State<CameraView>
                 onScaleUpdate: _handleScaleUpdate,
                 onTapDown: (TapDownDetails details) =>
                     onViewFinderTap(details, constraints),
-                onTap: onTakePictureButtonPressed,
+                onTap: () => onTakePictureButtonPressed(context),
               );
             },
           ),
@@ -278,14 +279,25 @@ class _CameraViewState extends State<CameraView>
     }
   }
 
-  void onTakePictureButtonPressed() {
+  void onTakePictureButtonPressed(BuildContext context) {
     takePicture().then((XFile? file) {
       if (mounted) {
-        setState(() {
-          imageFile = file;
-        });
-        if (file != null) {
-          log('Picture saved to ${file.path}');
+        log('Picture saved to ${file?.path}');
+
+        if (file != null && file.path.isNotEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            context
+                .select((MainCubit cubit) => cubit)
+                .setState(MainCubit.recordingStateLabel);
+            context.select((ImageCubit cubit) => cubit).setPath(file.path);
+            await Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (context) =>
+                    const InteractionPage(InteractionMode.multiModalMode),
+              ),
+            );
+          });
         }
       }
     });
