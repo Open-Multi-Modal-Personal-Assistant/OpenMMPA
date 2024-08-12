@@ -4,7 +4,7 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
-def projectName = 'Inspector Gadget'
+def projectName = 'Open MMPA'
 
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
