@@ -12,6 +12,7 @@ import 'package:flutter_easy_animations/flutter_easy_animations.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/ai/cubit/ai_cubit.dart';
+import 'package:inspector_gadget/camera/cubit/image_cubit.dart';
 import 'package:inspector_gadget/database/cubit/database_cubit.dart';
 import 'package:inspector_gadget/heart_rate/heart_rate.dart';
 import 'package:inspector_gadget/interaction/cubit/interaction_cubit.dart';
@@ -52,12 +53,15 @@ class InteractionPage extends StatelessWidget {
           value: context.read<AiCubit>(),
           child: BlocProvider.value(
             value: context.read<DatabaseCubit>(),
-            child: MultiBlocProvider(
-              providers: [
-                BlocProvider(create: (_) => HeartRateCubit()),
-                BlocProvider(create: (_) => LocationCubit()),
-              ],
-              child: InteractionView(interactionMode),
+            child: BlocProvider.value(
+              value: context.read<ImageCubit>(),
+              child: MultiBlocProvider(
+                providers: [
+                  BlocProvider(create: (_) => HeartRateCubit()),
+                  BlocProvider(create: (_) => LocationCubit()),
+                ],
+                child: InteractionView(interactionMode),
+              ),
             ),
           ),
         ),
@@ -83,6 +87,7 @@ class _InteractionViewState extends State<InteractionView>
   TtsState? ttsState;
   MainCubit? mainCubit;
   AiCubit? aiCubit;
+  ImageCubit? imageCubit;
   DatabaseCubit? databaseCubit;
   PreferencesState? preferencesState;
   bool areSpeechServicesNative =
@@ -293,8 +298,14 @@ class _InteractionViewState extends State<InteractionView>
         gpsLocation = loc;
       }
 
+      var imagePath = '';
+      if (widget.interactionMode == InteractionMode.multiModalMode) {
+        imagePath = imageCubit?.state ?? '';
+      }
+
       response = await aiCubit?.chatStep(
         prompt,
+        imagePath,
         databaseCubit,
         preferencesState,
         heartRate,
@@ -496,6 +507,7 @@ class _InteractionViewState extends State<InteractionView>
 
     heartRateCubit = context.select((HeartRateCubit cubit) => cubit);
     locationCubit = context.select((LocationCubit cubit) => cubit);
+    imageCubit = context.select((ImageCubit cubit) => cubit);
 
     _processDeferredActionQueue(context);
 

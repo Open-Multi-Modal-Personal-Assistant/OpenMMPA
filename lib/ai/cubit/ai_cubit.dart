@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:fl_location/fl_location.dart';
@@ -37,6 +38,7 @@ class AiCubit extends Cubit<int> with ToolsMixin {
 
   Future<GenerateContentResponse?> chatStep(
     String prompt,
+    String imagePath,
     DatabaseCubit? database,
     PreferencesState? preferencesState,
     int heartRate,
@@ -91,11 +93,23 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     }
 
     stuffedPrompt.write(prompt);
-    // TODO(MrCsabaToth): Multi modal call?
-    var content = Content.text(stuffedPrompt.toString());
-    var response = await chat!.sendMessage(content);
+
+    final stuffed = stuffedPrompt.toString();
+    var message = Content.text('');
+    if (imagePath.isEmpty) {
+      message = Content.text(stuffed);
+    } else {
+      Content.multi([
+        TextPart(stuffed),
+        // TODO(MrCsabaToth): other image formats (png, jpg, webp, heic, heif)
+        DataPart('image/jpeg', await File(imagePath).readAsBytes()),
+      ]);
+    }
+
+    var response = await chat!.sendMessage(message);
 
     List<FunctionCall> functionCalls;
+    var content = Content.text('');
     while ((functionCalls = response.functionCalls.toList()).isNotEmpty) {
       final responses = <FunctionResponse>[];
       for (final functionCall in functionCalls) {
