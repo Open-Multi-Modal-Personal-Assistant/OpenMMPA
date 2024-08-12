@@ -49,10 +49,10 @@ class MainPage extends StatelessWidget {
     const appBarHeight = 56;
     if (horizontal) {
       columnSizes.add(1.fr);
-      iconSize = min(size.width / 3, (size.height - appBarHeight) / 2);
+      iconSize = min(size.width / 3.5, (size.height - appBarHeight) / 2.5);
     } else {
       rowSizes.add(1.fr);
-      iconSize = min(size.width / 2, (size.height - appBarHeight) / 3);
+      iconSize = min(size.width / 2.5, (size.height - appBarHeight) / 3.5);
     }
 
     final clickableState = [
@@ -68,8 +68,8 @@ class MainPage extends StatelessWidget {
           columnSizes: columnSizes,
           rowSizes: rowSizes,
           children: [
-            Card(
-              child: IconButton(
+            Center(
+              child: IconButton.filledTonal(
                 key: const Key(uniModalKey),
                 icon: const Icon(Icons.chat),
                 iconSize: iconSize,
@@ -82,8 +82,8 @@ class MainPage extends StatelessWidget {
                     : null,
               ),
             ),
-            Card(
-              child: IconButton(
+            Center(
+              child: IconButton.filledTonal(
                 key: const Key(multiModalKey),
                 icon: const Icon(Icons.video_chat),
                 iconSize: iconSize,
@@ -97,8 +97,8 @@ class MainPage extends StatelessWidget {
                     : null,
               ),
             ),
-            Card(
-              child: IconButton(
+            Center(
+              child: IconButton.filledTonal(
                 key: const Key(translateKey),
                 icon: const Icon(Icons.translate),
                 iconSize: iconSize,
@@ -111,8 +111,8 @@ class MainPage extends StatelessWidget {
                     : null,
               ),
             ),
-            Card(
-              child: IconButton(
+            Center(
+              child: IconButton.filledTonal(
                 key: const Key(personalizationKey),
                 icon: const Icon(Icons.person_add),
                 iconSize: iconSize,
@@ -126,8 +126,8 @@ class MainPage extends StatelessWidget {
                     : null,
               ),
             ),
-            Card(
-              child: IconButton(
+            Center(
+              child: IconButton.filledTonal(
                 key: const Key(settingsKey),
                 icon: const Icon(Icons.settings),
                 iconSize: iconSize,
@@ -141,8 +141,8 @@ class MainPage extends StatelessWidget {
                     : null,
               ),
             ),
-            Card(
-              child: IconButton(
+            Center(
+              child: IconButton.filledTonal(
                 key: const Key(helpKey),
                 icon: const Icon(Icons.help),
                 iconSize: iconSize,
