@@ -318,15 +318,16 @@ class _InteractionViewState extends State<InteractionView>
         response.text.isNullOrWhiteSpace ||
         !context.mounted) {
       mainCubit?.setState(MainCubit.errorStateLabel);
+      return;
     }
 
     if (llmDebugMode) {
       mainCubit?.setState(MainCubit.doneStateLabel);
     } else if (context.mounted) {
       if (areSpeechServicesNative) {
-        await _playbackPhase(context, response?.text ?? '', null, targetLocale);
+        await _playbackPhase(context, response.text ?? '', null, targetLocale);
       } else {
-        await _ttsPhase(context, response?.text ?? '', targetLocale);
+        await _ttsPhase(context, response.text ?? '', targetLocale);
       }
     }
   }
