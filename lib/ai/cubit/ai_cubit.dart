@@ -85,9 +85,10 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     final nearestPersonalization =
         await database?.getNearestPersonalization(userEmbedding);
     if (nearestPersonalization != null && nearestPersonalization.isNotEmpty) {
-      stuffedPrompt
-        ..writeln(personalizationStuffing)
-        ..writeln(nearestPersonalization.map((p) => '* ${p.object.content}'));
+      stuffedPrompt.writeln(personalizationStuffing);
+      for (final personalization in nearestPersonalization) {
+        stuffedPrompt.writeln('- ${personalization.object.content}');
+      }
     }
 
     if (stuffedPrompt.isNotEmpty) {
