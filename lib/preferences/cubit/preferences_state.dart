@@ -21,8 +21,7 @@ class PreferencesState {
   static const int volumeMinimum = 0;
   static const int volumeDefault = 60;
   static const int volumeMaximum = 100;
-  static const int volumedDivisions =
-      volumeMaximum - volumeMinimum;
+  static const int volumedDivisions = (volumeMaximum - volumeMinimum + 1) ~/ 5;
   static const String unitSystemTag = 'unit_system';
   static const bool unitSystemDefault = false;
   static const imperialCountries = ['US', 'UK', 'LR', 'MM'];
@@ -39,6 +38,14 @@ class PreferencesState {
   static const String themeSelectionLight = 'light';
   static const String themeSelectionDark = 'dark';
   static const String themeSelectionDefault = themeSelectionSystem;
+  static const int ragThresholdMinimum = 0;
+  static const int ragThresholdDefault = 50;
+  static const int ragThresholdMaximum = 200;
+  static const int ragThresholdDivisions =
+      (ragThresholdMaximum - ragThresholdMinimum + 1) ~/ 5;
+  static const String personalizationRagThresholdTag =
+      'personalization_rag_threshold';
+  static const String historyRagThresholdTag = 'history_rag_threshold';
   static const String prefix = 'ig'; // Inspector Gadget
 
   static Future<void> init() async {
@@ -56,6 +63,8 @@ class PreferencesState {
         outputLocaleTag: outputLocaleDefault,
         llmDebugModeTag: llmDebugModeDefault,
         themeSelectionTag: themeSelectionDefault,
+        personalizationRagThresholdTag: ragThresholdDefault,
+        historyRagThresholdTag: ragThresholdDefault,
       },
     );
 
@@ -87,6 +96,7 @@ class PreferencesState {
       prefService?.get<String>(outputLocaleTag) ?? outputLocaleDefault;
   bool get llmDebugMode =>
       prefService?.get<bool>(llmDebugModeTag) ?? llmDebugModeDefault;
+
   ThemeMode themeSelection() {
     final theme =
         prefService?.get<String>(themeSelectionTag) ?? themeSelectionDefault;
@@ -98,6 +108,14 @@ class PreferencesState {
       return ThemeMode.system;
     }
   }
+
+  double get personalizationRagThreshold =>
+      (prefService?.get<int>(personalizationRagThresholdTag) ??
+          ragThresholdDefault) /
+      100.0;
+  double get historyRagThreshold =>
+      (prefService?.get<int>(historyRagThresholdTag) ?? ragThresholdDefault) /
+      100.0;
 
   static bool getUnitSystemDefault() {
     final localeName = Platform.localeName;

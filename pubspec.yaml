@@ -35,6 +35,7 @@ dependencies:
   listview_utils_plus: ^0.0.3
   media_kit: ^1.1.10
   media_kit_libs_audio: ^1.0.4
+  number_selector: ^1.0.7
   objectbox: ^4.0.1
   objectbox_flutter_libs: ^4.0.1
   path: ^1.9.0

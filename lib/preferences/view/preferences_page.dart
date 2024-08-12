@@ -10,6 +10,7 @@ import 'package:inspector_gadget/database/view/history_page.dart';
 import 'package:inspector_gadget/database/view/personalization_page.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
+import 'package:inspector_gadget/preferences/view/pref_integer.dart';
 import 'package:inspector_gadget/stt/cubit/stt_cubit.dart';
 import 'package:inspector_gadget/tts/cubit/tts_cubit.dart';
 import 'package:pref/pref.dart';
@@ -187,6 +188,34 @@ class _PreferencesViewState extends State<PreferencesView> {
         title: Text(l10n.themeSelectionDarkLabel),
         value: PreferencesState.themeSelectionDark,
         pref: PreferencesState.themeSelectionTag,
+      ),
+      const PrefLabel(title: Divider(height: 1)),
+      PrefSlider<int>(
+        title: Text(l10n.personalizationRagThresholdLabel),
+        pref: PreferencesState.personalizationRagThresholdTag,
+        min: PreferencesState.ragThresholdMinimum,
+        max: PreferencesState.ragThresholdMaximum,
+        divisions: PreferencesState.ragThresholdDivisions,
+        direction: Axis.vertical,
+      ),
+      const PrefInteger(
+        pref: PreferencesState.personalizationRagThresholdTag,
+        min: PreferencesState.ragThresholdMinimum,
+        max: PreferencesState.ragThresholdMaximum,
+      ),
+      const PrefLabel(title: Divider(height: 1)),
+      PrefSlider<int>(
+        pref: PreferencesState.historyRagThresholdTag,
+        title: Text(l10n.historyRagThresholdLabel),
+        min: PreferencesState.ragThresholdMinimum,
+        max: PreferencesState.ragThresholdMaximum,
+        divisions: PreferencesState.ragThresholdDivisions,
+        direction: Axis.vertical,
+      ),
+      const PrefInteger(
+        pref: PreferencesState.historyRagThresholdTag,
+        min: PreferencesState.ragThresholdMinimum,
+        max: PreferencesState.ragThresholdMaximum,
       ),
     ];
 

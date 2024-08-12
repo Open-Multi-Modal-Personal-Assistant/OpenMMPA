@@ -75,18 +75,26 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     final stuffedPrompt = StringBuffer();
     final nearestHistory = await database?.getNearestHistory(userEmbedding);
     if (nearestHistory != null && nearestHistory.isNotEmpty) {
-      stuffedPrompt
-        ..writeln(conversationStuffing)
-        ..writeln(
-          nearestHistory.map((h) => '${h.object.role}: ${h.object.content}'),
-        );
+      log('ANN Peers ${nearestHistory.map((p) => p.score)}');
+      final annThreshold = preferencesState?.historyRagThreshold ??
+          PreferencesState.ragThresholdDefault / 100.0;
+      stuffedPrompt.writeln(conversationStuffing);
+      for (final history
+          in nearestHistory.where((h) => h.score < annThreshold)) {
+        stuffedPrompt
+            .writeln('- ${history.object.role}: ${history.object.content}');
+      }
     }
 
     final nearestPersonalization =
         await database?.getNearestPersonalization(userEmbedding);
     if (nearestPersonalization != null && nearestPersonalization.isNotEmpty) {
+      log('ANN Peers ${nearestPersonalization.map((p) => p.score)}');
+      final annThreshold = preferencesState?.personalizationRagThreshold ??
+          PreferencesState.ragThresholdDefault / 100.0;
       stuffedPrompt.writeln(personalizationStuffing);
-      for (final personalization in nearestPersonalization) {
+      for (final personalization
+          in nearestPersonalization.where((p) => p.score < annThreshold)) {
         stuffedPrompt.writeln('- ${personalization.object.content}');
       }
     }

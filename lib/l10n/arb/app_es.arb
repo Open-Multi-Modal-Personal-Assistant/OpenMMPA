@@ -139,5 +139,13 @@
     "themeSelectionDarkLabel": "Tema oscuro",
     "@themeSelectionSystemLabel": {
         "description": "Texto que se muestra en la casilla de verificación de selección de tema oscuro de Preferencias"
+    },
+    "personalizationRagThresholdLabel": "Umbral de personalización RAG",
+    "@personalizationRagThresholdLabel": {
+        "description": "Texto que se muestra en el control deslizante y el control giratorio del Umbral de RAG de Preferencias de personalización"
+    },
+    "historyRagThresholdLabel": "Historial Umbral RAG",
+    "@historyRagThresholdLabel": {
+        "description": "Texto que se muestra en las preferencias del control deslizante y el control giratorio del umbral de RAG del historial"
     }
 }

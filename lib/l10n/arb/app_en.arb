@@ -139,5 +139,13 @@
     "themeSelectionDarkLabel": "Dark theme",
     "@themeSelectionSystemLabel": {
         "description": "Text shown in the Preferences for Dark theme selection checkbox"
+    },
+    "personalizationRagThresholdLabel": "Personalization RAG Threshold",
+    "@personalizationRagThresholdLabel": {
+        "description": "Text shown in the Preferences for Personalization RAG Threshold slider and spinner"
+    },
+    "historyRagThresholdLabel": "History RAG Threshold",
+    "@historyRagThresholdLabel": {
+        "description": "Text shown in the Preferences for History RAG Threshold slider and spinner"
     }
 }
