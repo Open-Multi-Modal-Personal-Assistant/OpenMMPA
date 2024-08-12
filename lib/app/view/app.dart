@@ -68,7 +68,7 @@ class AppView extends StatelessWidget {
           useMaterial3: true,
           swapLegacyOnMaterial3: true,
         ),
-        themeMode: ThemeMode.dark,
+        // themeMode: ThemeMode.dark,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: const MainPage(),
