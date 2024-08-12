@@ -149,9 +149,9 @@ class _PreferencesViewState extends State<PreferencesView> {
       PrefSlider<int>(
         title: Text(l10n.preferencesVolumeLabel),
         pref: PreferencesState.volumeTag,
-        min: 0,
-        max: 100,
-        divisions: 5,
+        min: PreferencesState.volumeMinimum,
+        max: PreferencesState.volumeMaximum,
+        divisions: PreferencesState.volumedDivisions,
         direction: Axis.vertical,
       ),
       PrefDropdown<String>(

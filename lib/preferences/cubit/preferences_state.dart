@@ -18,7 +18,11 @@ class PreferencesState {
   static const String areSpeechServicesNativeTag = 'are_speech_services_native';
   static const bool areSpeechServicesNativeDefault = false;
   static const String volumeTag = 'volume';
-  static const int volumeDefault = 50;
+  static const int volumeMinimum = 0;
+  static const int volumeDefault = 60;
+  static const int volumeMaximum = 100;
+  static const int volumedDivisions =
+      volumeMaximum - volumeMinimum;
   static const String unitSystemTag = 'unit_system';
   static const bool unitSystemDefault = false;
   static const imperialCountries = ['US', 'UK', 'LR', 'MM'];
