@@ -31,7 +31,7 @@ class PreferencesState {
   static const String outputLocaleDefault = 'en-US';
   static const String llmDebugModeTag = 'llm_debug_mode';
   static const bool llmDebugModeDefault = false;
-  static const int pauseForDefault = 3;
+  static const int pauseForDefault = 10;
   static const int listenForDefault = 60;
   static const String themeSelectionTag = 'theme_selection';
   static const String themeSelectionSystem = 'system';
