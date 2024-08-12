@@ -164,7 +164,7 @@ class _InteractionViewState extends State<InteractionView>
         }
 
         final devs = await _audioRecorder?.listInputDevices() ?? [];
-        debugPrint(devs.toString());
+        debugPrint('STT devices: $devs');
 
         const config = RecordConfig(
           encoder: encoder,
@@ -404,8 +404,11 @@ class _InteractionViewState extends State<InteractionView>
                 preferencesState!.areSpeechServicesNative &&
                     sttState.hasSpeech &&
                     widget.interactionMode != InteractionMode.translateMode;
-            if (!areSpeechServicesNative) {
-              ttsState = context.select((TtsCubit cubit) => cubit.state);
+
+            ttsState = context.select((TtsCubit cubit) => cubit.state);
+            if ((ttsState?.languages.isEmpty ?? false) &&
+                sttState.localeNames.isNotEmpty) {
+              ttsState?.supplementLanguages(sttState.localeNames);
             }
 
             await heartRateCubit?.listenToHeartRate();

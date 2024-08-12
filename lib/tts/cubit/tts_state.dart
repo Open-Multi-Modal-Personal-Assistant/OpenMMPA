@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:inspector_gadget/state_logging_mixin.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:strings/strings.dart';
 
 class TtsState with StateLoggingMixin {
@@ -123,5 +124,16 @@ class TtsState with StateLoggingMixin {
   Future<void> pause() async {
     final result = await tts.pause();
     logEvent(result == 1 ? 'TTS Paused' : 'Error while TTS Pause');
+  }
+
+  bool supplementLanguages(List<LocaleName> localeINames) {
+    if (languages.isNotEmpty) {
+      return false;
+    }
+
+    languages = localeINames
+        .map((ln) => ln.localeId.replaceAll('_', '-'))
+        .toList(growable: false);
+    return true;
   }
 }
