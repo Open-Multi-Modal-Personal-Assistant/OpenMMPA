@@ -31,6 +31,12 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     return GenerativeModel(
       model: 'gemini-1.5-$modelType',
       apiKey: preferencesState?.geminiApiKey ?? geminiApiKey,
+      safetySettings: [
+        SafetySetting(HarmCategory.harassment, HarmBlockThreshold.none),
+        SafetySetting(HarmCategory.hateSpeech, HarmBlockThreshold.none),
+        SafetySetting(HarmCategory.sexuallyExplicit, HarmBlockThreshold.low),
+        SafetySetting(HarmCategory.dangerousContent, HarmBlockThreshold.none),
+      ],
       systemInstruction: Content.text(systemInstruction),
       tools: withTools ? [getFunctionDeclarations(preferencesState)] : null,
     );
