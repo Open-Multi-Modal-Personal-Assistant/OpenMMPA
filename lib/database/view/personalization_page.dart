@@ -202,6 +202,9 @@ class _PersonalizationViewState extends State<PersonalizationView>
 
                     if (result == OkCancelResult.ok) {
                       database?.deletePersonalization(p13n.id);
+                      setState(() {
+                        _editCount++;
+                      });
                     }
                   },
                   icon: const Icon(Icons.delete),
