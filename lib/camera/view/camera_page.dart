@@ -304,7 +304,7 @@ class _CameraViewState extends State<CameraView>
                 .select((MainCubit cubit) => cubit)
                 .setState(MainCubit.recordingStateLabel);
             context.select((ImageCubit cubit) => cubit).setPath(file.path);
-            await Navigator.push(
+            await Navigator.pushReplacement(
               context,
               MaterialPageRoute<void>(
                 builder: (context) =>
