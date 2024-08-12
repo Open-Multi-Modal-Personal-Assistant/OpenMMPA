@@ -64,9 +64,10 @@ class _PreferencesViewState extends State<PreferencesView> {
 
     if (inputLocales.isEmpty && outputLanguages.isNotEmpty) {
       inputLocales = ttsState.languages
+          .map((lang) => lang.replaceAll('-', '_'))
           .map(
             (language) => DropdownMenuItem(
-              value: language.replaceAll('-', '_'),
+              value: language,
               child: Text(language),
             ),
           )
