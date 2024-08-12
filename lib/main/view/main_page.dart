@@ -71,8 +71,7 @@ class MainPage extends StatelessWidget {
             Center(
               child: IconButton.filledTonal(
                 key: const Key(uniModalKey),
-                icon: const Icon(Icons.chat),
-                iconSize: iconSize,
+                icon: Icon(Icons.chat, size: iconSize),
                 onPressed: () => clickableState
                     ? navigateWithMode(
                         context,
@@ -85,8 +84,7 @@ class MainPage extends StatelessWidget {
             Center(
               child: IconButton.filledTonal(
                 key: const Key(multiModalKey),
-                icon: const Icon(Icons.video_chat),
-                iconSize: iconSize,
+                icon: Icon(Icons.video_chat, size: iconSize),
                 onPressed: () => clickableState
                     ? Navigator.push(
                         context,
@@ -100,8 +98,7 @@ class MainPage extends StatelessWidget {
             Center(
               child: IconButton.filledTonal(
                 key: const Key(translateKey),
-                icon: const Icon(Icons.translate),
-                iconSize: iconSize,
+                icon: Icon(Icons.translate, size: iconSize),
                 onPressed: () => clickableState
                     ? navigateWithMode(
                         context,
@@ -114,8 +111,7 @@ class MainPage extends StatelessWidget {
             Center(
               child: IconButton.filledTonal(
                 key: const Key(personalizationKey),
-                icon: const Icon(Icons.person_add),
-                iconSize: iconSize,
+                icon: Icon(Icons.person_add, size: iconSize),
                 onPressed: () => clickableState
                     ? Navigator.push(
                         context,
@@ -129,8 +125,7 @@ class MainPage extends StatelessWidget {
             Center(
               child: IconButton.filledTonal(
                 key: const Key(settingsKey),
-                icon: const Icon(Icons.settings),
-                iconSize: iconSize,
+                icon: Icon(Icons.settings, size: iconSize),
                 onPressed: () => clickableState
                     ? Navigator.push(
                         context,
@@ -144,8 +139,7 @@ class MainPage extends StatelessWidget {
             Center(
               child: IconButton.filledTonal(
                 key: const Key(helpKey),
-                icon: const Icon(Icons.help),
-                iconSize: iconSize,
+                icon: Icon(Icons.help, size: iconSize),
                 onPressed: () async => legendDialog(context, [
                   Tuple2<IconData, String>(
                     Icons.chat,
