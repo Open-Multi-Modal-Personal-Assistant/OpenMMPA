@@ -44,13 +44,15 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     int heartRate,
     Location? gpsLocation,
   ) async {
+    log('prompt: $prompt');
     if (chat != null) {
-      final model = getModel(preferencesState, systemInstruction);
       final stuffedInstruction = systemInstruction.replaceAll(
         '%%%',
         getFunctionCallPromptStuffing(preferencesState),
       );
-      chat = model.startChat(history: [Content.system(stuffedInstruction)]);
+      log('stuffedInstruction: $stuffedInstruction');
+      final model = getModel(preferencesState, stuffedInstruction);
+      chat = model.startChat();
     }
 
     if (chat == null) {
@@ -95,6 +97,7 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     stuffedPrompt.write(prompt);
 
     final stuffed = stuffedPrompt.toString();
+    log('stuffed: $stuffed');
     var message = Content.text('');
     if (imagePath.isEmpty) {
       message = Content.text(stuffed);
