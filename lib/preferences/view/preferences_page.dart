@@ -62,7 +62,7 @@ class _PreferencesViewState extends State<PreferencesView> {
         )
         .toList(growable: false);
 
-    if (inputLocales.isNotEmpty && outputLanguages.isNotEmpty) {
+    if (inputLocales.isNotEmpty && outputLanguages.isEmpty) {
       outputLanguages = sttState.localeNames
           .map(
             (localeName) => DropdownMenuItem(
