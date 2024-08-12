@@ -162,6 +162,9 @@ class _HistoryViewState extends State<HistoryView>
 
           if (result == OkCancelResult.ok) {
             database?.clearHistory();
+            setState(() {
+              _editCount++;
+            });
           }
         },
       ),
