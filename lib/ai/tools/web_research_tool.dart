@@ -23,8 +23,8 @@ class WebResearchTool implements FunctionTool {
 
     return [
       FunctionDeclaration(
-        'webResearch',
-        'deliver accurate and factual search results quickly and efficiently',
+        'fetchWebResearch',
+        'fetch accurate and factual search results quickly and efficiently',
         Schema(
           SchemaType.object,
           properties: {
@@ -48,7 +48,7 @@ class WebResearchTool implements FunctionTool {
 
   @override
   bool canDispatchFunctionCall(FunctionCall call) {
-    return call.name == 'webResearch';
+    return call.name == 'fetchWebResearch';
   }
 
   @override
@@ -60,7 +60,7 @@ class WebResearchTool implements FunctionTool {
   ) async {
     final tavilyApiKey = preferences?.tavilyApiKey ?? '';
     final result = switch (call.name) {
-      'webResearch' => {
+      'fetchWebResearch' => {
           'query': await _webResearch(call.args, tavilyApiKey),
         },
       _ => null

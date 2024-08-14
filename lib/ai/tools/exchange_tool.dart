@@ -21,7 +21,7 @@ class ExchangeTool implements FunctionTool {
     return [
       FunctionDeclaration(
         'fetchCurrencyExchangeRate',
-        'Returns exchange rate between two currencies.',
+        'Fetch the exchange rate between two currencies.',
         Schema(
           SchemaType.object,
           properties: {
@@ -45,7 +45,7 @@ class ExchangeTool implements FunctionTool {
       ),
       FunctionDeclaration(
         'fetchCryptoExchangeRate',
-        'Returns the immediate exchange rate between two crypto currencies '
+        'Fetch the immediate exchange rate between two crypto currencies '
             'or a crypto currency and a money currency.',
         Schema(
           SchemaType.object,

@@ -19,8 +19,8 @@ class LyricsTool implements FunctionTool {
   ) {
     return [
       FunctionDeclaration(
-        'lyricsLookup',
-        'Look up a lyrics of a song by a given artist and title',
+        'fetchLyrics',
+        'Fetch the lyrics of a song by a given artist and title',
         Schema(
           SchemaType.object,
           properties: {
@@ -46,7 +46,7 @@ class LyricsTool implements FunctionTool {
 
   @override
   bool canDispatchFunctionCall(FunctionCall call) {
-    return call.name == 'lyricsLookup';
+    return call.name == 'fetchLyrics';
   }
 
   @override
@@ -57,7 +57,7 @@ class LyricsTool implements FunctionTool {
     PreferencesState? preferences,
   ) async {
     final result = switch (call.name) {
-      'lyricsLookup' => {
+      'fetchLyrics' => {
           'query': await _lyricsLookup(call.args),
         },
       _ => null

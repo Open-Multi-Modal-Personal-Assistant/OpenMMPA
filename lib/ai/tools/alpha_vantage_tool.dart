@@ -26,7 +26,7 @@ class AlphaVantageTool implements FunctionTool {
 
     return [
       FunctionDeclaration(
-        'getStockPrice',
+        'fetchStockPrice',
         'Fetch the current stock price of a given company in JSON string',
         Schema(
           SchemaType.object,
@@ -39,8 +39,8 @@ class AlphaVantageTool implements FunctionTool {
         ),
       ),
       FunctionDeclaration(
-        'getCompanyOverview',
-        'Get company details and other financial data in JSON string',
+        'fetchCompanyOverview',
+        'Fetch company details and other financial data in JSON string',
         Schema(
           SchemaType.object,
           properties: {
@@ -52,8 +52,8 @@ class AlphaVantageTool implements FunctionTool {
         ),
       ),
       FunctionDeclaration(
-        'getCompanyNews',
-        'Get the latest news headlines for a company as JSON string',
+        'fetchCompanyNews',
+        'Fetch the latest news headlines for a company as JSON string',
         Schema(
           SchemaType.object,
           properties: {
@@ -65,8 +65,8 @@ class AlphaVantageTool implements FunctionTool {
         ),
       ),
       FunctionDeclaration(
-        'getNewsWithSentiment',
-        'Gets live and historical market news and sentiment data',
+        'fetchNewsWithSentiment',
+        'Fetch live and historical market news and sentiment data',
         Schema(
           SchemaType.object,
           properties: {
@@ -100,10 +100,10 @@ and technology''',
   @override
   bool canDispatchFunctionCall(FunctionCall call) {
     return [
-      'getStockPrice',
-      'getCompanyOverview',
-      'getCompanyNews',
-      'getNewsWithSentiment',
+      'fetchStockPrice',
+      'fetchCompanyOverview',
+      'fetchCompanyNews',
+      'fetchNewsWithSentiment',
     ].contains(call.name);
   }
 
@@ -116,16 +116,16 @@ and technology''',
   ) async {
     alphaVantageAccessKey = preferences?.alphaVantageAccessKey ?? '';
     final result = switch (call.name) {
-      'getStockPrice' => {
+      'fetchStockPrice' => {
           'stockPrice': _getStockPrice(call.args),
         },
-      'getCompanyOverview' => {
+      'fetchCompanyOverview' => {
           'companyOverview': _getCompanyOverview(call.args),
         },
-      'getCompanyNews' => {
+      'fetchCompanyNews' => {
           'companyNews': _getCompanyNews(call.args),
         },
-      'getNewsWithSentiment' => {
+      'fetchNewsWithSentiment' => {
           'newsWithSentiment': _getNewsWithSentiment(call.args),
         },
       _ => null
