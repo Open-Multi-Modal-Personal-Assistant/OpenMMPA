@@ -163,5 +163,9 @@
     "preferencesSystemLabel": "System",
     "@preferencesSystemLabel": {
         "description": "Text shown on the preferences settings button and page for System"
+    },
+    "localeSelectionLabel": "Language Selection:",
+    "@localeSelectionLabel": {
+        "description": "Text shown in the Preferences for application Language Selection lead label"
     }
 }

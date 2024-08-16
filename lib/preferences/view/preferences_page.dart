@@ -5,6 +5,7 @@ import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/preferences/view/ai_rag.dart';
 import 'package:inspector_gadget/preferences/view/api_keys.dart';
 import 'package:inspector_gadget/preferences/view/speech_services.dart';
+import 'package:inspector_gadget/preferences/view/system.dart';
 import 'package:pref/pref.dart';
 import 'package:tuple/tuple.dart';
 
@@ -60,6 +61,11 @@ class PreferencesPage extends StatelessWidget {
         Icons.transcribe,
         l10n.preferencesSpeechServicesLabel,
         (context) => const SpeechServicesPreferencesPage(),
+      ),
+      Tuple3(
+        Icons.build,
+        l10n.preferencesSystemLabel,
+        (context) => const SystemPreferencesPage(),
       ),
     ];
 

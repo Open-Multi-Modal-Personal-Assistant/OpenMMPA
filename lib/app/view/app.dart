@@ -1,10 +1,13 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:inspector_gadget/ai/ai.dart';
 import 'package:inspector_gadget/camera/cubit/image_cubit.dart';
 import 'package:inspector_gadget/database/cubit/database_cubit.dart';
+import 'package:inspector_gadget/l10n/cubit/locale_cubit.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
+import 'package:inspector_gadget/locale_ex.dart';
 import 'package:inspector_gadget/main/main.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_cubit.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
@@ -22,6 +25,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => AiCubit()),
         BlocProvider(create: (_) => DatabaseCubit()),
         BlocProvider(create: (_) => ImageCubit()),
+        BlocProvider(create: (_) => LocaleCubit()),
         BlocProvider(create: (_) => MainCubit()),
         BlocProvider(create: (_) => PreferencesCubit()),
         BlocProvider(create: (_) => SttCubit()),
@@ -54,8 +58,17 @@ class AppView extends StatelessWidget {
       mainCubit.setState(MainCubit.waitingStateLabel);
     }
 
+    final localizationDelegates = [
+      ...AppLocalizations.localizationsDelegates,
+      const LocaleNamesLocalizationsDelegate(),
+    ];
     final preferencesState =
         context.select((PreferencesCubit cubit) => cubit.state);
+    final selectedLocale = LocaleEx.fromPreferences(preferencesState.appLocale);
+    final localeCubit = context.select((LocaleCubit cubit) => cubit);
+    if (localeCubit.state != selectedLocale) {
+      localeCubit.setLanguage(selectedLocale);
+    }
 
     return PrefService(
       service: PreferencesState.prefService!,
@@ -72,8 +85,9 @@ class AppView extends StatelessWidget {
           swapLegacyOnMaterial3: true,
         ),
         themeMode: preferencesState.themeSelection(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: localizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
+        locale: selectedLocale,
         home: const MainPage(),
       ),
     );

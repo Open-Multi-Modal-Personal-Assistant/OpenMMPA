@@ -28,10 +28,15 @@ class PreferencesState {
   static const String unitSystemTag = 'unit_system';
   static const bool unitSystemDefault = false;
   static const imperialCountries = ['US', 'UK', 'LR', 'MM'];
+  static const String localeLanguageDefault = 'en';
+  static const String localeCountryDefault = 'US';
   static const String inputLocaleTag = 'input_locale';
-  static const String inputLocaleDefault = 'en-US';
+  static const String inputLocaleDefault =
+      '$localeLanguageDefault-$localeCountryDefault';
   static const String outputLocaleTag = 'output_locale';
-  static const String outputLocaleDefault = 'en-US';
+  static const String outputLocaleDefault = inputLocaleDefault;
+  static const String appLocaleTag = 'app_locale';
+  static const String appLocaleDefault = inputLocaleDefault;
   static const String llmDebugModeTag = 'llm_debug_mode';
   static const bool llmDebugModeDefault = false;
   static const int pauseForDefault = 10;
@@ -64,6 +69,7 @@ class PreferencesState {
         unitSystemTag: getUnitSystemDefault(),
         inputLocaleTag: inputLocaleDefault,
         outputLocaleTag: outputLocaleDefault,
+        appLocaleTag: appLocaleDefault,
         llmDebugModeTag: llmDebugModeDefault,
         themeSelectionTag: themeSelectionDefault,
         personalizationRagThresholdTag: ragThresholdDefault,
@@ -100,6 +106,8 @@ class PreferencesState {
       prefService?.get<String>(inputLocaleTag) ?? inputLocaleDefault;
   String get outputLocale =>
       prefService?.get<String>(outputLocaleTag) ?? outputLocaleDefault;
+  String get appLocale =>
+      prefService?.get<String>(appLocaleTag) ?? appLocaleDefault;
   bool get llmDebugMode =>
       prefService?.get<bool>(llmDebugModeTag) ?? llmDebugModeDefault;
 
