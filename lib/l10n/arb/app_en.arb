@@ -28,13 +28,13 @@
     "@preferencesImportApiKeysTitle": {
         "description": "Text shown in the preferences settings for the Import API Key button"
     },
-    "preferencesSpeechServicesNativeLabel": "TTS / STT Native?",
+    "preferencesSpeechServicesNativeLabel": "Speech Services Native?",
     "@preferencesSpeechServicesNativeLabel": {
-        "description": "Text shown in the preferences settings for Are Speech Services Native (Android)?"
+        "description": "Text shown in the preferences settings for Speech Services Native?"
     },
-    "preferencesSpeechServicesRemoteLabel": "TTS / STT Remote?",
-    "@preferencesSpeechServicesRemoteLabel": {
-        "description": "Text shown in the preferences settings for Are Speech Services Remote?"
+    "preferencesNativeSpeechServicesLocalLabel": "Local Native Speech Services?",
+    "@preferencesNativeSpeechServicesLocalLabel": {
+        "description": "Text shown in the preferences settings for Local Native Speech Services?"
     },
     "preferencesVolumeLabel": "Volume",
     "@preferencesVolumeLabel": {

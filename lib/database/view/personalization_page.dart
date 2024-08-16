@@ -462,7 +462,10 @@ class _PersonalizationViewState extends State<PersonalizationView>
               ?.setState(PersonalizationCubit.recordingStateLabel);
 
           if (areSpeechServicesNative) {
+            final areNativeSpeechServicesLocal =
+                preferencesState!.areNativeSpeechServicesLocal;
             final options = SpeechListenOptions(
+              onDevice: areNativeSpeechServicesLocal,
               listenMode: ListenMode.dictation,
               cancelOnError: true,
               partialResults: false,

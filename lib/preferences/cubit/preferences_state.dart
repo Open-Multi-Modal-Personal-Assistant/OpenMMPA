@@ -17,6 +17,9 @@ class PreferencesState {
   static const String tavilyApiKeyDefault = '';
   static const String areSpeechServicesNativeTag = 'are_speech_services_native';
   static const bool areSpeechServicesNativeDefault = false;
+  static const String areNativeSpeechServicesLocalTag =
+      'are_native_speech_services_local';
+  static const bool areNativeSpeechServicesLocalDefault = false;
   static const String volumeTag = 'volume';
   static const int volumeMinimum = 0;
   static const int volumeDefault = 60;
@@ -87,6 +90,9 @@ class PreferencesState {
   bool get areSpeechServicesNative =>
       prefService?.get<bool>(areSpeechServicesNativeTag) ??
       areSpeechServicesNativeDefault;
+  bool get areNativeSpeechServicesLocal =>
+      prefService?.get<bool>(areNativeSpeechServicesLocalTag) ??
+      areNativeSpeechServicesLocalDefault;
   int get volume => prefService?.get<int>(volumeTag) ?? volumeDefault;
   bool get unitSystem =>
       prefService?.get<bool>(unitSystemTag) ?? getUnitSystemDefault();

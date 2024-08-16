@@ -425,13 +425,17 @@ class _InteractionViewState extends State<InteractionView>
             speech = sttState.speech;
             if (!llmDebugMode) {
               if (areSpeechServicesNative) {
+                final areNativeSpeechServicesLocal =
+                    preferencesState!.areNativeSpeechServicesLocal;
                 final options = SpeechListenOptions(
+                  onDevice: areNativeSpeechServicesLocal,
                   listenMode: ListenMode.dictation,
                   cancelOnError: true,
                   partialResults: false,
                   autoPunctuation: true,
                   enableHapticFeedback: true,
                 );
+
                 await sttState.speech.listen(
                   onResult: _resultListener,
                   listenFor: const Duration(
