@@ -34,7 +34,7 @@ class AiCubit extends Cubit<int> with ToolsMixin {
       safetySettings: [
         SafetySetting(HarmCategory.harassment, HarmBlockThreshold.none),
         SafetySetting(HarmCategory.hateSpeech, HarmBlockThreshold.none),
-        SafetySetting(HarmCategory.sexuallyExplicit, HarmBlockThreshold.low),
+        SafetySetting(HarmCategory.sexuallyExplicit, HarmBlockThreshold.high),
         SafetySetting(HarmCategory.dangerousContent, HarmBlockThreshold.none),
       ],
       systemInstruction: Content.text(systemInstruction),
