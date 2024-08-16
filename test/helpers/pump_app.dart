@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inspector_gadget/ai/ai.dart';
+import 'package:inspector_gadget/camera/cubit/image_cubit.dart';
 import 'package:inspector_gadget/database/cubit/database_cubit.dart';
 import 'package:inspector_gadget/database/object_box.dart';
+import 'package:inspector_gadget/l10n/cubit/locale_cubit.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/main/cubit/main_cubit.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_cubit.dart';
@@ -41,6 +43,10 @@ class MockAiCubit extends MockCubit<int> implements AiCubit {}
 class MockDatabaseCubit extends MockCubit<ObjectBox?>
     implements DatabaseCubit {}
 
+class MockLocaleCubit extends MockCubit<Locale> implements LocaleCubit {}
+
+class MockImageCubit extends MockCubit<String> implements ImageCubit {}
+
 extension PumpApp on WidgetTester {
   Future<void> pumpApp(Widget widget) {
     PreferencesState.prefService = MockPrefService();
@@ -55,6 +61,8 @@ extension PumpApp on WidgetTester {
     final PreferencesState preferencesState = MockPreferencesState();
     when(() => preferencesState.llmDebugMode).thenReturn(true);
     when(() => preferencesState.areSpeechServicesNative).thenReturn(true);
+    when(() => preferencesState.appLocale)
+        .thenReturn(PreferencesState.appLocaleDefault);
     final PreferencesCubit preferencesCubit = MockPreferencesCubit();
     when(() => preferencesCubit.state).thenReturn(preferencesState);
     final SttState sttState = MockSttState();
@@ -68,6 +76,8 @@ extension PumpApp on WidgetTester {
     when(() => ttsCubit.state).thenReturn(ttsState);
     final AiCubit aiCubit = MockAiCubit();
     final DatabaseCubit dbCubit = MockDatabaseCubit();
+    final LocaleCubit localeCubit = MockLocaleCubit();
+    final ImageCubit imageCubit = MockImageCubit();
 
     return pumpWidget(
       MultiBlocProvider(
@@ -78,6 +88,8 @@ extension PumpApp on WidgetTester {
           BlocProvider(create: (_) => ttsCubit),
           BlocProvider(create: (_) => aiCubit),
           BlocProvider(create: (_) => dbCubit),
+          BlocProvider(create: (_) => localeCubit),
+          BlocProvider(create: (_) => imageCubit),
         ],
         child: PrefService(
           service: PreferencesState.prefService!,

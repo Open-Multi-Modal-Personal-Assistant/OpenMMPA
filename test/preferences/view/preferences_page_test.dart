@@ -15,9 +15,12 @@ void main() {
   group('PreferencesView', () {
     testWidgets('renders preferences page', (tester) async {
       await tester.pumpApp(const PreferencesPage());
-      expect(find.widgetWithText(PrefText, 'Gemini API Key'), findsOneWidget);
       expect(
-        find.widgetWithText(PrefCheckbox, 'Speech Services Native?'),
+        find.widgetWithText(PrefButton, 'Personalization'),
+        findsOneWidget,
+      );
+      expect(
+        find.widgetWithText(PrefButton, 'Chat History'),
         findsOneWidget,
       );
     });
