@@ -7,17 +7,17 @@ import '../../helpers/helpers.dart';
 void main() {
   group('PreferencesPage', () {
     testWidgets('renders PreferencesView', (tester) async {
-      await tester.pumpApp(const PreferencesView());
-      expect(find.byType(PreferencesView), findsOneWidget);
+      await tester.pumpApp(const PreferencesPage());
+      expect(find.byType(PreferencesPage), findsOneWidget);
     });
   });
 
   group('PreferencesView', () {
     testWidgets('renders preferences page', (tester) async {
-      await tester.pumpApp(const PreferencesView());
+      await tester.pumpApp(const PreferencesPage());
       expect(find.widgetWithText(PrefText, 'Gemini API Key'), findsOneWidget);
       expect(
-        find.widgetWithText(PrefCheckbox, 'TTS / STT Native?'),
+        find.widgetWithText(PrefCheckbox, 'Speech Services Native?'),
         findsOneWidget,
       );
     });

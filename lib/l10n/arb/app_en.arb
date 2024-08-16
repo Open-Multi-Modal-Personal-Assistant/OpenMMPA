@@ -147,5 +147,21 @@
     "historyRagThresholdLabel": "History RAG Threshold",
     "@historyRagThresholdLabel": {
         "description": "Text shown in the Preferences for History RAG Threshold slider and spinner"
+    },
+    "preferencesApiKeysLabel": "API Keys",
+    "@preferencesApiKeysLabel": {
+        "description": "Text shown on the preferences settings button and page for API Keys"
+    },
+    "preferencesAiRagLabel": "AI + RAG",
+    "@preferencesAiRagLabel": {
+        "description": "Text shown on the preferences settings button and page for AI + RAG"
+    },
+    "preferencesSpeechServicesLabel": "Speech Services",
+    "@preferencesSpeechServicesLabel": {
+        "description": "Text shown on the preferences settings button and page for Speech Services"
+    },
+    "preferencesSystemLabel": "System",
+    "@preferencesSystemLabel": {
+        "description": "Text shown on the preferences settings button and page for System"
     }
 }

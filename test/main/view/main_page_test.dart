@@ -64,7 +64,7 @@ void main() {
       await tester.pumpApp(const MainPage());
       await tester.tap(find.byKey(const Key(MainPage.settingsKey)));
       await tester.pumpAndSettle();
-      expect(find.byType(PreferencesView), findsOneWidget);
+      expect(find.byType(PreferencesPage), findsOneWidget);
     });
   });
 }

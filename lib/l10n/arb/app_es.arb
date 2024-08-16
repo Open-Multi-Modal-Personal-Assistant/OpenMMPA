@@ -147,5 +147,21 @@
     "historyRagThresholdLabel": "Historial Umbral RAG",
     "@historyRagThresholdLabel": {
         "description": "Texto que se muestra en las preferencias del control deslizante y el control giratorio del umbral de RAG del historial"
+    },
+    "preferencesApiKeysLabel": "Claves API",
+    "@preferencesApiKeysLabel": {
+        "description": "Texto que se muestra en la barra de aplicaciones de la página de preferencias de claves API"
+    },
+    "preferencesAiRagLabel": "AI + RAG",
+    "@preferencesAiRagLabel": {
+        "description": "Texto que se muestra en el botón y la página de configuración de preferencias para AI + RAG"
+    },
+    "preferencesSpeechServicesLabel": "Servicios de habla",
+    "@preferencesSpeechServicesLabel": {
+        "description": "Texto que se muestra en el botón y la página de configuración de preferencias de los servicios de voz"
+    },
+    "preferencesSystemLabel": "Sistema",
+    "@preferencesSystemLabel": {
+        "description": "Texto que se muestra en el botón y la página de configuración de preferencias del Sistema"
     }
 }
