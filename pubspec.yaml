@@ -8,7 +8,7 @@ environment:
 
 dependency_overrides:
   collection: ^1.19.0  # Flutter SDK (flutter_test pinned it)
-  js: ^0.7.1  # Due to media_kit vs speech_to_text collision
+  js: ^0.7.1  # media_kit vs speech_to_text
 
 dependencies:
   adaptive_dialog: ^2.1.0
@@ -42,7 +42,7 @@ dependencies:
   path_provider: ^2.1.4
   pref: ^2.8.0
   record: ^5.1.2
-  speech_to_text: ^6.6.2
+  speech_to_text: ^7.0.0-beta.3
   statemachine: ^3.3.1
   strings: ^3.1.2
   tuple: ^2.0.2

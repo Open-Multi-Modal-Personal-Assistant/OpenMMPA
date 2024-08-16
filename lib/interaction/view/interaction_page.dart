@@ -268,8 +268,7 @@ class _InteractionViewState extends State<InteractionView>
     GenerateContentResponse? response;
     var targetLocale = '';
     final inputLocale =
-        (preferencesState?.inputLocale ?? PreferencesState.inputLocaleDefault)
-            .replaceAll('_', '-');
+        preferencesState?.inputLocale ?? PreferencesState.inputLocaleDefault;
     final outputLocale =
         preferencesState?.outputLocale ?? PreferencesState.outputLocaleDefault;
     if (widget.interactionMode == InteractionMode.translateMode) {

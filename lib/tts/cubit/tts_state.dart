@@ -131,9 +131,7 @@ class TtsState with StateLoggingMixin {
       return false;
     }
 
-    languages = localeINames
-        .map((ln) => ln.localeId.replaceAll('_', '-'))
-        .toList(growable: false);
+    languages = localeINames.map((ln) => ln.localeId).toList(growable: false);
     return true;
   }
 }

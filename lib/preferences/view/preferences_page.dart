@@ -67,7 +67,7 @@ class _PreferencesViewState extends State<PreferencesView> {
       outputLanguages = sttState.localeNames
           .map(
             (localeName) => DropdownMenuItem(
-              value: localeName.localeId.replaceAll('_', '-'),
+              value: localeName.localeId,
               child: Text(localeName.name),
             ),
           )

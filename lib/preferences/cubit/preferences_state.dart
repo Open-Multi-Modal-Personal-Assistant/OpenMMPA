@@ -26,7 +26,7 @@ class PreferencesState {
   static const bool unitSystemDefault = false;
   static const imperialCountries = ['US', 'UK', 'LR', 'MM'];
   static const String inputLocaleTag = 'input_locale';
-  static const String inputLocaleDefault = 'en_US';
+  static const String inputLocaleDefault = 'en-US';
   static const String outputLocaleTag = 'output_locale';
   static const String outputLocaleDefault = 'en-US';
   static const String llmDebugModeTag = 'llm_debug_mode';
