@@ -82,6 +82,9 @@ class PreferencesState {
       harmBlockThresholdNone;
   static const HarmBlockThreshold harmCategoryDangerousContentNativeDefault =
       HarmBlockThreshold.none;
+  static const String classicGoogleTranslateTag = 'classic_google_translate';
+  static const bool classicGoogleTranslateDefault = false;
+
   static const String prefix = 'ig'; // Inspector Gadget
 
   static Future<void> init() async {
@@ -106,6 +109,7 @@ class PreferencesState {
         harmCategoryHateSpeechTag: harmCategoryHateSpeechDefault,
         harmCategorySexuallyExplicitTag: harmCategoryHarassmentDefault,
         harmCategoryDangerousContentTag: harmCategorySexuallyExplicitDefault,
+        classicGoogleTranslateTag: classicGoogleTranslateDefault,
       },
     );
 
@@ -158,6 +162,9 @@ class PreferencesState {
         prefService?.get<String>(harmCategoryDangerousContentTag) ??
             harmCategoryDangerousContentDefault,
       );
+  bool get classicGoogleTranslate =>
+      prefService?.get<bool>(classicGoogleTranslateTag) ??
+      classicGoogleTranslateDefault;
 
   HarmBlockThreshold getHarmBlockThreshold(String harmBlockThreshold) {
     switch (harmBlockThreshold) {

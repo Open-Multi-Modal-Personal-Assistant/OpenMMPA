@@ -14,6 +14,8 @@ import 'package:inspector_gadget/database/cubit/database_cubit.dart';
 import 'package:inspector_gadget/database/models/history.dart';
 import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
 import 'package:inspector_gadget/secrets.dart';
+import 'package:strings/strings.dart';
+import 'package:translator/translator.dart';
 
 class AiCubit extends Cubit<int> with ToolsMixin {
   AiCubit() : super(0);
@@ -238,6 +240,42 @@ class AiCubit extends Cubit<int> with ToolsMixin {
     String targetLocale,
     PreferencesState? preferencesState,
   ) async {
+    if (preferencesState?.classicGoogleTranslate ??
+        PreferencesState.classicGoogleTranslateDefault) {
+      final translator = GoogleTranslator();
+      final translation =
+          await translator.translate(transcript, to: targetLocale.left(2));
+      return GenerateContentResponse(
+        [
+          Candidate(
+            Content.text(translation.text),
+            [
+              SafetyRating(
+                HarmCategory.harassment,
+                HarmProbability.negligible,
+              ),
+              SafetyRating(
+                HarmCategory.hateSpeech,
+                HarmProbability.negligible,
+              ),
+              SafetyRating(
+                HarmCategory.sexuallyExplicit,
+                HarmProbability.negligible,
+              ),
+              SafetyRating(
+                HarmCategory.dangerousContent,
+                HarmProbability.negligible,
+              ),
+            ],
+            CitationMetadata([]),
+            FinishReason.stop,
+            '',
+          ),
+        ],
+        null,
+      );
+    }
+
     final model = getModel(
       preferencesState,
       translateSystemInstruction,

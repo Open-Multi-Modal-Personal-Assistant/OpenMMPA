@@ -1327,6 +1327,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  translator:
+    dependency: "direct main"
+    description:
+      name: translator
+      sha256: "03521d194365e758c66444a3b03005733e1daf0cd3de9c63257bf82b1a4e2ba1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   tuple:
     dependency: "direct main"
     description:
