@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:number_selector/number_selector.dart';
 import 'package:pref/pref.dart';
@@ -30,6 +31,17 @@ class PrefIntegerState extends State<PrefInteger> {
   Color borderColor = Colors.black26;
   Color backgroundColor = Colors.white;
   Color iconColor = Colors.black54;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final isDark =
+        PlatformDispatcher.instance.platformBrightness == Brightness.dark;
+    borderColor = isDark ? Colors.grey.shade400 : Colors.grey.shade600;
+    backgroundColor = isDark ? Colors.grey.shade800 : Colors.grey.shade200;
+    iconColor = isDark ? Colors.white : Colors.black;
+  }
 
   @override
   Widget build(BuildContext context) {
