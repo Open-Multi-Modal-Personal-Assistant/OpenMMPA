@@ -163,5 +163,45 @@
     "preferencesSystemLabel": "Sistema",
     "@preferencesSystemLabel": {
         "description": "Texto que se muestra en el botón y la página de configuración de preferencias del Sistema"
+    },
+    "localeSelectionLabel": "Selección de idioma:",
+    "@localeSelectionLabel": {
+        "description": "Texto que se muestra en las Preferencias de la aplicación Etiqueta principal de Selección de idioma"
+    },
+    "harmBlockThresholdLowLabel": "Bajo",
+    "@harmBlockThresholdLowLabel": {
+        "description": "Texto que se muestra en la configuración de seguridad del modelo para el umbral de bloqueo de daño bajo (es decir: bloquear cuando hay una baja probabilidad de contenido inseguro)"
+    },
+    "harmBlockThresholdMediumLabel": "Medio",
+    "@harmBlockThresholdMediumLabel": {
+        "description": "Texto que se muestra en la configuración de seguridad del modelo para el umbral de bloqueo de daño medio (es decir: bloquear cuando hay una probabilidad media de contenido inseguro)"
+    },
+    "harmBlockThresholdHighLabel": "Alto",
+    "@harmBlockThresholdHighLabel": {
+        "description": "Texto que se muestra en la configuración de seguridad del modelo para el umbral de bloqueo de alto daño (es decir: bloquear cuando hay una alta probabilidad de contenido inseguro)"
+    },
+    "harmBlockThresholdNoneLabel": "Ninguno",
+    "@harmBlockThresholdNoneLabel": {
+        "description": "Texto que se muestra en la configuración de seguridad del modelo para el umbral de bloqueo de No dañar (significado: mostrar siempre independientemente de la probabilidad de contenido inseguro)"
+    },
+    "modelSafetySettingsLabel": "Seguridad del modelo",
+    "@modelSafetySettingsLabel": {
+        "description": "Texto que se muestra en las Preferencias para encabezar las selecciones de Seguridad del modelo para varias categorías de daños"
+    },
+    "harmCategoryHarassmentLabel": "Acoso",
+    "@harmCategoryHarassmentLabel": {
+        "description": "Texto que se muestra en las Preferencias para la configuración de seguridad de la categoría de daño por acoso"
+    },
+    "harmCategoryHateSpeechLabel": "Discurso de odio",
+    "@harmCategoryHateSpeechLabel": {
+        "description": "Texto que se muestra en las Preferencias para la configuración de seguridad de la categoría de daño por discurso de odio"
+    },
+    "harmCategorySexuallyExplicitLabel": "Sexualmente explícito",
+    "@harmCategorySexuallyExplicitLabel": {
+        "description": "Texto que se muestra en las Preferencias para la configuración de seguridad de la categoría Daño sexual explícito"
+    },
+    "harmCategoryDangerousContentLabel": "Contenido peligroso",
+    "@harmCategoryDangerousContentLabel": {
+        "description": "Texto que se muestra en las Preferencias para la configuración de seguridad de la categoría de daño Contenido peligroso"
     }
 }

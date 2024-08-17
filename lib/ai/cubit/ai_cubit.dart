@@ -32,10 +32,26 @@ class AiCubit extends Cubit<int> with ToolsMixin {
       model: 'gemini-1.5-$modelType',
       apiKey: preferencesState?.geminiApiKey ?? geminiApiKey,
       safetySettings: [
-        SafetySetting(HarmCategory.harassment, HarmBlockThreshold.none),
-        SafetySetting(HarmCategory.hateSpeech, HarmBlockThreshold.none),
-        SafetySetting(HarmCategory.sexuallyExplicit, HarmBlockThreshold.high),
-        SafetySetting(HarmCategory.dangerousContent, HarmBlockThreshold.none),
+        SafetySetting(
+          HarmCategory.harassment,
+          preferencesState?.harmCategoryHarassment ??
+              PreferencesState.harmCategoryHarassmentNativeDefault,
+        ),
+        SafetySetting(
+          HarmCategory.hateSpeech,
+          preferencesState?.harmCategoryHateSpeech ??
+              PreferencesState.harmCategoryHateSpeechNativeDefault,
+        ),
+        SafetySetting(
+          HarmCategory.sexuallyExplicit,
+          preferencesState?.harmCategorySexuallyExplicit ??
+              PreferencesState.harmCategorySexuallyExplicitNativeDefault,
+        ),
+        SafetySetting(
+          HarmCategory.dangerousContent,
+          preferencesState?.harmCategoryDangerousContent ??
+              PreferencesState.harmCategoryDangerousContentNativeDefault,
+        ),
       ],
       systemInstruction: Content.text(systemInstruction),
       tools: withTools ? [getFunctionDeclarations(preferencesState)] : null,

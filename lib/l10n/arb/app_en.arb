@@ -167,5 +167,41 @@
     "localeSelectionLabel": "Language Selection:",
     "@localeSelectionLabel": {
         "description": "Text shown in the Preferences for application Language Selection lead label"
+    },
+    "harmBlockThresholdLowLabel": "Low",
+    "@harmBlockThresholdLowLabel": {
+        "description": "Text shown in the Model Safety Settings for Low Harm Block Threshold (meaning: Block when low probability of unsafe content)"
+    },
+    "harmBlockThresholdMediumLabel": "Medium",
+    "@harmBlockThresholdMediumLabel": {
+        "description": "Text shown in the Model Safety Settings for Medium Harm Block Threshold (meaning: Block when medium probability of unsafe content)"
+    },
+    "harmBlockThresholdHighLabel": "High",
+    "@harmBlockThresholdHighLabel": {
+        "description": "Text shown in the Model Safety Settings for High Harm Block Threshold (meaning: Block when high probability of unsafe content)"
+    },
+    "harmBlockThresholdNoneLabel": "None",
+    "@harmBlockThresholdNoneLabel": {
+        "description": "Text shown in the Model Safety Settings for None Harm Block Threshold (Meaning: Always show regardless of probability of unsafe content)"
+    },
+    "modelSafetySettingsLabel": "Model Safety",
+    "@modelSafetySettingsLabel": {
+        "description": "Text shown in the Preferences for heading the Model Safety selections for various harm categories"
+    },
+    "harmCategoryHarassmentLabel": "Harassment",
+    "@harmCategoryHarassmentLabel": {
+        "description": "Text shown in the Preferences for the safety settings of the Harassment harm category"
+    },
+    "harmCategoryHateSpeechLabel": "Hate Speech",
+    "@harmCategoryHateSpeechLabel": {
+        "description": "Text shown in the Preferences for the safety settings of the Hate Speech harm category"
+    },
+    "harmCategorySexuallyExplicitLabel": "Sexually Explicit",
+    "@harmCategorySexuallyExplicitLabel": {
+        "description": "Text shown in the Preferences for the safety settings of the Sexually Explicit harm category"
+    },
+    "harmCategoryDangerousContentLabel": "Dangerous Content",
+    "@harmCategoryDangerousContentLabel": {
+        "description": "Text shown in the Preferences for the safety settings of the Dangerous Content harm category"
     }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:pref/pref.dart';
 import 'package:strings/strings.dart';
 
@@ -54,6 +55,33 @@ class PreferencesState {
   static const String personalizationRagThresholdTag =
       'personalization_rag_threshold';
   static const String historyRagThresholdTag = 'history_rag_threshold';
+  static const String harmBlockThresholdUnspecified =
+      'HARM_BLOCK_THRESHOLD_UNSPECIFIED';
+  static const String harmBlockThresholdLow = 'HARM_BLOCK_THRESHOLD_LOW';
+  static const String harmBlockThresholdMedium = 'HARM_BLOCK_THRESHOLD_MEDIUM';
+  static const String harmBlockThresholdHigh = 'HARM_BLOCK_THRESHOLD_HIGH';
+  static const String harmBlockThresholdNone = 'HARM_BLOCK_THRESHOLD_NONE';
+  static const String harmCategoryUnspecifiedTag = 'HARM_CATEGORY_UNSPECIFIED';
+  static const String harmCategoryHarassmentTag = 'HARM_CATEGORY_HARASSMENT';
+  static const String harmCategoryHateSpeechTag = 'HARM_CATEGORY_HATE_SPEECH';
+  static const String harmCategorySexuallyExplicitTag =
+      'HARM_CATEGORY_SEXUALLY_EXPLICIT';
+  static const String harmCategoryDangerousContentTag =
+      'HARM_CATEGORY_DANGEROUS_CONTENT';
+  static const String harmCategoryHarassmentDefault = harmBlockThresholdNone;
+  static const HarmBlockThreshold harmCategoryHarassmentNativeDefault =
+      HarmBlockThreshold.none;
+  static const String harmCategoryHateSpeechDefault = harmBlockThresholdNone;
+  static const HarmBlockThreshold harmCategoryHateSpeechNativeDefault =
+      HarmBlockThreshold.none;
+  static const String harmCategorySexuallyExplicitDefault =
+      harmBlockThresholdHigh;
+  static const HarmBlockThreshold harmCategorySexuallyExplicitNativeDefault =
+      HarmBlockThreshold.high;
+  static const String harmCategoryDangerousContentDefault =
+      harmBlockThresholdNone;
+  static const HarmBlockThreshold harmCategoryDangerousContentNativeDefault =
+      HarmBlockThreshold.none;
   static const String prefix = 'ig'; // Inspector Gadget
 
   static Future<void> init() async {
@@ -74,6 +102,10 @@ class PreferencesState {
         themeSelectionTag: themeSelectionDefault,
         personalizationRagThresholdTag: ragThresholdDefault,
         historyRagThresholdTag: ragThresholdDefault,
+        harmCategoryHarassmentTag: harmCategoryHarassmentDefault,
+        harmCategoryHateSpeechTag: harmCategoryHateSpeechDefault,
+        harmCategorySexuallyExplicitTag: harmCategoryHarassmentDefault,
+        harmCategoryDangerousContentTag: harmCategorySexuallyExplicitDefault,
       },
     );
 
@@ -110,6 +142,37 @@ class PreferencesState {
       prefService?.get<String>(appLocaleTag) ?? appLocaleDefault;
   bool get llmDebugMode =>
       prefService?.get<bool>(llmDebugModeTag) ?? llmDebugModeDefault;
+  HarmBlockThreshold get harmCategoryHarassment => getHarmBlockThreshold(
+        prefService?.get<String>(harmCategoryHarassmentTag) ??
+            harmCategoryHarassmentDefault,
+      );
+  HarmBlockThreshold get harmCategoryHateSpeech => getHarmBlockThreshold(
+        prefService?.get<String>(harmCategoryHateSpeechTag) ??
+            harmCategoryHateSpeechDefault,
+      );
+  HarmBlockThreshold get harmCategorySexuallyExplicit => getHarmBlockThreshold(
+        prefService?.get<String>(harmCategorySexuallyExplicitTag) ??
+            harmCategorySexuallyExplicitDefault,
+      );
+  HarmBlockThreshold get harmCategoryDangerousContent => getHarmBlockThreshold(
+        prefService?.get<String>(harmCategoryDangerousContentTag) ??
+            harmCategoryDangerousContentDefault,
+      );
+
+  HarmBlockThreshold getHarmBlockThreshold(String harmBlockThreshold) {
+    switch (harmBlockThreshold) {
+      case harmBlockThresholdLow:
+        return HarmBlockThreshold.low;
+      case harmBlockThresholdMedium:
+        return HarmBlockThreshold.medium;
+      case harmBlockThresholdHigh:
+        return HarmBlockThreshold.high;
+      case harmBlockThresholdNone:
+        return HarmBlockThreshold.none;
+      default:
+        return HarmBlockThreshold.unspecified;
+    }
+  }
 
   ThemeMode themeSelection() {
     final theme =
