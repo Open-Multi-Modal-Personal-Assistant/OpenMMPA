@@ -206,4 +206,10 @@ class PreferencesState {
     final deviceCountry = localeName.right(2).toUpperCase();
     return !imperialCountries.contains(deviceCountry);
   }
+
+  void setOutputLocale(String locale) {
+    if (locale.isNotEmpty) {
+      prefService?.set<String>(outputLocaleTag, locale);
+    }
+  }
 }

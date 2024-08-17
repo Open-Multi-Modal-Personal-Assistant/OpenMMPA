@@ -277,6 +277,10 @@ class _InteractionViewState extends State<InteractionView>
         targetLocale = outputLocale;
       } else {
         // Also covers matchedLocale == outputLocale
+        if (matchedLocale != outputLocale) {
+          preferencesState?.setOutputLocale(matchedLocale);
+        }
+
         targetLocale = inputLocale;
       }
 
