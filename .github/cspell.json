@@ -5,7 +5,7 @@
   "dictionaryDefinitions": [
     {
       "name": "vgv_allowed",
-      "path": "https://raw.githubusercontent.com/CsabaConsulting/very_good_dictionaries/main/allowed.txt",
+      "path": "https://raw.githubusercontent.com/verygoodopensource/very_good_dictionaries/main/allowed.txt",
       "description": "Allowed VGV Spellings"
     },
     {
@@ -22,6 +22,7 @@
     "página",
     "Texto",
     "Tavily",
-    "SerpAPI"
+    "SerpAPI",
+    "MMPA"
   ]
 }
