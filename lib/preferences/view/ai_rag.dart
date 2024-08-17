@@ -36,6 +36,10 @@ class AiRagPreferencesPage extends StatelessWidget {
         title: Text(l10n.preferencesFastLlmModeLabel),
         pref: PreferencesState.fastLlmModeTag,
       ),
+      PrefCheckbox(
+        title: Text(l10n.classicGoogleTranslateLabel),
+        pref: PreferencesState.classicGoogleTranslateTag,
+      ),
       PrefLabel(title: Text(l10n.modelSafetySettingsLabel)),
       PrefDropdown<String>(
         title: Text(l10n.harmCategoryHarassmentLabel),

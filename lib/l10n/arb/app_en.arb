@@ -203,5 +203,9 @@
     "harmCategoryDangerousContentLabel": "Dangerous Content",
     "@harmCategoryDangerousContentLabel": {
         "description": "Text shown in the Preferences for the safety settings of the Dangerous Content harm category"
+    },
+    "classicGoogleTranslateLabel": "Classic Google Translation",
+    "@classicGoogleTranslateLabel": {
+        "description": "Text shown in the Preferences for the Classic Google Translation"
     }
 }

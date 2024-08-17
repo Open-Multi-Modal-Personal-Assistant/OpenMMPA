@@ -203,5 +203,9 @@
     "harmCategoryDangerousContentLabel": "Contenido peligroso",
     "@harmCategoryDangerousContentLabel": {
         "description": "Texto que se muestra en las Preferencias para la configuración de seguridad de la categoría de daño Contenido peligroso"
+    },
+    "classicGoogleTranslateLabel": "Traducción clásica de Google",
+    "@classicGoogleTranslateLabel": {
+        "description": "Texto que se muestra en las Preferencias de la Traducción Clásica de Google"
     }
 }
