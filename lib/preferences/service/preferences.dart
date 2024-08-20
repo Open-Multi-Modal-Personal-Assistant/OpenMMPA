@@ -96,6 +96,7 @@ class PreferencesState {
         alphaVantageAccessKeyTag: alphaVantageAccessKeyDefault,
         tavilyApiKeyTag: tavilyApiKeyDefault,
         areSpeechServicesNativeTag: areSpeechServicesNativeDefault,
+        areNativeSpeechServicesLocalTag: areNativeSpeechServicesLocalDefault,
         volumeTag: volumeDefault,
         unitSystemTag: getUnitSystemDefault(),
         inputLocaleTag: inputLocaleDefault,
