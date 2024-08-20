@@ -3,33 +3,16 @@ import 'dart:math' as m;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inspector_gadget/camera/cubit/capture_cubit.dart';
-import 'package:inspector_gadget/camera/cubit/image_cubit.dart';
-import 'package:inspector_gadget/interaction/interaction.dart';
+import 'package:get_it/get_it.dart';
+import 'package:inspector_gadget/camera/view/capture_state.dart';
+import 'package:inspector_gadget/interaction/view/interaction_page.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
-import 'package:inspector_gadget/main/cubit/main_cubit.dart';
 
-class CameraPage extends StatelessWidget {
+class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: context.read<ImageCubit>(),
-      child: BlocProvider(
-        create: (_) => CaptureCubit(),
-        child: const CameraView(),
-      ),
-    );
-  }
-}
-
-class CameraView extends StatefulWidget {
-  const CameraView({super.key});
-
-  @override
-  State<CameraView> createState() => _CameraViewState();
+  State<CameraPage> createState() => CameraPageState();
 }
 
 /// Returns a suitable camera icon for [direction].
@@ -52,7 +35,7 @@ void _logError(String code, String? message) {
   log('Error: $code${message == null ? '' : '\nError Message: $message'}');
 }
 
-class _CameraViewState extends State<CameraView>
+class CameraPageState extends State<CameraPage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   List<CameraDescription> _cameras = <CameraDescription>[];
   CameraController? controller;
@@ -68,6 +51,9 @@ class _CameraViewState extends State<CameraView>
   @override
   void initState() {
     super.initState();
+
+    GetIt.I.get<CaptureState>().setState(CaptureState.previewStateLabel);
+
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
@@ -300,15 +286,13 @@ class _CameraViewState extends State<CameraView>
 
         if (file != null && file.path.isNotEmpty) {
           WidgetsBinding.instance.addPostFrameCallback((_) async {
-            context
-                .select((MainCubit cubit) => cubit)
-                .setState(MainCubit.recordingStateLabel);
-            context.select((ImageCubit cubit) => cubit).setPath(file.path);
             await Navigator.pushReplacement(
               context,
               MaterialPageRoute<void>(
-                builder: (context) =>
-                    const InteractionPage(InteractionMode.multiModalMode),
+                builder: (context) => InteractionPage(
+                  InteractionMode.multiModalMode,
+                  imagePath: file.path,
+                ),
               ),
             );
           });

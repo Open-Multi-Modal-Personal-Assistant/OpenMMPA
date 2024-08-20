@@ -1,13 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+// import 'package:get_it/get_it.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:pref/pref.dart';
 import 'package:strings/strings.dart';
 
-class PreferencesState {
-  static BasePrefService? prefService;
-
+class PreferencesService with ChangeNotifier {
   static const String geminiApiKeyTag = 'gemini_api_key';
   static const String geminiApiKeyDefault = '';
   static const String fastLlmModeTag = 'fast_llm_mode';
@@ -85,9 +84,11 @@ class PreferencesState {
   static const String classicGoogleTranslateTag = 'classic_google_translate';
   static const bool classicGoogleTranslateDefault = false;
 
-  static const String prefix = 'ig'; // Inspector Gadget
+  final String prefix = 'ommpa'; // Inspector Gadget
 
-  static Future<void> init() async {
+  BasePrefService? prefService;
+
+  Future<PreferencesService> init() async {
     prefService = await PrefServiceShared.init(
       prefix: prefix,
       defaults: {
@@ -119,6 +120,10 @@ class PreferencesState {
       debugPrint('Out of bounds volume $savedVolume reset to $volumeDefault');
       prefService?.set(volumeTag, volumeDefault);
     }
+
+    // GetIt.I.signalReady(this);
+
+    return this;
   }
 
   String get geminiApiKey =>
@@ -166,6 +171,18 @@ class PreferencesState {
   bool get classicGoogleTranslate =>
       prefService?.get<bool>(classicGoogleTranslateTag) ??
       classicGoogleTranslateDefault;
+  String get theme =>
+      prefService?.get<String>(themeSelectionTag) ?? themeSelectionDefault;
+  ThemeMode get themeMode {
+    switch (theme) {
+      case themeSelectionLight:
+        return ThemeMode.light;
+      case themeSelectionDark:
+        return ThemeMode.dark;
+      default:
+        return ThemeMode.system;
+    }
+  }
 
   HarmBlockThreshold getHarmBlockThreshold(String harmBlockThreshold) {
     switch (harmBlockThreshold) {
@@ -179,18 +196,6 @@ class PreferencesState {
         return HarmBlockThreshold.none;
       default:
         return HarmBlockThreshold.unspecified;
-    }
-  }
-
-  ThemeMode themeSelection() {
-    final theme =
-        prefService?.get<String>(themeSelectionTag) ?? themeSelectionDefault;
-    if (theme == themeSelectionLight) {
-      return ThemeMode.light;
-    } else if (theme == themeSelectionDark) {
-      return ThemeMode.dark;
-    } else {
-      return ThemeMode.system;
     }
   }
 
@@ -212,5 +217,9 @@ class PreferencesState {
     if (locale.isNotEmpty) {
       prefService?.set<String>(outputLocaleTag, locale);
     }
+  }
+
+  void emit() {
+    notifyListeners();
   }
 }

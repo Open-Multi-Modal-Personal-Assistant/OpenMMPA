@@ -9,7 +9,7 @@ import 'package:inspector_gadget/ai/tools/sun_time_tool.dart';
 import 'package:inspector_gadget/ai/tools/weather_tool.dart';
 import 'package:inspector_gadget/ai/tools/web_research_tool.dart';
 // import 'package:inspector_gadget/ai/tools/web_search_tool.dart';
-import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
+import 'package:inspector_gadget/preferences/service/preferences.dart';
 
 mixin ToolsMixin {
   static const String alphaVantageBaseUrl = 'https://www.alphavantage.co';
@@ -17,7 +17,7 @@ mixin ToolsMixin {
 
   List<FunctionTool> functionTools = [];
 
-  List<FunctionTool> initializeFunctionTools(PreferencesState? preferences) {
+  List<FunctionTool> initializeFunctionTools(PreferencesService preferences) {
     if (functionTools.isNotEmpty) {
       return functionTools;
     }
@@ -38,7 +38,7 @@ mixin ToolsMixin {
     return functionTools;
   }
 
-  List<Tool> getToolDeclarations(PreferencesState? preferences) {
+  List<Tool> getToolDeclarations(PreferencesService preferences) {
     final funcTools = initializeFunctionTools(preferences);
     final tools = <Tool>[];
     for (final funcTool in funcTools) {
@@ -50,7 +50,7 @@ mixin ToolsMixin {
     return tools;
   }
 
-  Tool getFunctionDeclarations(PreferencesState? preferences) {
+  Tool getFunctionDeclarations(PreferencesService preferences) {
     final funcTools = initializeFunctionTools(preferences);
     final functionDeclarations = <FunctionDeclaration>[];
     for (final funcTool in funcTools) {
@@ -65,7 +65,7 @@ mixin ToolsMixin {
     );
   }
 
-  String getFunctionCallPromptStuffing(PreferencesState? preferences) {
+  String getFunctionCallPromptStuffing(PreferencesService preferences) {
     final funcTools = initializeFunctionTools(preferences);
     final buffer = StringBuffer();
     for (final funcTool in funcTools) {
@@ -83,7 +83,7 @@ mixin ToolsMixin {
     FunctionCall call,
     Location? location,
     int hr,
-    PreferencesState? preferences,
+    PreferencesService preferences,
   ) async {
     for (final functionTool in functionTools) {
       if (functionTool.canDispatchFunctionCall(call)) {

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
-import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
+import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:inspector_gadget/preferences/view/pref_integer.dart';
 import 'package:pref/pref.dart';
 
@@ -14,19 +14,19 @@ class AiRagPreferencesPage extends StatelessWidget {
 
     final harmBlockThresholds = [
       DropdownMenuItem(
-        value: PreferencesState.harmBlockThresholdLow,
+        value: PreferencesService.harmBlockThresholdLow,
         child: Text(l10n.harmBlockThresholdLowLabel),
       ),
       DropdownMenuItem(
-        value: PreferencesState.harmBlockThresholdMedium,
+        value: PreferencesService.harmBlockThresholdMedium,
         child: Text(l10n.harmBlockThresholdMediumLabel),
       ),
       DropdownMenuItem(
-        value: PreferencesState.harmBlockThresholdHigh,
+        value: PreferencesService.harmBlockThresholdHigh,
         child: Text(l10n.harmBlockThresholdHighLabel),
       ),
       DropdownMenuItem(
-        value: PreferencesState.harmBlockThresholdNone,
+        value: PreferencesService.harmBlockThresholdNone,
         child: Text(l10n.harmBlockThresholdNoneLabel),
       ),
     ];
@@ -34,60 +34,60 @@ class AiRagPreferencesPage extends StatelessWidget {
     final aiRagPreferences = <Widget>[
       PrefCheckbox(
         title: Text(l10n.preferencesFastLlmModeLabel),
-        pref: PreferencesState.fastLlmModeTag,
+        pref: PreferencesService.fastLlmModeTag,
       ),
       PrefCheckbox(
         title: Text(l10n.classicGoogleTranslateLabel),
-        pref: PreferencesState.classicGoogleTranslateTag,
+        pref: PreferencesService.classicGoogleTranslateTag,
       ),
       PrefLabel(title: Text(l10n.modelSafetySettingsLabel)),
       PrefDropdown<String>(
         title: Text(l10n.harmCategoryHarassmentLabel),
-        pref: PreferencesState.harmCategoryHarassmentTag,
+        pref: PreferencesService.harmCategoryHarassmentTag,
         items: harmBlockThresholds,
       ),
       PrefDropdown<String>(
         title: Text(l10n.harmCategoryHateSpeechLabel),
-        pref: PreferencesState.harmCategoryHateSpeechTag,
+        pref: PreferencesService.harmCategoryHateSpeechTag,
         items: harmBlockThresholds,
       ),
       PrefDropdown<String>(
         title: Text(l10n.harmCategorySexuallyExplicitLabel),
-        pref: PreferencesState.harmCategorySexuallyExplicitTag,
+        pref: PreferencesService.harmCategorySexuallyExplicitTag,
         items: harmBlockThresholds,
       ),
       PrefDropdown<String>(
         title: Text(l10n.harmCategoryDangerousContentLabel),
-        pref: PreferencesState.harmCategoryDangerousContentTag,
+        pref: PreferencesService.harmCategoryDangerousContentTag,
         items: harmBlockThresholds,
       ),
       const PrefLabel(title: Divider(height: 1)),
       PrefSlider<int>(
         title: Text(l10n.personalizationRagThresholdLabel),
-        pref: PreferencesState.personalizationRagThresholdTag,
-        min: PreferencesState.ragThresholdMinimum,
-        max: PreferencesState.ragThresholdMaximum,
-        divisions: PreferencesState.ragThresholdDivisions,
+        pref: PreferencesService.personalizationRagThresholdTag,
+        min: PreferencesService.ragThresholdMinimum,
+        max: PreferencesService.ragThresholdMaximum,
+        divisions: PreferencesService.ragThresholdDivisions,
         direction: Axis.vertical,
       ),
       const PrefInteger(
-        pref: PreferencesState.personalizationRagThresholdTag,
-        min: PreferencesState.ragThresholdMinimum,
-        max: PreferencesState.ragThresholdMaximum,
+        pref: PreferencesService.personalizationRagThresholdTag,
+        min: PreferencesService.ragThresholdMinimum,
+        max: PreferencesService.ragThresholdMaximum,
       ),
       const PrefLabel(title: Divider(height: 1)),
       PrefSlider<int>(
-        pref: PreferencesState.historyRagThresholdTag,
+        pref: PreferencesService.historyRagThresholdTag,
         title: Text(l10n.historyRagThresholdLabel),
-        min: PreferencesState.ragThresholdMinimum,
-        max: PreferencesState.ragThresholdMaximum,
-        divisions: PreferencesState.ragThresholdDivisions,
+        min: PreferencesService.ragThresholdMinimum,
+        max: PreferencesService.ragThresholdMaximum,
+        divisions: PreferencesService.ragThresholdDivisions,
         direction: Axis.vertical,
       ),
       const PrefInteger(
-        pref: PreferencesState.historyRagThresholdTag,
-        min: PreferencesState.ragThresholdMinimum,
-        max: PreferencesState.ragThresholdMaximum,
+        pref: PreferencesService.historyRagThresholdTag,
+        min: PreferencesService.ragThresholdMinimum,
+        max: PreferencesService.ragThresholdMaximum,
       ),
     ];
 
@@ -95,7 +95,7 @@ class AiRagPreferencesPage extends StatelessWidget {
       aiRagPreferences.add(
         PrefCheckbox(
           title: Text(l10n.preferencesLlmDebugModeLabel),
-          pref: PreferencesState.llmDebugModeTag,
+          pref: PreferencesService.llmDebugModeTag,
         ),
       );
     }

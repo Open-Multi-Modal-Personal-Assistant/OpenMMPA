@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:inspector_gadget/preferences/preferences.dart';
+import 'package:inspector_gadget/preferences/view/preferences_page.dart';
 import 'package:pref/pref.dart';
 
 import '../../helpers/helpers.dart';

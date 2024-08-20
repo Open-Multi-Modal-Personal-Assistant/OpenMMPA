@@ -6,17 +6,17 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/ai/tools/currency_request.dart';
 import 'package:inspector_gadget/ai/tools/function_tool.dart';
-import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
+import 'package:inspector_gadget/preferences/service/preferences.dart';
 
 class ExchangeTool implements FunctionTool {
   @override
-  bool isAvailable(PreferencesState? preferences) {
+  bool isAvailable(PreferencesService preferences) {
     return true;
   }
 
   @override
   List<FunctionDeclaration> getFunctionDeclarations(
-    PreferencesState? preferences,
+    PreferencesService preferences,
   ) {
     return [
       FunctionDeclaration(
@@ -65,7 +65,7 @@ class ExchangeTool implements FunctionTool {
   }
 
   @override
-  Tool getTool(PreferencesState? preferences) {
+  Tool getTool(PreferencesService preferences) {
     return Tool(
       functionDeclarations: getFunctionDeclarations(preferences),
     );
@@ -82,7 +82,7 @@ class ExchangeTool implements FunctionTool {
     FunctionCall call,
     Location? location,
     int hr,
-    PreferencesState? preferences,
+    PreferencesService preferences,
   ) async {
     final result = switch (call.name) {
       'fetchCurrencyExchangeRate' => {

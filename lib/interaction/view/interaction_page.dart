@@ -4,99 +4,58 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dart_helper_utils/dart_helper_utils.dart';
-import 'package:fl_location/fl_location.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:http/http.dart' as http;
-import 'package:inspector_gadget/ai/cubit/ai_cubit.dart';
-import 'package:inspector_gadget/camera/cubit/image_cubit.dart';
+import 'package:inspector_gadget/ai/service/ai_service.dart';
 import 'package:inspector_gadget/constants.dart';
-import 'package:inspector_gadget/database/cubit/database_cubit.dart';
-import 'package:inspector_gadget/heart_rate/heart_rate.dart';
-import 'package:inspector_gadget/interaction/cubit/interaction_cubit.dart';
-import 'package:inspector_gadget/interaction/view/deferred_action.dart';
-import 'package:inspector_gadget/interaction/view/transcription_list.dart';
+import 'package:inspector_gadget/database/service/database.dart';
+import 'package:inspector_gadget/heart_rate/service/heart_rate.dart';
+import 'package:inspector_gadget/interaction/service/deferred_action.dart';
+import 'package:inspector_gadget/interaction/service/interaction_state.dart';
+import 'package:inspector_gadget/interaction/service/transcription_list.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
-import 'package:inspector_gadget/location/location.dart';
-import 'package:inspector_gadget/main/cubit/main_cubit.dart';
-import 'package:inspector_gadget/main/main.dart';
-import 'package:inspector_gadget/preferences/cubit/preferences_cubit.dart';
-import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
-import 'package:inspector_gadget/preferences/preferences.dart';
+import 'package:inspector_gadget/location/service/location.dart';
+import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:inspector_gadget/secrets.dart';
+import 'package:inspector_gadget/speech/service/stt.dart';
+import 'package:inspector_gadget/speech/service/tts.dart';
 import 'package:inspector_gadget/string_ex.dart';
-import 'package:inspector_gadget/stt/cubit/stt_cubit.dart';
-import 'package:inspector_gadget/tts/cubit/tts_cubit.dart';
-import 'package:inspector_gadget/tts/cubit/tts_state.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:watch_it/watch_it.dart';
 
-class InteractionPage extends StatelessWidget {
-  const InteractionPage(this.interactionMode, {super.key});
-
-  final InteractionMode interactionMode;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: context.read<SttCubit>(),
-      child: BlocProvider.value(
-        value: context.read<TtsCubit>(),
-        child: BlocProvider.value(
-          value: context.read<AiCubit>(),
-          child: BlocProvider.value(
-            value: context.read<DatabaseCubit>(),
-            child: BlocProvider.value(
-              value: context.read<ImageCubit>(),
-              child: MultiBlocProvider(
-                providers: [
-                  BlocProvider(create: (_) => HeartRateCubit()),
-                  BlocProvider(create: (_) => LocationCubit()),
-                ],
-                child: InteractionView(interactionMode),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+enum InteractionMode {
+  uniModalMode,
+  translateMode,
+  multiModalMode,
 }
 
-class InteractionView extends StatefulWidget {
-  const InteractionView(this.interactionMode, {super.key});
+class InteractionPage extends StatefulWidget with WatchItStatefulWidgetMixin {
+  const InteractionPage(this.interactionMode, {this.imagePath = '', super.key});
 
   final InteractionMode interactionMode;
+  final String imagePath;
 
   @override
-  State<InteractionView> createState() => _InteractionViewState();
+  State<InteractionPage> createState() => InteractionPageState();
 }
 
-class _InteractionViewState extends State<InteractionView>
+class InteractionPageState extends State<InteractionPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  AudioRecorder? _audioRecorder;
-  SpeechToText? speech;
-  TtsState? ttsState;
-  MainCubit? mainCubit;
-  AiCubit? aiCubit;
-  ImageCubit? imageCubit;
-  DatabaseCubit? databaseCubit;
-  PreferencesState? preferencesState;
+  late DatabaseService database;
+  late PreferencesService preferences;
   bool areSpeechServicesNative =
-      PreferencesState.areSpeechServicesNativeDefault;
-  bool llmDebugMode = PreferencesState.llmDebugModeDefault;
-  HeartRateCubit? heartRateCubit;
-  int heartRate = 0;
-  LocationCubit? locationCubit;
-  Location? gpsLocation;
+      PreferencesService.areSpeechServicesNativeDefault;
+
+  AudioRecorder? _audioRecorder;
   List<DeferredAction> deferredActionQueue = [];
   Player? _player;
 
@@ -107,6 +66,13 @@ class _InteractionViewState extends State<InteractionView>
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat(reverse: true);
+
+    GetIt.I
+        .get<InteractionState>()
+        .setState(InteractionState.waitingStateLabel);
+    database = GetIt.I.get<DatabaseService>();
+    preferences = GetIt.I.get<PreferencesService>();
+    GetIt.I.get<HeartRateService>().listenToHeartRate();
 
     deferredActionQueue.add(DeferredAction(ActionKind.initialize));
   }
@@ -183,7 +149,8 @@ class _InteractionViewState extends State<InteractionView>
   Future<void> _stopRecording(BuildContext context) async {
     if (areSpeechServicesNative) {
       debugPrint('speech stop');
-      await speech?.stop();
+      final sttService = GetIt.I.get<SttService>();
+      await sttService.speech.stop();
     } else {
       final path = await _audioRecorder?.stop();
       if (path != null) {
@@ -201,13 +168,16 @@ class _InteractionViewState extends State<InteractionView>
         }
 
         log('Error during stop recording, path $path');
-        mainCubit?.setState(MainCubit.errorStateLabel);
+        GetIt.I
+            .get<InteractionState>()
+            .setState(InteractionState.errorStateLabel);
       }
     }
   }
 
   Future<void> _sttPhase(BuildContext context, List<int> recordingBytes) async {
-    mainCubit?.setState(MainCubit.sttStateLabel);
+    final interactionState = GetIt.I.get<InteractionState>()
+      ..setState(InteractionState.sttStateLabel);
     try {
       final sttFullUrl =
           Uri.https(functionUrl, sttEndpoint, {'token': chirpToken});
@@ -230,11 +200,11 @@ class _InteractionViewState extends State<InteractionView>
       } else {
         log('${transcriptionResponse.statusCode} '
             '${transcriptionResponse.reasonPhrase}');
-        mainCubit?.setState(MainCubit.errorStateLabel);
+        interactionState.setState(InteractionState.errorStateLabel);
       }
     } catch (e) {
       log('Exception during transcription: $e');
-      mainCubit?.setState(MainCubit.errorStateLabel);
+      interactionState.setState(InteractionState.errorStateLabel);
     }
   }
 
@@ -263,69 +233,54 @@ class _InteractionViewState extends State<InteractionView>
     String prompt,
     String locale,
   ) async {
-    mainCubit?.setState(MainCubit.llmStateLabel);
+    final interactionState = GetIt.I.get<InteractionState>()
+      ..setState(InteractionState.llmStateLabel);
 
     GenerateContentResponse? response;
     var targetLocale = '';
-    final inputLocale =
-        preferencesState?.inputLocale ?? PreferencesState.inputLocaleDefault;
-    final outputLocale =
-        preferencesState?.outputLocale ?? PreferencesState.outputLocaleDefault;
+    final inputLocale = preferences.inputLocale;
+    final outputLocale = preferences.outputLocale;
+    final aiService = GetIt.I.get<AiService>();
     if (widget.interactionMode == InteractionMode.translateMode) {
-      final matchedLocale = ttsState?.matchLanguage(locale) ?? outputLocale;
+      final ttsService = GetIt.I.get<TtsService>();
+      final matchedLocale = ttsService.matchLanguage(locale);
       if (matchedLocale.localeMatch(inputLocale)) {
         targetLocale = outputLocale;
       } else {
         // Also covers matchedLocale == outputLocale
         if (matchedLocale != outputLocale) {
-          preferencesState?.setOutputLocale(matchedLocale);
+          preferences.setOutputLocale(matchedLocale);
         }
 
         targetLocale = inputLocale;
       }
 
       debugPrint('targetLocale: $targetLocale');
-      response =
-          await aiCubit?.translate(prompt, targetLocale, preferencesState);
+      response = await aiService.translate(prompt, targetLocale);
     } else {
       targetLocale = inputLocale;
       debugPrint('targetLocale: $targetLocale');
-      // final newHeartRate = heartRateCubit?.state ?? 0;
-      // if (newHeartRate > 0) {
-      //   heartRate = newHeartRate;
-      // }
 
-      final loc = await locationCubit?.obtain();
-      if (loc != null &&
-          (loc.latitude.abs() > 10e-6 || loc.longitude.abs() > 10e-6)) {
-        gpsLocation = loc;
-      }
+      unawaited(GetIt.I.get<LocationService>().obtain());
 
       var imagePath = '';
       if (widget.interactionMode == InteractionMode.multiModalMode) {
-        imagePath = imageCubit?.state ?? '';
+        imagePath = widget.imagePath;
       }
 
-      response = await aiCubit?.chatStep(
-        prompt,
-        imagePath,
-        databaseCubit,
-        preferencesState,
-        heartRate,
-        gpsLocation,
-      );
+      response = await aiService.chatStep(prompt, imagePath);
     }
 
     debugPrint('Final: ${response?.text}');
     if (response == null ||
         response.text.isNullOrWhiteSpace ||
         !context.mounted) {
-      mainCubit?.setState(MainCubit.errorStateLabel);
+      interactionState.setState(InteractionState.errorStateLabel);
       return;
     }
 
-    if (llmDebugMode) {
-      mainCubit?.setState(MainCubit.doneStateLabel);
+    if (preferences.llmDebugMode) {
+      interactionState.setState(InteractionState.doneStateLabel);
     } else if (context.mounted) {
       if (areSpeechServicesNative) {
         await _playbackPhase(context, response.text ?? '', null, targetLocale);
@@ -340,7 +295,8 @@ class _InteractionViewState extends State<InteractionView>
     String responseText,
     String locale,
   ) async {
-    mainCubit?.setState(MainCubit.ttsStateLabel);
+    final interactionState = GetIt.I.get<InteractionState>()
+      ..setState(InteractionState.ttsStateLabel);
     try {
       final ttsFullUrl = Uri.https(functionUrl, ttsEndpoint, {
         'token': chirpToken,
@@ -361,11 +317,11 @@ class _InteractionViewState extends State<InteractionView>
       } else {
         log('${synthetizationResponse.statusCode} '
             '${synthetizationResponse.reasonPhrase}');
-        mainCubit?.setState(MainCubit.errorStateLabel);
+        interactionState.setState(InteractionState.errorStateLabel);
       }
     } catch (e) {
       log('Error during synthetization: $e');
-      mainCubit?.setState(MainCubit.errorStateLabel);
+      interactionState.setState(InteractionState.errorStateLabel);
     }
   }
 
@@ -375,24 +331,23 @@ class _InteractionViewState extends State<InteractionView>
     Uint8List? audioTrack,
     String locale,
   ) async {
-    mainCubit?.setState(MainCubit.playingStateLabel);
+    final interactionState = GetIt.I.get<InteractionState>()
+      ..setState(InteractionState.playingStateLabel);
     if (responseText.isNotEmpty) {
-      if (await ttsState?.setLanguage(locale) ?? false) {
-        await ttsState?.speak(
-          responseText,
-          preferencesState?.volume ?? PreferencesState.volumeDefault,
-        );
+      final ttsService = GetIt.I.get<TtsService>();
+      if (await ttsService.setLanguage(locale)) {
+        await ttsService.speak(responseText, preferences.volume);
       }
     } else if (audioTrack.isNotEmptyOrNull) {
       _player ??= Player();
       final memoryMedia = await Media.memory(audioTrack!);
       await _player?.open(memoryMedia);
     } else {
-      mainCubit?.setState(MainCubit.errorStateLabel);
+      interactionState.setState(InteractionState.errorStateLabel);
       return;
     }
 
-    mainCubit?.setState(MainCubit.doneStateLabel);
+    interactionState.setState(InteractionState.doneStateLabel);
   }
 
   Future<void> _processDeferredActionQueue(BuildContext context) async {
@@ -402,37 +357,23 @@ class _InteractionViewState extends State<InteractionView>
       for (final deferredAction in queueCopy) {
         switch (deferredAction.actionKind) {
           case ActionKind.initialize:
-            final sttState = context.select((SttCubit cubit) => cubit.state);
-            areSpeechServicesNative =
-                preferencesState!.areSpeechServicesNative &&
-                    sttState.hasSpeech &&
-                    widget.interactionMode != InteractionMode.translateMode;
+            final sttService = GetIt.I.get<SttService>();
+            areSpeechServicesNative = preferences.areSpeechServicesNative &&
+                sttService.hasSpeech &&
+                widget.interactionMode != InteractionMode.translateMode;
 
-            ttsState = context.select((TtsCubit cubit) => cubit.state);
-            if ((ttsState?.languages.isEmpty ?? false) &&
-                sttState.localeNames.isNotEmpty) {
-              ttsState?.supplementLanguages(sttState.localeNames);
+            final ttsService = GetIt.I.get<TtsService>();
+            if (ttsService.languages.isEmpty &&
+                sttService.localeNames.isNotEmpty) {
+              ttsService.supplementLanguages(sttService.localeNames);
             }
 
-            await heartRateCubit?.listenToHeartRate();
-            final newHeartRate = heartRateCubit?.state ?? 0;
-            if (newHeartRate > 0) {
-              heartRate = newHeartRate;
-            }
-
-            final loc = await locationCubit?.obtain();
-            if (loc != null &&
-                (loc.latitude.abs() > 10e-6 || loc.longitude.abs() > 10e-6)) {
-              gpsLocation = loc;
-            }
-
-            speech = sttState.speech;
-            if (!llmDebugMode) {
+            if (!preferences.llmDebugMode) {
               if (areSpeechServicesNative) {
-                final areNativeSpeechServicesLocal =
-                    preferencesState!.areNativeSpeechServicesLocal;
+                unawaited(GetIt.I.get<LocationService>().obtain());
+
                 final options = SpeechListenOptions(
-                  onDevice: areNativeSpeechServicesLocal,
+                  onDevice: preferences.areNativeSpeechServicesLocal,
                   listenMode: ListenMode.dictation,
                   cancelOnError: true,
                   partialResults: false,
@@ -440,36 +381,29 @@ class _InteractionViewState extends State<InteractionView>
                   enableHapticFeedback: true,
                 );
 
-                await sttState.speech.listen(
+                await sttService.speech.listen(
                   onResult: _resultListener,
                   listenFor: const Duration(
-                    seconds: PreferencesState.listenForDefault,
+                    seconds: PreferencesService.listenForDefault,
                   ),
                   pauseFor: const Duration(
-                    seconds: PreferencesState.pauseForDefault,
+                    seconds: PreferencesService.pauseForDefault,
                   ),
-                  localeId: sttState.systemLocale,
+                  localeId: preferences.inputLocale,
                   onSoundLevelChange: _soundLevelListener,
                   listenOptions: options,
                 );
               } else {
-                MediaKit.ensureInitialized();
                 _audioRecorder = AudioRecorder();
                 await _startRecording();
               }
             }
 
-          case ActionKind.volumeAdjust:
-            // TODO(MrCsabaToth): Actually set the volume?
-            await PreferencesState.prefService
-                ?.set(PreferencesState.volumeTag, deferredAction.integer);
-
           case ActionKind.speechTranscripted:
-            final sttState = context.select((SttCubit cubit) => cubit.state);
             await _llmPhase(
               context,
               deferredAction.text,
-              sttState.systemLocale,
+              preferences.inputLocale,
             );
         }
       }
@@ -499,13 +433,7 @@ class _InteractionViewState extends State<InteractionView>
   Widget build(BuildContext context) {
     final l10n = context.l10n;
 
-    mainCubit = context.select((MainCubit cubit) => cubit);
-    aiCubit = context.select((AiCubit cubit) => cubit);
-    databaseCubit = context.select((DatabaseCubit cubit) => cubit);
-    preferencesState = context.select((PreferencesCubit cubit) => cubit.state);
-    llmDebugMode =
-        preferencesState?.llmDebugMode ?? PreferencesState.llmDebugModeDefault;
-    if (llmDebugMode &&
+    if (preferences.llmDebugMode &&
         deferredActionQueue.isNotEmpty &&
         deferredActionQueue.first.actionKind == ActionKind.initialize) {
       deferredActionQueue.add(
@@ -516,14 +444,10 @@ class _InteractionViewState extends State<InteractionView>
       );
     }
 
-    heartRateCubit = context.select((HeartRateCubit cubit) => cubit);
-    locationCubit = context.select((LocationCubit cubit) => cubit);
-    imageCubit = context.select((ImageCubit cubit) => cubit);
-
     _processDeferredActionQueue(context);
 
-    final stateIndex =
-        context.select((MainCubit cubit) => cubit.getStateIndex());
+    final interactionState = GetIt.I.get<InteractionState>();
+    final stateIndex = watchPropertyValue((InteractionState s) => s.stateIndex);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.interactionAppBarTitle)),
@@ -583,7 +507,7 @@ class _InteractionViewState extends State<InteractionView>
               ),
               onTap: () {
                 deferredActionQueue.add(DeferredAction(ActionKind.initialize));
-                mainCubit?.setState(MainCubit.waitingStateLabel);
+                interactionState.setState(InteractionState.waitingStateLabel);
               },
             ),
             // 7: Error phase
@@ -594,7 +518,7 @@ class _InteractionViewState extends State<InteractionView>
               ),
               onTap: () {
                 deferredActionQueue.add(DeferredAction(ActionKind.initialize));
-                mainCubit?.setState(MainCubit.waitingStateLabel);
+                interactionState.setState(InteractionState.waitingStateLabel);
               },
             ),
           ],
