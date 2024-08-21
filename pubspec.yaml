@@ -1,6 +1,6 @@
 name: inspector_gadget
 description: Open Multi-Modal Personal Assistant
-version: 1.0.0+1
+version: 1.0.1
 publish_to: none
 
 environment:
