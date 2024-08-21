@@ -5,17 +5,17 @@ import 'package:fl_location/fl_location.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/ai/tools/function_tool.dart';
-import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
+import 'package:inspector_gadget/preferences/service/preferences.dart';
 
 class WebResearchTool implements FunctionTool {
   @override
-  bool isAvailable(PreferencesState? preferences) {
-    return !(preferences?.tavilyApiKey.isNullOrWhiteSpace ?? false);
+  bool isAvailable(PreferencesService preferences) {
+    return preferences.tavilyApiKey.isNullOrWhiteSpace;
   }
 
   @override
   List<FunctionDeclaration> getFunctionDeclarations(
-    PreferencesState? preferences,
+    PreferencesService preferences,
   ) {
     if (!isAvailable(preferences)) {
       return [];
@@ -40,7 +40,7 @@ class WebResearchTool implements FunctionTool {
   }
 
   @override
-  Tool getTool(PreferencesState? preferences) {
+  Tool getTool(PreferencesService preferences) {
     return Tool(
       functionDeclarations: getFunctionDeclarations(preferences),
     );
@@ -56,12 +56,11 @@ class WebResearchTool implements FunctionTool {
     FunctionCall call,
     Location? location,
     int hr,
-    PreferencesState? preferences,
+    PreferencesService preferences,
   ) async {
-    final tavilyApiKey = preferences?.tavilyApiKey ?? '';
     final result = switch (call.name) {
       'fetchWebResearch' => {
-          'query': await _webResearch(call.args, tavilyApiKey),
+          'query': await _webResearch(call.args, preferences.tavilyApiKey),
         },
       _ => null
     };

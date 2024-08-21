@@ -1,15 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:inspector_gadget/camera/view/camera_page.dart';
 import 'package:inspector_gadget/database/view/personalization_page.dart';
-import 'package:inspector_gadget/interaction/interaction.dart';
+import 'package:inspector_gadget/interaction/view/interaction_page.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/legend_dialog.dart';
-import 'package:inspector_gadget/main/main.dart';
-import 'package:inspector_gadget/preferences/preferences.dart';
+import 'package:inspector_gadget/preferences/view/preferences_page.dart';
 import 'package:tuple/tuple.dart';
 
 class MainPage extends StatelessWidget {
@@ -22,12 +20,7 @@ class MainPage extends StatelessWidget {
   static const String settingsKey = 'Settings';
   static const String helpKey = 'Help';
 
-  void navigateWithMode(
-    BuildContext context,
-    MainCubit mainCubit,
-    InteractionMode interactionMode,
-  ) {
-    mainCubit.setState(MainCubit.recordingStateLabel);
+  void navigateWithMode(BuildContext context, InteractionMode interactionMode) {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
@@ -39,7 +32,6 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final mainCubit = context.select((MainCubit cubit) => cubit);
     final size = MediaQuery.of(context).size;
     final horizontal = size.width >= size.height;
     final columnSizes = [1.fr, 1.fr];
@@ -55,12 +47,6 @@ class MainPage extends StatelessWidget {
       iconSize = min(size.width / 2.5, (size.height - appBarHeight) / 3.5);
     }
 
-    final clickableState = [
-      MainCubit.waitingStateLabel,
-      MainCubit.doneStateLabel,
-      MainCubit.errorStateLabel,
-    ].contains(mainCubit.state.name);
-
     return Scaffold(
       appBar: AppBar(title: Text(l10n.mainAppBarTitle)),
       body: Center(
@@ -72,68 +58,56 @@ class MainPage extends StatelessWidget {
               child: IconButton.filledTonal(
                 key: const Key(uniModalKey),
                 icon: Icon(Icons.chat, size: iconSize),
-                onPressed: () => clickableState
-                    ? navigateWithMode(
-                        context,
-                        mainCubit,
-                        InteractionMode.uniModalMode,
-                      )
-                    : null,
+                onPressed: () => navigateWithMode(
+                  context,
+                  InteractionMode.uniModalMode,
+                ),
               ),
             ),
             Center(
               child: IconButton.filledTonal(
                 key: const Key(multiModalKey),
                 icon: Icon(Icons.video_chat, size: iconSize),
-                onPressed: () => clickableState
-                    ? Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (context) => const CameraPage(),
-                        ),
-                      )
-                    : null,
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (context) => const CameraPage(),
+                  ),
+                ),
               ),
             ),
             Center(
               child: IconButton.filledTonal(
                 key: const Key(translateKey),
                 icon: Icon(Icons.translate, size: iconSize),
-                onPressed: () => clickableState
-                    ? navigateWithMode(
-                        context,
-                        mainCubit,
-                        InteractionMode.translateMode,
-                      )
-                    : null,
+                onPressed: () => navigateWithMode(
+                  context,
+                  InteractionMode.translateMode,
+                ),
               ),
             ),
             Center(
               child: IconButton.filledTonal(
                 key: const Key(personalizationKey),
                 icon: Icon(Icons.person_add, size: iconSize),
-                onPressed: () => clickableState
-                    ? Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (context) => const PersonalizationPage(),
-                        ),
-                      )
-                    : null,
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (context) => const PersonalizationPage(),
+                  ),
+                ),
               ),
             ),
             Center(
               child: IconButton.filledTonal(
                 key: const Key(settingsKey),
                 icon: Icon(Icons.settings, size: iconSize),
-                onPressed: () => clickableState
-                    ? Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (context) => const PreferencesPage(),
-                        ),
-                      )
-                    : null,
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (context) => const PreferencesPage(),
+                  ),
+                ),
               ),
             ),
             Center(

@@ -1,51 +1,28 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
-import 'package:inspector_gadget/database/cubit/database_cubit.dart';
-import 'package:inspector_gadget/database/cubit/history_cubit.dart';
 import 'package:inspector_gadget/database/models/history.dart';
+import 'package:inspector_gadget/database/service/database.dart';
+import 'package:inspector_gadget/database/service/history_state.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
-import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
-import 'package:inspector_gadget/preferences/preferences.dart';
-import 'package:inspector_gadget/tts/cubit/tts_cubit.dart';
+import 'package:inspector_gadget/preferences/service/preferences.dart';
+import 'package:inspector_gadget/speech/service/tts.dart';
 import 'package:listview_utils_plus/listview_utils_plus.dart';
+import 'package:watch_it/watch_it.dart';
 
-class HistoryPage extends StatelessWidget {
+class HistoryPage extends StatefulWidget with WatchItStatefulWidgetMixin {
   const HistoryPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: context.read<DatabaseCubit>(),
-      child: BlocProvider.value(
-        value: context.read<TtsCubit>(),
-        child: BlocProvider.value(
-          value: context.read<PreferencesCubit>(),
-          child: BlocProvider(
-            create: (_) => HistoryCubit(),
-            child: const HistoryView(),
-          ),
-        ),
-      ),
-    );
-  }
+  State<HistoryPage> createState() => HistoryPageState();
 }
 
-class HistoryView extends StatefulWidget {
-  const HistoryView({super.key});
-
-  @override
-  State<HistoryView> createState() => _HistoryViewState();
-}
-
-class _HistoryViewState extends State<HistoryView>
+class HistoryPageState extends State<HistoryPage>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late AnimationController _animationController;
   int _editCount = 0;
-  PreferencesState? preferencesState;
-  DatabaseCubit? database;
-  HistoryCubit? historyCubit;
+  late DatabaseService database;
+  late PreferencesService preferences;
 
   @override
   void didChangeMetrics() {
@@ -57,6 +34,11 @@ class _HistoryViewState extends State<HistoryView>
   @override
   void initState() {
     super.initState();
+
+    GetIt.I.get<HistoryState>().setState(HistoryState.browsingStateLabel);
+    database = GetIt.I.get<DatabaseService>();
+    preferences = GetIt.I.get<PreferencesService>();
+
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
@@ -75,12 +57,7 @@ class _HistoryViewState extends State<HistoryView>
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    preferencesState = context.select((PreferencesCubit cubit) => cubit.state);
-    database = context.select((DatabaseCubit cubit) => cubit);
-    historyCubit = context.select((HistoryCubit cubit) => cubit);
-    final stateIndex =
-        context.select((HistoryCubit cubit) => cubit.getStateIndex());
-    final ttsState = context.select((TtsCubit cubit) => cubit.state);
+    final stateIndex = watchPropertyValue((HistoryState s) => s.stateIndex);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.historyAppBarTitle)),
@@ -96,11 +73,8 @@ class _HistoryViewState extends State<HistoryView>
                 const Center(child: CircularProgressIndicator()),
             adapter: ListAdapter(
               fetchItems: (int page, int limit) async {
-                final data = await database?.historyPaged(page * limit, limit);
-                return ListItems(
-                  data,
-                  reachedToEnd: (data?.length ?? 0) < limit,
-                );
+                final data = await database.historyPaged(page * limit, limit);
+                return ListItems(data, reachedToEnd: data.length < limit);
               },
             ),
             errorBuilder: (context, error, state) {
@@ -129,13 +103,11 @@ class _HistoryViewState extends State<HistoryView>
                 ),
                 trailing: IconButton(
                   onPressed: () async {
-                    historyCubit?.setState(HistoryCubit.playingStateLabel);
-                    await ttsState.speak(
-                      history.content,
-                      preferencesState?.volume ??
-                          PreferencesState.volumeDefault,
-                    );
-                    historyCubit?.setState(HistoryCubit.browsingStateLabel);
+                    final historyViewState = GetIt.I.get<HistoryState>()
+                      ..setState(HistoryState.playingStateLabel);
+                    final ttsService = GetIt.I.get<TtsService>();
+                    await ttsService.speak(history.content, preferences.volume);
+                    historyViewState.setState(HistoryState.browsingStateLabel);
                   },
                   icon: const Icon(Icons.play_arrow),
                 ),
@@ -161,7 +133,7 @@ class _HistoryViewState extends State<HistoryView>
           );
 
           if (result == OkCancelResult.ok) {
-            database?.clearHistory();
+            database.clearHistory();
             setState(() {
               _editCount++;
             });
