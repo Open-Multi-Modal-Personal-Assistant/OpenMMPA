@@ -1,6 +1,5 @@
 import 'dart:async';
 
-// import 'package:get_it/get_it.dart';
 import 'package:inspector_gadget/database/models/history.dart';
 import 'package:inspector_gadget/database/models/personalization.dart';
 import 'package:inspector_gadget/database/object_box.dart';
@@ -19,7 +18,6 @@ class DatabaseService with StateLoggingMixin {
 
     initialized = true;
     objectBox = await ObjectBox.create();
-    // GetIt.I.signalReady(this);
 
     return this;
   }

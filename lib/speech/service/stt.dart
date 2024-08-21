@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
-// import 'package:get_it/get_it.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:inspector_gadget/state_logging_mixin.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
@@ -43,8 +42,6 @@ class SttService with StateLoggingMixin {
         systemLocale =
             systemLocaleName?.localeId ?? PreferencesService.inputLocaleDefault;
         logEvent('System locale: $systemLocale');
-
-        // GetIt.I.signalReady(this);
       }
     } catch (e) {
       log('Exception while initializing speech: $e');

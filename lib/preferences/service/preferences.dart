@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-// import 'package:get_it/get_it.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:pref/pref.dart';
 import 'package:strings/strings.dart';
@@ -120,8 +119,6 @@ class PreferencesService with ChangeNotifier {
       debugPrint('Out of bounds volume $savedVolume reset to $volumeDefault');
       prefService?.set(volumeTag, volumeDefault);
     }
-
-    // GetIt.I.signalReady(this);
 
     return this;
   }
