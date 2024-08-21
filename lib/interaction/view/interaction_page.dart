@@ -461,7 +461,10 @@ class InteractionPageState extends State<InteractionPage>
           sizing: StackFit.expand,
           children: [
             // 0: Waiting
-            Container(),
+            AnimateStyles.swing(
+              _animationController,
+              outlinedIcon(context, Icons.hourglass_bottom, 200),
+            ),
             // 1: Recording phase
             GestureDetector(
               child: AnimateStyles.pulse(
