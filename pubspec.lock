@@ -162,10 +162,10 @@ packages:
     dependency: transitive
     description:
       name: camera_android_camerax
-      sha256: "8bd9cab67551642eb33ceb33ece7acc0890014fc90ddfae637c7e2b683657e65"
+      sha256: "7cd93578ad201dcc6bb5810451fb00d76a86bab9b68dceb68b8cbd7038ac5846"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.7+2"
+    version: "0.6.8+3"
   camera_avfoundation:
     dependency: transitive
     description:
@@ -274,10 +274,10 @@ packages:
     dependency: "direct main"
     description:
       name: dart_helper_utils
-      sha256: "896ba2bbd399d0091944bc2f0ee710f612c0df29554996c2ece4570116bfdbf5"
+      sha256: "97f68f20f3b60b44b9bdc21395299d5d5df85da73020335d5d0304c83054c141"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.0"
+    version: "2.5.1"
   dart_style:
     dependency: transitive
     description:
@@ -1131,10 +1131,10 @@ packages:
     dependency: "direct main"
     description:
       name: speech_to_text
-      sha256: b9b1c3e0591de86cd2cb9564c1410aa9830d5b3a52f1c4a335e50e6ce67013c5
+      sha256: "6cf8f284997490ebef1d68f8707bef57dcf083f43c0f915cc285428520bfe6be"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0-beta.3"
+    version: "7.0.0"
   speech_to_text_platform_interface:
     dependency: transitive
     description:
@@ -1385,4 +1385,4 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=3.5.0 <4.0.0"
-  flutter: ">=3.22.0"
+  flutter: ">=3.24.0"
