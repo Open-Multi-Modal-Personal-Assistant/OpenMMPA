@@ -5,12 +5,17 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
-import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
+import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:pref/pref.dart';
 
-class ApiKeysPreferencesPage extends StatelessWidget {
+class ApiKeysPreferencesPage extends StatefulWidget {
   const ApiKeysPreferencesPage({super.key});
 
+  @override
+  State<ApiKeysPreferencesPage> createState() => ApiKeysPreferencesPageState();
+}
+
+class ApiKeysPreferencesPageState extends State<ApiKeysPreferencesPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -18,21 +23,21 @@ class ApiKeysPreferencesPage extends StatelessWidget {
     final apiKeysPreferences = <Widget>[
       PrefText(
         label: l10n.preferencesGeminiApiKeyLabel,
-        pref: PreferencesState.geminiApiKeyTag,
+        pref: PreferencesService.geminiApiKeyTag,
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(r'\w')),
         ],
       ),
       PrefText(
         label: l10n.preferencesAlphaVantageAccessKeyLabel,
-        pref: PreferencesState.alphaVantageAccessKeyTag,
+        pref: PreferencesService.alphaVantageAccessKeyTag,
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(r'\w')),
         ],
       ),
       PrefText(
         label: l10n.preferencesTavilyApiKeyLabel,
-        pref: PreferencesState.tavilyApiKeyTag,
+        pref: PreferencesService.tavilyApiKeyTag,
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(r'[\w-]+')),
         ],
@@ -58,6 +63,7 @@ class ApiKeysPreferencesPage extends StatelessWidget {
             }
 
             await prefService.fromMap(preferencesMap);
+            setState(() {});
           }
         },
         leading: const Icon(Icons.cloud_download),

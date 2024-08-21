@@ -3,7 +3,7 @@ import 'package:fl_location/fl_location.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/ai/tools/function_tool.dart';
-import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
+import 'package:inspector_gadget/preferences/service/preferences.dart';
 
 class AlphaVantageTool implements FunctionTool {
   static const String alphaVantageBaseUrl = 'www.alphavantage.co';
@@ -12,13 +12,13 @@ class AlphaVantageTool implements FunctionTool {
   String alphaVantageAccessKey = '';
 
   @override
-  bool isAvailable(PreferencesState? preferences) {
-    return !(preferences?.alphaVantageAccessKey.isNullOrWhiteSpace ?? false);
+  bool isAvailable(PreferencesService preferences) {
+    return preferences.alphaVantageAccessKey.isNullOrWhiteSpace;
   }
 
   @override
   List<FunctionDeclaration> getFunctionDeclarations(
-    PreferencesState? preferences,
+    PreferencesService preferences,
   ) {
     if (!isAvailable(preferences)) {
       return [];
@@ -88,7 +88,7 @@ and technology''',
   }
 
   @override
-  Tool getTool(PreferencesState? preferences) {
+  Tool getTool(PreferencesService preferences) {
     var functions = <FunctionDeclaration>[];
     if (isAvailable(preferences)) {
       functions = getFunctionDeclarations(preferences);
@@ -112,9 +112,9 @@ and technology''',
     FunctionCall call,
     Location? location,
     int hr,
-    PreferencesState? preferences,
+    PreferencesService preferences,
   ) async {
-    alphaVantageAccessKey = preferences?.alphaVantageAccessKey ?? '';
+    alphaVantageAccessKey = preferences.alphaVantageAccessKey;
     final result = switch (call.name) {
       'fetchStockPrice' => {
           'stockPrice': _getStockPrice(call.args),

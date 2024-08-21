@@ -4,24 +4,20 @@ import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
 import 'package:http/http.dart' as http;
-import 'package:inspector_gadget/ai/cubit/ai_cubit.dart';
+import 'package:inspector_gadget/ai/service/ai_service.dart';
 import 'package:inspector_gadget/constants.dart';
-import 'package:inspector_gadget/database/cubit/database_cubit.dart';
-import 'package:inspector_gadget/database/cubit/personalization_cubit.dart';
 import 'package:inspector_gadget/database/models/personalization.dart';
-import 'package:inspector_gadget/database/view/deferred_action.dart';
-import 'package:inspector_gadget/interaction/view/transcription_list.dart';
+import 'package:inspector_gadget/database/service/database.dart';
+import 'package:inspector_gadget/database/service/deferred_action.dart';
+import 'package:inspector_gadget/database/service/personalization_state.dart';
+import 'package:inspector_gadget/interaction/service/transcription_list.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
-import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
-import 'package:inspector_gadget/preferences/preferences.dart';
+import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:inspector_gadget/secrets.dart';
-import 'package:inspector_gadget/stt/cubit/stt_cubit.dart';
-import 'package:inspector_gadget/stt/cubit/stt_state.dart';
-import 'package:inspector_gadget/tts/cubit/tts_cubit.dart';
-import 'package:inspector_gadget/tts/cubit/tts_state.dart';
+import 'package:inspector_gadget/speech/service/stt.dart';
+import 'package:inspector_gadget/speech/service/tts.dart';
 import 'package:listview_utils_plus/listview_utils_plus.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path/path.dart' as p;
@@ -29,57 +25,28 @@ import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:watch_it/watch_it.dart';
 
-class PersonalizationPage extends StatelessWidget {
+class PersonalizationPage extends StatefulWidget
+    with WatchItStatefulWidgetMixin {
   const PersonalizationPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: context.read<DatabaseCubit>(),
-      child: BlocProvider.value(
-        value: context.read<SttCubit>(),
-        child: BlocProvider.value(
-          value: context.read<TtsCubit>(),
-          child: BlocProvider.value(
-            value: context.read<PreferencesCubit>(),
-            child: BlocProvider.value(
-              value: context.read<AiCubit>(),
-              child: BlocProvider(
-                create: (_) => PersonalizationCubit(),
-                child: const PersonalizationView(),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  State<PersonalizationPage> createState() => PersonalizationPageState();
 }
 
-class PersonalizationView extends StatefulWidget {
-  const PersonalizationView({super.key});
-
-  @override
-  State<PersonalizationView> createState() => _PersonalizationViewState();
-}
-
-class _PersonalizationViewState extends State<PersonalizationView>
+class PersonalizationPageState extends State<PersonalizationPage>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late AnimationController _animationController;
   int _editCount = 0;
-  PreferencesState? preferencesState;
-  String inputLocaleId = PreferencesState.inputLocaleDefault;
-  AiCubit? aiCubit;
-  DatabaseCubit? database;
-  PersonalizationCubit? personalizationCubit;
-
+  late DatabaseService database;
+  late PreferencesService preferences;
+  String inputLocaleId = PreferencesService.inputLocaleDefault;
   bool areSpeechServicesNative =
-      PreferencesState.areSpeechServicesNativeDefault;
+      PreferencesService.areSpeechServicesNativeDefault;
   AudioRecorder? _audioRecorder;
   Player? _player;
   SpeechToText? speech;
-  TtsState? ttsState;
   List<DeferredAction> deferredActionQueue = [];
 
   @override
@@ -96,6 +63,12 @@ class _PersonalizationViewState extends State<PersonalizationView>
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat(reverse: true);
+
+    GetIt.I
+        .get<PersonalizationState>()
+        .setState(PersonalizationState.browsingStateLabel);
+    database = GetIt.I.get<DatabaseService>();
+    preferences = GetIt.I.get<PreferencesService>();
 
     WidgetsBinding.instance.addObserver(this);
 
@@ -193,12 +166,15 @@ class _PersonalizationViewState extends State<PersonalizationView>
         }
 
         log('Error during stop recording, path $path');
-        personalizationCubit?.setState(PersonalizationCubit.errorStateLabel);
+        GetIt.I
+            .get<PersonalizationState>()
+            .setState(PersonalizationState.errorStateLabel);
       }
     }
   }
 
   Future<void> _sttPhase(BuildContext context, List<int> recordingBytes) async {
+    final personalizationViewState = GetIt.I.get<PersonalizationState>();
     try {
       final sttFullUrl =
           Uri.https(functionUrl, sttEndpoint, {'token': chirpToken});
@@ -215,11 +191,11 @@ class _PersonalizationViewState extends State<PersonalizationView>
       } else {
         log('${transcriptionResponse.statusCode} '
             '${transcriptionResponse.reasonPhrase}');
-        personalizationCubit?.setState(PersonalizationCubit.errorStateLabel);
+        personalizationViewState.setState(PersonalizationState.errorStateLabel);
       }
     } catch (e) {
       log('Exception during transcription: $e');
-      personalizationCubit?.setState(PersonalizationCubit.errorStateLabel);
+      personalizationViewState.setState(PersonalizationState.errorStateLabel);
     }
   }
 
@@ -244,20 +220,22 @@ class _PersonalizationViewState extends State<PersonalizationView>
   /* END Android native STT utilities */
 
   Future<void> embedAndPersistPersonalization(String recorded) async {
-    if (recorded.isNotEmpty && database != null) {
-      personalizationCubit?.setState(PersonalizationCubit.processingStateLabel);
-      final embedding =
-          await aiCubit?.obtainEmbedding(recorded, preferencesState) ?? [];
+    final personalizationViewState = GetIt.I.get<PersonalizationState>();
+    if (recorded.isNotEmpty) {
+      personalizationViewState
+          .setState(PersonalizationState.processingStateLabel);
+      final aiService = GetIt.I.get<AiService>();
+      final embedding = await aiService.obtainEmbedding(recorded);
       final personalization = Personalization(recorded, inputLocaleId)
         ..embedding = embedding;
-      database!.addUpdatePersonalization(personalization);
+      database.addUpdatePersonalization(personalization);
 
       setState(() {
         _editCount++;
       });
     }
 
-    personalizationCubit?.setState(PersonalizationCubit.browsingStateLabel);
+    personalizationViewState.setState(PersonalizationState.browsingStateLabel);
   }
 
   Future<void> _ttsPhase(
@@ -265,6 +243,7 @@ class _PersonalizationViewState extends State<PersonalizationView>
     String responseText,
     String locale,
   ) async {
+    final personalizationViewState = GetIt.I.get<PersonalizationState>();
     try {
       final ttsFullUrl = Uri.https(functionUrl, ttsEndpoint, {
         'token': chirpToken,
@@ -279,34 +258,33 @@ class _PersonalizationViewState extends State<PersonalizationView>
           final memoryMedia =
               await Media.memory(synthetizationResponse.bodyBytes);
           await _player?.open(memoryMedia);
-          personalizationCubit
-              ?.setState(PersonalizationCubit.browsingStateLabel);
+          personalizationViewState
+              .setState(PersonalizationState.browsingStateLabel);
         } else {
-          personalizationCubit?.setState(PersonalizationCubit.errorStateLabel);
+          personalizationViewState
+              .setState(PersonalizationState.errorStateLabel);
         }
       } else {
         log('${synthetizationResponse.statusCode} '
             '${synthetizationResponse.reasonPhrase}');
-        personalizationCubit?.setState(PersonalizationCubit.errorStateLabel);
+        personalizationViewState.setState(PersonalizationState.errorStateLabel);
       }
     } catch (e) {
       log('Error during synthetization: $e');
-      personalizationCubit?.setState(PersonalizationCubit.errorStateLabel);
+      personalizationViewState.setState(PersonalizationState.errorStateLabel);
     }
   }
 
-  Future<void> _processDeferredActionQueue(
-    BuildContext context,
-    SttState sttState,
-  ) async {
+  Future<void> _processDeferredActionQueue(BuildContext context) async {
     if (deferredActionQueue.isNotEmpty) {
       final queueCopy = [...deferredActionQueue];
       deferredActionQueue.clear();
       for (final deferredAction in queueCopy) {
         switch (deferredAction.actionKind) {
           case ActionKind.initialize:
+            final sttService = GetIt.I.get<SttService>();
             areSpeechServicesNative =
-                preferencesState!.areSpeechServicesNative && sttState.hasSpeech;
+                preferences.areSpeechServicesNative && sttService.hasSpeech;
           case ActionKind.speechTranscripted:
             await embedAndPersistPersonalization(deferredAction.text);
         }
@@ -317,19 +295,12 @@ class _PersonalizationViewState extends State<PersonalizationView>
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    aiCubit = context.select((AiCubit cubit) => cubit);
-    preferencesState = context.select((PreferencesCubit cubit) => cubit.state);
-    inputLocaleId =
-        preferencesState?.inputLocale ?? PreferencesState.inputLocaleDefault;
-    database = context.select((DatabaseCubit cubit) => cubit);
-    personalizationCubit =
-        context.select((PersonalizationCubit cubit) => cubit);
+    inputLocaleId = preferences.inputLocale;
     final stateIndex =
-        context.select((PersonalizationCubit cubit) => cubit.getStateIndex());
-    final sttState = context.select((SttCubit cubit) => cubit.state);
-    final ttsState = context.select((TtsCubit cubit) => cubit.state);
+        watchPropertyValue((PersonalizationState s) => s.stateIndex);
+    final personalizationViewState = GetIt.I.get<PersonalizationState>();
 
-    _processDeferredActionQueue(context, sttState);
+    _processDeferredActionQueue(context);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.personalizationAppBarTitle)),
@@ -346,10 +317,10 @@ class _PersonalizationViewState extends State<PersonalizationView>
             adapter: ListAdapter(
               fetchItems: (int page, int limit) async {
                 final data =
-                    await database?.personalizationPaged(page * limit, limit);
+                    await database.personalizationPaged(page * limit, limit);
                 return ListItems(
                   data,
-                  reachedToEnd: (data?.length ?? 0) < limit,
+                  reachedToEnd: data.length < limit,
                 );
               },
             ),
@@ -373,22 +344,22 @@ class _PersonalizationViewState extends State<PersonalizationView>
                 key: Key('p_${p13n.id}'),
                 leading: IconButton(
                   onPressed: () async {
-                    personalizationCubit
-                        ?.setState(PersonalizationCubit.playingStateLabel);
+                    personalizationViewState
+                        .setState(PersonalizationState.playingStateLabel);
                     if (areSpeechServicesNative) {
-                      if (await ttsState.setLanguage(p13n.locale)) {
-                        await ttsState.speak(
+                      final ttsService = GetIt.I.get<TtsService>();
+                      if (await ttsService.setLanguage(p13n.locale)) {
+                        await ttsService.speak(
                           p13n.content,
-                          preferencesState?.volume ??
-                              PreferencesState.volumeDefault,
+                          preferences.volume,
                         );
                       } else {
-                        personalizationCubit
-                            ?.setState(PersonalizationCubit.errorStateLabel);
+                        personalizationViewState
+                            .setState(PersonalizationState.errorStateLabel);
                       }
 
-                      personalizationCubit
-                          ?.setState(PersonalizationCubit.browsingStateLabel);
+                      personalizationViewState
+                          .setState(PersonalizationState.browsingStateLabel);
                     } else {
                       await _ttsPhase(context, p13n.content, p13n.locale);
                     }
@@ -411,7 +382,7 @@ class _PersonalizationViewState extends State<PersonalizationView>
                     );
 
                     if (result == OkCancelResult.ok) {
-                      database?.deletePersonalization(p13n.id);
+                      database.deletePersonalization(p13n.id);
                       setState(() {
                         _editCount++;
                       });
@@ -449,8 +420,8 @@ class _PersonalizationViewState extends State<PersonalizationView>
               const Icon(Icons.warning, size: 220),
             ),
             onTap: () {
-              personalizationCubit
-                  ?.setState(PersonalizationCubit.browsingStateLabel);
+              personalizationViewState
+                  .setState(PersonalizationState.browsingStateLabel);
             },
           ),
         ],
@@ -458,14 +429,11 @@ class _PersonalizationViewState extends State<PersonalizationView>
       floatingActionButton: IconButton(
         icon: const Icon(Icons.add),
         onPressed: () async {
-          personalizationCubit
-              ?.setState(PersonalizationCubit.recordingStateLabel);
-
+          personalizationViewState
+              .setState(PersonalizationState.recordingStateLabel);
           if (areSpeechServicesNative) {
-            final areNativeSpeechServicesLocal =
-                preferencesState!.areNativeSpeechServicesLocal;
             final options = SpeechListenOptions(
-              onDevice: areNativeSpeechServicesLocal,
+              onDevice: preferences.areNativeSpeechServicesLocal,
               listenMode: ListenMode.dictation,
               cancelOnError: true,
               partialResults: false,
@@ -473,22 +441,21 @@ class _PersonalizationViewState extends State<PersonalizationView>
               enableHapticFeedback: true,
             );
 
-            inputLocaleId =
-                preferencesState?.inputLocale ?? sttState.systemLocale;
-            await sttState.speech.listen(
+            inputLocaleId = preferences.inputLocale;
+            final sttService = GetIt.I.get<SttService>();
+            await sttService.speech.listen(
               onResult: _resultListener,
               listenFor: const Duration(
-                seconds: PreferencesState.listenForDefault,
+                seconds: PreferencesService.listenForDefault,
               ),
               pauseFor: const Duration(
-                seconds: PreferencesState.pauseForDefault,
+                seconds: PreferencesService.pauseForDefault,
               ),
               localeId: inputLocaleId,
               onSoundLevelChange: _soundLevelListener,
               listenOptions: options,
             );
           } else {
-            MediaKit.ensureInitialized();
             _audioRecorder = AudioRecorder();
             await _startRecording();
           }

@@ -1,15 +1,15 @@
 import 'package:fl_location/fl_location.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:inspector_gadget/preferences/cubit/preferences_state.dart';
+import 'package:inspector_gadget/preferences/service/preferences.dart';
 
 abstract class FunctionTool {
-  bool isAvailable(PreferencesState? preferences);
+  bool isAvailable(PreferencesService preferences);
 
   List<FunctionDeclaration> getFunctionDeclarations(
-    PreferencesState? preferences,
+    PreferencesService preferences,
   );
 
-  Tool getTool(PreferencesState? preferences);
+  Tool getTool(PreferencesService preferences);
 
   bool canDispatchFunctionCall(FunctionCall call);
 
@@ -17,6 +17,6 @@ abstract class FunctionTool {
     FunctionCall call,
     Location? location,
     int hr,
-    PreferencesState? preferences,
+    PreferencesService preferences,
   );
 }

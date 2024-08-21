@@ -1,10 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:inspector_gadget/preferences/preferences.dart';
+import 'package:inspector_gadget/preferences/view/preferences_page.dart';
 import 'package:pref/pref.dart';
 
-import '../../helpers/helpers.dart';
+import '../../helpers/pump_app.dart';
+import '../../helpers/setup_services.dart';
 
 void main() {
+  setUpAll(() async {
+    setUpServices();
+  });
+
   group('PreferencesPage', () {
     testWidgets('renders PreferencesView', (tester) async {
       await tester.pumpApp(const PreferencesPage());
