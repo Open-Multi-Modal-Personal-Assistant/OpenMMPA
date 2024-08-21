@@ -357,6 +357,10 @@ class InteractionPageState extends State<InteractionPage>
       for (final deferredAction in queueCopy) {
         switch (deferredAction.actionKind) {
           case ActionKind.initialize:
+            GetIt.I
+                .get<InteractionState>()
+                .setState(InteractionState.recordingStateLabel);
+
             final sttService = GetIt.I.get<SttService>();
             areSpeechServicesNative = preferences.areSpeechServicesNative &&
                 sttService.hasSpeech &&
