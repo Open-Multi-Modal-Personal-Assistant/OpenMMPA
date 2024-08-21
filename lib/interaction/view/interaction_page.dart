@@ -470,7 +470,7 @@ class InteractionPageState extends State<InteractionPage>
             GestureDetector(
               child: AnimateStyles.pulse(
                 _animationController,
-                outlinedIcon(context, Icons.mic_rounded, 200),
+                outlinedIcon(context, Icons.mic, 200),
               ),
               onTap: () async {
                 await _stopRecording(context);

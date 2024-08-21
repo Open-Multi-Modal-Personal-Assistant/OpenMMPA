@@ -402,7 +402,7 @@ class PersonalizationPageState extends State<PersonalizationPage>
           GestureDetector(
             child: AnimateStyles.pulse(
               _animationController,
-              const Icon(Icons.mic_rounded, size: 220),
+              const Icon(Icons.mic, size: 220),
             ),
             onTap: () async {
               await _stopRecording(context);
