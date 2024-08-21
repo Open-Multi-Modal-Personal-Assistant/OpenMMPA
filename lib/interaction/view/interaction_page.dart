@@ -42,6 +42,7 @@ class InteractionPage extends StatefulWidget with WatchItStatefulWidgetMixin {
 
   final InteractionMode interactionMode;
   final String imagePath;
+  static const llmTestPrompt = "What is part 121G on O'Reilly Auto Parts?";
 
   @override
   State<InteractionPage> createState() => InteractionPageState();
@@ -443,7 +444,7 @@ class InteractionPageState extends State<InteractionPage>
       deferredActionQueue.add(
         DeferredAction(
           ActionKind.speechTranscripted,
-          text: "What is part 121G on O'Reilly Auto Parts?",
+          text: InteractionPage.llmTestPrompt,
         ),
       );
     }

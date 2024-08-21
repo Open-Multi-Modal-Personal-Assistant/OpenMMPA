@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:inspector_gadget/camera/view/camera_page.dart';
 import 'package:inspector_gadget/database/view/personalization_page.dart';
 import 'package:inspector_gadget/interaction/view/interaction_page.dart';
 import 'package:inspector_gadget/main/view/main_page.dart';
 import 'package:inspector_gadget/preferences/view/preferences_page.dart';
 
-import '../../helpers/helpers.dart';
+import '../../helpers/pump_app.dart';
+import '../../helpers/setup_services.dart';
 
 void main() {
+  setUpAll(() async {
+    setUpServices();
+  });
+
   group('MainView', () {
     testWidgets('renders MainPage', (tester) async {
       await tester.pumpApp(const MainPage());
@@ -24,12 +30,12 @@ void main() {
       expect(find.widgetWithIcon(IconButton, Icons.help), findsOneWidget);
     });
 
-    /* pumpAndSettle times out for some reason */
     testWidgets('navigates to interaction when the uni modal button is tapped',
         (tester) async {
       await tester.pumpApp(const MainPage());
       await tester.tap(find.byKey(const Key(MainPage.uniModalKey)));
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettleEx();
+
       expect(find.byType(InteractionPage), findsOneWidget);
     });
 
@@ -38,15 +44,17 @@ void main() {
         (tester) async {
       await tester.pumpApp(const MainPage());
       await tester.tap(find.byKey(const Key(MainPage.multiModalKey)));
-      await tester.pumpAndSettle();
-      expect(find.byType(InteractionPage), findsOneWidget);
+      await tester.pumpAndSettleEx();
+
+      expect(find.byType(CameraPage), findsOneWidget);
     });
 
     testWidgets('navigates to interaction when the translate button is tapped',
         (tester) async {
       await tester.pumpApp(const MainPage());
       await tester.tap(find.byKey(const Key(MainPage.translateKey)));
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettleEx();
+
       expect(find.byType(InteractionPage), findsOneWidget);
     });
 
@@ -54,7 +62,8 @@ void main() {
         (tester) async {
       await tester.pumpApp(const MainPage());
       await tester.tap(find.byKey(const Key(MainPage.personalizationKey)));
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettleEx();
+
       expect(find.byType(PersonalizationPage), findsOneWidget);
     });
 
@@ -62,7 +71,8 @@ void main() {
         (tester) async {
       await tester.pumpApp(const MainPage());
       await tester.tap(find.byKey(const Key(MainPage.settingsKey)));
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettleEx();
+
       expect(find.byType(PreferencesPage), findsOneWidget);
     });
   });

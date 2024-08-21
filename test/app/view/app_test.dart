@@ -6,7 +6,7 @@ import 'package:inspector_gadget/main/view/main_page.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../helpers/helpers.dart';
+import '../../helpers/mock_preferences.dart';
 
 void main() {
   group('App', () {
@@ -20,6 +20,7 @@ void main() {
       GetIt.I.registerSingleton<PreferencesService>(mockPreferences);
 
       await tester.pumpWidget(const AppView());
+      await tester.pumpAndSettle();
 
       expect(find.byType(MainPage), findsOneWidget);
     });
