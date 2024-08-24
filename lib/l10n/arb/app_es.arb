@@ -207,5 +207,17 @@
     "classicGoogleTranslateLabel": "Traducción clásica de Google",
     "@classicGoogleTranslateLabel": {
         "description": "Texto que se muestra en las Preferencias de la Traducción Clásica de Google"
+    },
+    "detailedCameraControlsLabel": "Más controles de cámara",
+    "@detailedCameraControlsLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias para los controles detallados de la cámara"
+    },
+    "detailedCameraControlsDescription": "Controles de modo de flash, exposición y enfoque",
+    "@detailedCameraControlsDescription": {
+        "description": "Texto que se muestra en la configuración de preferencias para la descripción detallada del control de la cámara"
+    },
+    "cameraSelectionInstruction": "Toca una cámara",
+    "@cameraSelectionInstruction": {
+        "description": "Texto que se muestra en la página de captura de la cámara cuando no se selecciona ninguna cámara"
     }
 }

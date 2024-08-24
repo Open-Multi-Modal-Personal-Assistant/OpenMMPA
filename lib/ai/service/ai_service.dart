@@ -14,6 +14,7 @@ import 'package:inspector_gadget/database/service/database.dart';
 import 'package:inspector_gadget/heart_rate/service/heart_rate.dart';
 import 'package:inspector_gadget/location/service/location.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
+import 'package:mime/mime.dart';
 import 'package:strings/strings.dart';
 import 'package:translator/translator.dart';
 
@@ -54,7 +55,7 @@ class AiService with ToolsMixin {
 
   Future<GenerateContentResponse?> chatStep(
     String prompt,
-    String imagePath,
+    String mediaPath,
   ) async {
     debugPrint('prompt: $prompt');
     final preferences = GetIt.I.get<PreferencesService>();
@@ -119,15 +120,22 @@ class AiService with ToolsMixin {
     final stuffed = stuffedPrompt.toString();
     debugPrint('stuffed: $stuffed');
     var message = Content.text('');
-    debugPrint('imagePath: $imagePath');
-    if (imagePath.isEmpty) {
+    debugPrint('mediaPath: $mediaPath');
+    if (mediaPath.isEmpty) {
       message = Content.text(stuffed);
     } else {
-      message = Content.multi([
-        TextPart(stuffed),
-        // TODO(MrCsabaToth): other image formats (png, jpg, webp, heic, heif)
-        DataPart('image/jpeg', await File(imagePath).readAsBytes()),
-      ]);
+      final mediaContent = await File(mediaPath).readAsBytes();
+      final mimeType = lookupMimeType(
+        mediaPath,
+        headerBytes: mediaContent.take(16).toList(growable: false),
+      );
+      if (mimeType != null) {
+        message = Content.multi(
+          [TextPart(stuffed), DataPart(mimeType, mediaContent)],
+        );
+      } else {
+        message = Content.text(stuffed);
+      }
     }
 
     var response = await chat!.sendMessage(message);

@@ -38,6 +38,11 @@ class SystemPreferencesPage extends StatelessWidget {
         value: PreferencesService.themeSelectionDark,
         pref: PreferencesService.themeSelectionTag,
       ),
+      PrefCheckbox(
+        title: Text(l10n.detailedCameraControlsLabel),
+        subtitle: Text(l10n.detailedCameraControlsDescription),
+        pref: PreferencesService.detailedCameraControlsTag,
+      ),
       const PrefLabel(title: Divider(height: 1)),
       PrefLabel(title: Text(l10n.localeSelectionLabel)),
     ];

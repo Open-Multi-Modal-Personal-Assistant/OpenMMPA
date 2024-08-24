@@ -82,6 +82,8 @@ class PreferencesService with ChangeNotifier {
       HarmBlockThreshold.none;
   static const String classicGoogleTranslateTag = 'classic_google_translate';
   static const bool classicGoogleTranslateDefault = false;
+  static const String detailedCameraControlsTag = 'detailed_camera_controls';
+  static const bool detailedCameraControlsDefault = false;
 
   final String prefix = 'ommpa'; // Inspector Gadget
 
@@ -111,6 +113,7 @@ class PreferencesService with ChangeNotifier {
         harmCategorySexuallyExplicitTag: harmCategoryHarassmentDefault,
         harmCategoryDangerousContentTag: harmCategorySexuallyExplicitDefault,
         classicGoogleTranslateTag: classicGoogleTranslateDefault,
+        detailedCameraControlsTag: detailedCameraControlsDefault,
       },
     );
 
@@ -168,6 +171,9 @@ class PreferencesService with ChangeNotifier {
   bool get classicGoogleTranslate =>
       prefService?.get<bool>(classicGoogleTranslateTag) ??
       classicGoogleTranslateDefault;
+  bool get detailedCameraControls =>
+      prefService?.get<bool>(detailedCameraControlsTag) ??
+      detailedCameraControlsDefault;
   String get theme =>
       prefService?.get<String>(themeSelectionTag) ?? themeSelectionDefault;
   ThemeMode get themeMode {

@@ -207,5 +207,17 @@
     "classicGoogleTranslateLabel": "Classic Google Translation",
     "@classicGoogleTranslateLabel": {
         "description": "Text shown in the Preferences for the Classic Google Translation"
+    },
+    "detailedCameraControlsLabel": "More Camera Controls",
+    "@detailedCameraControlsLabel": {
+        "description": "Text shown in the preferences settings for Detailed Camera Controls"
+    },
+    "detailedCameraControlsDescription": "Flash, Exposure, and Focus Mode controls",
+    "@detailedCameraControlsDescription": {
+        "description": "Text shown in the preferences settings for Detailed Camera Control Description"
+    },
+    "cameraSelectionInstruction": "Tap a camera",
+    "@cameraSelectionInstruction": {
+        "description": "Text shown in the camera capture page when no camera is selected"
     }
 }

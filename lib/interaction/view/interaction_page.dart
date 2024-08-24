@@ -18,6 +18,7 @@ import 'package:inspector_gadget/interaction/service/interaction_state.dart';
 import 'package:inspector_gadget/interaction/service/transcription_list.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/location/service/location.dart';
+import 'package:inspector_gadget/outlined_icon.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:inspector_gadget/secrets.dart';
 import 'package:inspector_gadget/speech/service/stt.dart';
@@ -38,10 +39,10 @@ enum InteractionMode {
 }
 
 class InteractionPage extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const InteractionPage(this.interactionMode, {this.imagePath = '', super.key});
+  const InteractionPage(this.interactionMode, {this.mediaPath = '', super.key});
 
   final InteractionMode interactionMode;
-  final String imagePath;
+  final String mediaPath;
   static const llmTestPrompt = "What is part 121G on O'Reilly Auto Parts?";
 
   @override
@@ -264,12 +265,12 @@ class InteractionPageState extends State<InteractionPage>
 
       unawaited(GetIt.I.get<LocationService>().obtain());
 
-      var imagePath = '';
+      var mediaPath = '';
       if (widget.interactionMode == InteractionMode.multiModalMode) {
-        imagePath = widget.imagePath;
+        mediaPath = widget.mediaPath;
       }
 
-      response = await aiService.chatStep(prompt, imagePath);
+      response = await aiService.chatStep(prompt, mediaPath);
     }
 
     debugPrint('Final: ${response?.text}');
@@ -413,25 +414,6 @@ class InteractionPageState extends State<InteractionPage>
         }
       }
     }
-  }
-
-  Widget outlinedIcon(
-    BuildContext context,
-    IconData iconData,
-    double iconSize,
-  ) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Stack(
-      children: [
-        Center(
-          child:
-              Icon(iconData, size: iconSize * 1.1, color: colorScheme.shadow),
-        ),
-        Center(
-          child: Icon(iconData, size: iconSize, color: colorScheme.primary),
-        ),
-      ],
-    );
   }
 
   @override
