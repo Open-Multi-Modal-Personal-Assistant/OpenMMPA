@@ -19,6 +19,7 @@ import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:inspector_gadget/secrets.dart';
 import 'package:inspector_gadget/speech/service/stt.dart';
 import 'package:inspector_gadget/speech/service/tts.dart';
+import 'package:inspector_gadget/speech/view/stt_mixin.dart';
 import 'package:inspector_gadget/speech/view/tts_mixin.dart';
 import 'package:listview_utils_plus/listview_utils_plus.dart';
 import 'package:path/path.dart' as p;
@@ -37,7 +38,11 @@ class PersonalizationPage extends StatefulWidget
 }
 
 class PersonalizationPageState extends State<PersonalizationPage>
-    with SingleTickerProviderStateMixin, TtsMixin, WidgetsBindingObserver {
+    with
+        SingleTickerProviderStateMixin,
+        SttMixin,
+        TtsMixin,
+        WidgetsBindingObserver {
   late AnimationController _animationController;
   int _editCount = 0;
   late DatabaseService database;
@@ -78,7 +83,7 @@ class PersonalizationPageState extends State<PersonalizationPage>
     WidgetsBinding.instance.removeObserver(this);
     _audioRecorder?.dispose();
     _animationController.dispose();
-    disposePlayer();
+    disposeTts();
     super.dispose();
   }
 

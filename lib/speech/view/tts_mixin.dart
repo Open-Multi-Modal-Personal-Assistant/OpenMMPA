@@ -82,7 +82,7 @@ mixin TtsMixin {
     }
   }
 
-  void disposePlayer() {
+  void disposeTts() {
     player?.dispose();
   }
 }

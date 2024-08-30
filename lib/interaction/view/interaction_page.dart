@@ -25,7 +25,6 @@ import 'package:inspector_gadget/speech/service/stt.dart';
 import 'package:inspector_gadget/speech/service/tts.dart';
 import 'package:inspector_gadget/speech/view/tts_mixin.dart';
 import 'package:inspector_gadget/string_ex.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
@@ -60,7 +59,6 @@ class InteractionPageState extends State<InteractionPage>
 
   AudioRecorder? _audioRecorder;
   List<DeferredAction> deferredActionQueue = [];
-  Player? _player;
 
   @override
   void initState() {
@@ -82,7 +80,7 @@ class InteractionPageState extends State<InteractionPage>
   void dispose() {
     _audioRecorder?.dispose();
     _animationController.dispose();
-    _player?.dispose();
+    disposeTts();
     super.dispose();
   }
 

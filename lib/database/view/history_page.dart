@@ -60,6 +60,7 @@ class HistoryPageState extends State<HistoryPage>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _animationController.dispose();
+    disposeTts();
     super.dispose();
   }
 
