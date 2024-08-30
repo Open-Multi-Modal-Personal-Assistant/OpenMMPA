@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
 import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/ai/service/ai_service.dart';
+import 'package:inspector_gadget/base_state.dart';
 import 'package:inspector_gadget/constants.dart';
 import 'package:inspector_gadget/database/models/personalization.dart';
 import 'package:inspector_gadget/database/service/database.dart';
@@ -18,8 +19,8 @@ import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:inspector_gadget/secrets.dart';
 import 'package:inspector_gadget/speech/service/stt.dart';
 import 'package:inspector_gadget/speech/service/tts.dart';
+import 'package:inspector_gadget/speech/view/tts_mixin.dart';
 import 'package:listview_utils_plus/listview_utils_plus.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
@@ -36,7 +37,7 @@ class PersonalizationPage extends StatefulWidget
 }
 
 class PersonalizationPageState extends State<PersonalizationPage>
-    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+    with SingleTickerProviderStateMixin, TtsMixin, WidgetsBindingObserver {
   late AnimationController _animationController;
   int _editCount = 0;
   late DatabaseService database;
@@ -45,7 +46,6 @@ class PersonalizationPageState extends State<PersonalizationPage>
   bool areSpeechServicesNative =
       PreferencesService.areSpeechServicesNativeDefault;
   AudioRecorder? _audioRecorder;
-  Player? _player;
   SpeechToText? speech;
   List<DeferredAction> deferredActionQueue = [];
 
@@ -64,9 +64,7 @@ class PersonalizationPageState extends State<PersonalizationPage>
       vsync: this,
     )..repeat(reverse: true);
 
-    GetIt.I
-        .get<PersonalizationState>()
-        .setState(PersonalizationState.browsingStateLabel);
+    GetIt.I.get<PersonalizationState>().setState(StateBase.browsingStateLabel);
     database = GetIt.I.get<DatabaseService>();
     preferences = GetIt.I.get<PreferencesService>();
 
@@ -80,7 +78,7 @@ class PersonalizationPageState extends State<PersonalizationPage>
     WidgetsBinding.instance.removeObserver(this);
     _audioRecorder?.dispose();
     _animationController.dispose();
-    _player?.dispose();
+    disposePlayer();
     super.dispose();
   }
 
@@ -166,9 +164,7 @@ class PersonalizationPageState extends State<PersonalizationPage>
         }
 
         log('Error during stop recording, path $path');
-        GetIt.I
-            .get<PersonalizationState>()
-            .setState(PersonalizationState.errorStateLabel);
+        GetIt.I.get<PersonalizationState>().errorState();
       }
     }
   }
@@ -191,11 +187,11 @@ class PersonalizationPageState extends State<PersonalizationPage>
       } else {
         log('${transcriptionResponse.statusCode} '
             '${transcriptionResponse.reasonPhrase}');
-        personalizationViewState.setState(PersonalizationState.errorStateLabel);
+        personalizationViewState.errorState();
       }
     } catch (e) {
       log('Exception during transcription: $e');
-      personalizationViewState.setState(PersonalizationState.errorStateLabel);
+      personalizationViewState.errorState();
     }
   }
 
@@ -222,8 +218,7 @@ class PersonalizationPageState extends State<PersonalizationPage>
   Future<void> embedAndPersistPersonalization(String recorded) async {
     final personalizationViewState = GetIt.I.get<PersonalizationState>();
     if (recorded.isNotEmpty) {
-      personalizationViewState
-          .setState(PersonalizationState.processingStateLabel);
+      personalizationViewState.setState(StateBase.llmStateLabel);
       final aiService = GetIt.I.get<AiService>();
       final embedding = await aiService.obtainEmbedding(recorded);
       final personalization = Personalization(recorded, inputLocaleId)
@@ -235,44 +230,7 @@ class PersonalizationPageState extends State<PersonalizationPage>
       });
     }
 
-    personalizationViewState.setState(PersonalizationState.browsingStateLabel);
-  }
-
-  Future<void> _ttsPhase(
-    BuildContext context,
-    String responseText,
-    String locale,
-  ) async {
-    final personalizationViewState = GetIt.I.get<PersonalizationState>();
-    try {
-      final ttsFullUrl = Uri.https(functionUrl, ttsEndpoint, {
-        'token': chirpToken,
-        'language_code': locale,
-        'text': responseText,
-      });
-      final synthetizationResponse = await http.post(ttsFullUrl);
-
-      if (synthetizationResponse.statusCode == 200) {
-        if (synthetizationResponse.bodyBytes.isNotEmpty) {
-          _player ??= Player();
-          final memoryMedia =
-              await Media.memory(synthetizationResponse.bodyBytes);
-          await _player?.open(memoryMedia);
-          personalizationViewState
-              .setState(PersonalizationState.browsingStateLabel);
-        } else {
-          personalizationViewState
-              .setState(PersonalizationState.errorStateLabel);
-        }
-      } else {
-        log('${synthetizationResponse.statusCode} '
-            '${synthetizationResponse.reasonPhrase}');
-        personalizationViewState.setState(PersonalizationState.errorStateLabel);
-      }
-    } catch (e) {
-      log('Error during synthetization: $e');
-      personalizationViewState.setState(PersonalizationState.errorStateLabel);
-    }
+    personalizationViewState.setState(StateBase.browsingStateLabel);
   }
 
   Future<void> _processDeferredActionQueue(BuildContext context) async {
@@ -285,6 +243,11 @@ class PersonalizationPageState extends State<PersonalizationPage>
             final sttService = GetIt.I.get<SttService>();
             areSpeechServicesNative =
                 preferences.areSpeechServicesNative && sttService.hasSpeech;
+            final ttsService = GetIt.I.get<TtsService>();
+            if (ttsService.languages.isEmpty &&
+                sttService.localeNames.isNotEmpty) {
+              ttsService.supplementLanguages(sttService.localeNames);
+            }
           case ActionKind.speechTranscripted:
             await embedAndPersistPersonalization(deferredAction.text);
         }
@@ -344,25 +307,15 @@ class PersonalizationPageState extends State<PersonalizationPage>
                 key: Key('p_${p13n.id}'),
                 leading: IconButton(
                   onPressed: () async {
-                    personalizationViewState
-                        .setState(PersonalizationState.playingStateLabel);
-                    if (areSpeechServicesNative) {
-                      final ttsService = GetIt.I.get<TtsService>();
-                      if (await ttsService.setLanguage(p13n.locale)) {
-                        await ttsService.speak(
-                          p13n.content,
-                          preferences.volume,
-                        );
-                      } else {
-                        personalizationViewState
-                            .setState(PersonalizationState.errorStateLabel);
-                      }
-
-                      personalizationViewState
-                          .setState(PersonalizationState.browsingStateLabel);
-                    } else {
-                      await _ttsPhase(context, p13n.content, p13n.locale);
-                    }
+                    await tts(
+                      context,
+                      p13n.content,
+                      p13n.locale,
+                      personalizationViewState,
+                      StateBase.browsingStateLabel,
+                      preferences,
+                      areSpeechServicesNative: areSpeechServicesNative,
+                    );
                   },
                   icon: const Icon(Icons.play_arrow),
                 ),
@@ -420,8 +373,7 @@ class PersonalizationPageState extends State<PersonalizationPage>
               const Icon(Icons.warning, size: 220),
             ),
             onTap: () {
-              personalizationViewState
-                  .setState(PersonalizationState.browsingStateLabel);
+              personalizationViewState.setState(StateBase.browsingStateLabel);
             },
           ),
         ],
@@ -429,8 +381,7 @@ class PersonalizationPageState extends State<PersonalizationPage>
       floatingActionButton: IconButton(
         icon: const Icon(Icons.add),
         onPressed: () async {
-          personalizationViewState
-              .setState(PersonalizationState.recordingStateLabel);
+          personalizationViewState.setState(StateBase.recordingStateLabel);
           if (areSpeechServicesNative) {
             final options = SpeechListenOptions(
               onDevice: preferences.areNativeSpeechServicesLocal,

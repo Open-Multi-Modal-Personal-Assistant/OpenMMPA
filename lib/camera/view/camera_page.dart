@@ -1064,12 +1064,13 @@ class CameraPageState extends State<CameraPage>
       return;
     }
 
-    setState(() {
-      _currentExposureOffset = offset;
-    });
     try {
-      _currentExposureOffset =
-          await cameraController!.setExposureOffset(offset);
+      final appliedOffset = await cameraController!.setExposureOffset(offset);
+      if (appliedOffset != _currentExposureOffset) {
+        setState(() {
+          _currentExposureOffset = appliedOffset;
+        });
+      }
     } on CameraException catch (e) {
       log('setExposureOffset error', error: e);
       rethrow;

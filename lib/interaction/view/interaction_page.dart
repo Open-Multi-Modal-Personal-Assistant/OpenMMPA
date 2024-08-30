@@ -4,12 +4,12 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dart_helper_utils/dart_helper_utils.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/ai/service/ai_service.dart';
+import 'package:inspector_gadget/base_state.dart';
 import 'package:inspector_gadget/constants.dart';
 import 'package:inspector_gadget/database/service/database.dart';
 import 'package:inspector_gadget/heart_rate/service/heart_rate.dart';
@@ -23,6 +23,7 @@ import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:inspector_gadget/secrets.dart';
 import 'package:inspector_gadget/speech/service/stt.dart';
 import 'package:inspector_gadget/speech/service/tts.dart';
+import 'package:inspector_gadget/speech/view/tts_mixin.dart';
 import 'package:inspector_gadget/string_ex.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path/path.dart' as p;
@@ -50,7 +51,7 @@ class InteractionPage extends StatefulWidget with WatchItStatefulWidgetMixin {
 }
 
 class InteractionPageState extends State<InteractionPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, TtsMixin {
   late AnimationController _animationController;
   late DatabaseService database;
   late PreferencesService preferences;
@@ -69,9 +70,7 @@ class InteractionPageState extends State<InteractionPage>
       vsync: this,
     )..repeat(reverse: true);
 
-    GetIt.I
-        .get<InteractionState>()
-        .setState(InteractionState.waitingStateLabel);
+    GetIt.I.get<InteractionState>().setState(StateBase.waitingStateLabel);
     database = GetIt.I.get<DatabaseService>();
     preferences = GetIt.I.get<PreferencesService>();
     GetIt.I.get<HeartRateService>().listenToHeartRate();
@@ -170,16 +169,14 @@ class InteractionPageState extends State<InteractionPage>
         }
 
         log('Error during stop recording, path $path');
-        GetIt.I
-            .get<InteractionState>()
-            .setState(InteractionState.errorStateLabel);
+        GetIt.I.get<InteractionState>().errorState();
       }
     }
   }
 
   Future<void> _sttPhase(BuildContext context, List<int> recordingBytes) async {
     final interactionState = GetIt.I.get<InteractionState>()
-      ..setState(InteractionState.sttStateLabel);
+      ..setState(StateBase.sttStateLabel);
     try {
       final sttFullUrl =
           Uri.https(functionUrl, sttEndpoint, {'token': chirpToken});
@@ -202,11 +199,11 @@ class InteractionPageState extends State<InteractionPage>
       } else {
         log('${transcriptionResponse.statusCode} '
             '${transcriptionResponse.reasonPhrase}');
-        interactionState.setState(InteractionState.errorStateLabel);
+        interactionState.errorState();
       }
     } catch (e) {
       log('Exception during transcription: $e');
-      interactionState.setState(InteractionState.errorStateLabel);
+      interactionState.errorState();
     }
   }
 
@@ -236,7 +233,7 @@ class InteractionPageState extends State<InteractionPage>
     String locale,
   ) async {
     final interactionState = GetIt.I.get<InteractionState>()
-      ..setState(InteractionState.llmStateLabel);
+      ..setState(StateBase.llmStateLabel);
 
     GenerateContentResponse? response;
     var targetLocale = '';
@@ -277,79 +274,23 @@ class InteractionPageState extends State<InteractionPage>
     if (response == null ||
         response.text.isNullOrWhiteSpace ||
         !context.mounted) {
-      interactionState.setState(InteractionState.errorStateLabel);
+      interactionState.errorState();
       return;
     }
 
     if (preferences.llmDebugMode) {
-      interactionState.setState(InteractionState.doneStateLabel);
+      interactionState.setState(StateBase.doneStateLabel);
     } else if (context.mounted) {
-      if (areSpeechServicesNative) {
-        await _playbackPhase(context, response.text ?? '', null, targetLocale);
-      } else {
-        await _ttsPhase(context, response.text ?? '', targetLocale);
-      }
+      await tts(
+        context,
+        response.text ?? '',
+        targetLocale,
+        GetIt.I.get<InteractionState>(),
+        StateBase.doneStateLabel,
+        preferences,
+        areSpeechServicesNative: areSpeechServicesNative,
+      );
     }
-  }
-
-  Future<void> _ttsPhase(
-    BuildContext context,
-    String responseText,
-    String locale,
-  ) async {
-    final interactionState = GetIt.I.get<InteractionState>()
-      ..setState(InteractionState.ttsStateLabel);
-    try {
-      final ttsFullUrl = Uri.https(functionUrl, ttsEndpoint, {
-        'token': chirpToken,
-        'language_code': locale,
-        'text': responseText,
-      });
-      final synthetizationResponse = await http.post(ttsFullUrl);
-
-      if (synthetizationResponse.statusCode == 200) {
-        if (context.mounted) {
-          await _playbackPhase(
-            context,
-            '',
-            synthetizationResponse.bodyBytes,
-            locale,
-          );
-        }
-      } else {
-        log('${synthetizationResponse.statusCode} '
-            '${synthetizationResponse.reasonPhrase}');
-        interactionState.setState(InteractionState.errorStateLabel);
-      }
-    } catch (e) {
-      log('Error during synthetization: $e');
-      interactionState.setState(InteractionState.errorStateLabel);
-    }
-  }
-
-  Future<void> _playbackPhase(
-    BuildContext context,
-    String responseText,
-    Uint8List? audioTrack,
-    String locale,
-  ) async {
-    final interactionState = GetIt.I.get<InteractionState>()
-      ..setState(InteractionState.playingStateLabel);
-    if (responseText.isNotEmpty) {
-      final ttsService = GetIt.I.get<TtsService>();
-      if (await ttsService.setLanguage(locale)) {
-        await ttsService.speak(responseText, preferences.volume);
-      }
-    } else if (audioTrack.isNotEmptyOrNull) {
-      _player ??= Player();
-      final memoryMedia = await Media.memory(audioTrack!);
-      await _player?.open(memoryMedia);
-    } else {
-      interactionState.setState(InteractionState.errorStateLabel);
-      return;
-    }
-
-    interactionState.setState(InteractionState.doneStateLabel);
   }
 
   Future<void> _processDeferredActionQueue(BuildContext context) async {
@@ -361,7 +302,7 @@ class InteractionPageState extends State<InteractionPage>
           case ActionKind.initialize:
             GetIt.I
                 .get<InteractionState>()
-                .setState(InteractionState.recordingStateLabel);
+                .setState(StateBase.recordingStateLabel);
 
             final sttService = GetIt.I.get<SttService>();
             areSpeechServicesNative = preferences.areSpeechServicesNative &&
@@ -497,7 +438,7 @@ class InteractionPageState extends State<InteractionPage>
               ),
               onTap: () {
                 deferredActionQueue.add(DeferredAction(ActionKind.initialize));
-                interactionState.setState(InteractionState.waitingStateLabel);
+                interactionState.setState(StateBase.waitingStateLabel);
               },
             ),
             // 7: Error phase
@@ -508,7 +449,7 @@ class InteractionPageState extends State<InteractionPage>
               ),
               onTap: () {
                 deferredActionQueue.add(DeferredAction(ActionKind.initialize));
-                interactionState.setState(InteractionState.waitingStateLabel);
+                interactionState.setState(StateBase.waitingStateLabel);
               },
             ),
           ],

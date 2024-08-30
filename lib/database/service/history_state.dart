@@ -1,22 +1,22 @@
-import 'package:inspector_gadget/state_mixin.dart';
+import 'package:inspector_gadget/base_state.dart';
 
-class HistoryState extends StateMixin {
-  HistoryState() : super(browsingStateLabel) {
-    final browsingState = newStartState(browsingStateLabel);
+class HistoryState extends StateBase {
+  HistoryState() : super(StateBase.browsingStateLabel) {
+    final browsingState = newStartState(StateBase.browsingStateLabel);
 
     stateMap = {
-      browsingStateLabel: browsingState,
-      playingStateLabel: newState(playingStateLabel),
+      StateBase.browsingStateLabel: browsingState,
+      StateBase.playingStateLabel: newState(StateBase.playingStateLabel),
+      StateBase.errorStateLabel: newState(StateBase.errorStateLabel),
     };
 
     stateIndexMap = {
-      browsingStateLabel: 0,
-      playingStateLabel: 1,
+      StateBase.browsingStateLabel: 0,
+      StateBase.ttsStateLabel: 1,
+      StateBase.playingStateLabel: 2,
+      StateBase.errorStateLabel: 3,
     };
 
     browsingState.enter();
   }
-
-  static const String browsingStateLabel = 'browsing';
-  static const String playingStateLabel = 'playing';
 }

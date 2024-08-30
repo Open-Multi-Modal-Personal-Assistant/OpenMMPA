@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:inspector_gadget/base_state.dart';
 import 'package:inspector_gadget/interaction/service/interaction_state.dart';
 
 void main() {
@@ -6,26 +7,25 @@ void main() {
     test('Uninitialized state is the default (waiting)', () {
       expect(
         InteractionState().current!.name,
-        equals(InteractionState.waitingStateLabel),
+        equals(StateBase.waitingStateLabel),
       );
     });
 
     test('Dummy state superseded by default (waiting) after creation', () {
-      final state = InteractionState()
-        ..setState(InteractionState.dummyStateLabel);
+      final state = InteractionState()..setState(StateBase.dummyStateLabel);
 
-      expect(state.current!.name, equals(InteractionState.waitingStateLabel));
+      expect(state.current!.name, equals(StateBase.waitingStateLabel));
     });
 
     for (final label in [
-      InteractionState.waitingStateLabel,
-      InteractionState.recordingStateLabel,
-      InteractionState.sttStateLabel,
-      InteractionState.llmStateLabel,
-      InteractionState.ttsStateLabel,
-      InteractionState.playingStateLabel,
-      InteractionState.doneStateLabel,
-      InteractionState.errorStateLabel,
+      StateBase.waitingStateLabel,
+      StateBase.recordingStateLabel,
+      StateBase.sttStateLabel,
+      StateBase.llmStateLabel,
+      StateBase.ttsStateLabel,
+      StateBase.playingStateLabel,
+      StateBase.doneStateLabel,
+      StateBase.errorStateLabel,
     ]) {
       test('State $label can be set', () {
         final state = InteractionState()..setState(label);
