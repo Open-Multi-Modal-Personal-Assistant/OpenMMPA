@@ -18,10 +18,10 @@ packages:
     dependency: "direct main"
     description:
       name: adaptive_dialog
-      sha256: "817ff9b4bb441434d1fcb39a8d4492e50be456cd3507e4f19c5c7455c9e279e0"
+      sha256: "165018c7520eb42ea8184b87601f7489c100c87abce15cd06e0a036c60f954e6"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.0"
   analyzer:
     dependency: transitive
     description:
@@ -282,10 +282,10 @@ packages:
     dependency: "direct main"
     description:
       name: dart_helper_utils
-      sha256: "97f68f20f3b60b44b9bdc21395299d5d5df85da73020335d5d0304c83054c141"
+      sha256: aeef28dd39805c415b7c9167ccf8a3793227849319632633025d06cb44e3d251
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.1"
+    version: "2.5.2"
   dart_style:
     dependency: transitive
     description:
@@ -362,26 +362,26 @@ packages:
     dependency: "direct main"
     description:
       name: fl_location
-      sha256: "416904dd54862126cbfed1930fbed9b770c15282247b5814cbac33251041f84f"
+      sha256: "7ef471bf91ab5ce3dcd38d1ff764b0e6d6fba5e70bdcd0d7103e9538257a2c91"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "4.1.0"
   fl_location_platform_interface:
     dependency: transitive
     description:
       name: fl_location_platform_interface
-      sha256: "208d640616535ceb1f872519633ea44aba3bf095fd1bc2a1dd625e6c5abc327b"
+      sha256: "1146e5d954394929ff8fc8e72de92241e9a8b9d6ccfd4d095eb90cac3d13747d"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "5.0.0"
   fl_location_web:
     dependency: transitive
     description:
       name: fl_location_web
-      sha256: "2da9a0ecb56180cfa5bbaa82a2749c59c1bf3d525a0cdf4e25e1f5e849cb4d48"
+      sha256: bb1ad1d47e8291bcdf11f78f977624ae775e1f98900fe061a19d8a64e6731f01
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "4.1.0"
   flat_buffers:
     dependency: transitive
     description:
@@ -798,10 +798,10 @@ packages:
     dependency: "direct main"
     description:
       name: mime
-      sha256: "2e123074287cc9fd6c09de8336dae606d1ddb88d9ac47358826db698c176a1f2"
+      sha256: "801fd0b26f14a4a58ccb09d5892c3fbdeff209594300a542492cf13fba9d247a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.6"
   mocktail:
     dependency: "direct dev"
     description:
