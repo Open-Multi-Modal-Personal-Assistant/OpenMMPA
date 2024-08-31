@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:inspector_gadget/base_state.dart';
+import 'package:inspector_gadget/common/base_state.dart';
 import 'package:inspector_gadget/interaction/service/interaction_state.dart';
 
 void main() {

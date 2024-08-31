@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:inspector_gadget/common/state_logging_mixin.dart';
 import 'package:inspector_gadget/database/models/history.dart';
 import 'package:inspector_gadget/database/models/personalization.dart';
 import 'package:inspector_gadget/database/object_box.dart';
 import 'package:inspector_gadget/objectbox.g.dart'; // created by `flutter pub run build_runner build`
-import 'package:inspector_gadget/state_logging_mixin.dart';
 
 class DatabaseService with StateLoggingMixin {
   ObjectBox? objectBox;

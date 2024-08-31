@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:inspector_gadget/ai/service/ai_service.dart';
-import 'package:inspector_gadget/base_state.dart';
 import 'package:inspector_gadget/camera/view/capture_state.dart';
+import 'package:inspector_gadget/common/base_state.dart';
 import 'package:inspector_gadget/database/service/database.dart';
 import 'package:inspector_gadget/database/service/personalization_state.dart';
 import 'package:inspector_gadget/heart_rate/service/heart_rate.dart';
@@ -79,6 +79,7 @@ MockPreferencesService setUpServices() {
     when(() => interactionState.setState(StateBase.errorStateLabel))
         .thenReturn(StateBase.errorStateLabel);
     when(() => interactionState.stateIndex).thenReturn(0);
+    when(interactionState.errorState).thenReturn(StateBase.errorStateLabel);
     GetIt.I.registerSingleton<InteractionState>(interactionState);
   }
 

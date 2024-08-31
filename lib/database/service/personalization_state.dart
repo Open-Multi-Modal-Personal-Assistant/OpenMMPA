@@ -1,4 +1,4 @@
-import 'package:inspector_gadget/base_state.dart';
+import 'package:inspector_gadget/common/base_state.dart';
 
 class PersonalizationState extends StateBase {
   PersonalizationState() : super(StateBase.browsingStateLabel) {

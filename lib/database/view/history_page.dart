@@ -1,10 +1,10 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
-import 'package:inspector_gadget/base_state.dart';
+import 'package:inspector_gadget/common/base_state.dart';
+import 'package:inspector_gadget/common/deferred_action.dart';
 import 'package:inspector_gadget/database/models/history.dart';
 import 'package:inspector_gadget/database/service/database.dart';
-import 'package:inspector_gadget/database/service/deferred_action.dart';
 import 'package:inspector_gadget/database/service/history_state.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';

@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:inspector_gadget/camera/view/camera_page.dart';
+import 'package:inspector_gadget/common/legend_dialog.dart';
 import 'package:inspector_gadget/database/view/personalization_page.dart';
 import 'package:inspector_gadget/interaction/view/interaction_page.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
-import 'package:inspector_gadget/legend_dialog.dart';
 import 'package:inspector_gadget/preferences/view/preferences_page.dart';
 import 'package:tuple/tuple.dart';
 
