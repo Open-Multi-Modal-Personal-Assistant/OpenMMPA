@@ -9,6 +9,7 @@ import 'package:inspector_gadget/ai/prompts/stuffed_user_utterance.dart';
 import 'package:inspector_gadget/ai/prompts/system_instruction.dart';
 import 'package:inspector_gadget/ai/prompts/translate_instruction.dart';
 import 'package:inspector_gadget/ai/tools/tools_mixin.dart';
+import 'package:inspector_gadget/common/constants.dart';
 import 'package:inspector_gadget/database/models/history.dart';
 import 'package:inspector_gadget/database/service/database.dart';
 import 'package:inspector_gadget/heart_rate/service/heart_rate.dart';
@@ -186,6 +187,21 @@ class AiService with ToolsMixin {
     return response;
   }
 
+  List<double> dimensionalityReduction(List<double> vector) {
+    // Reduction by addition of values
+    final foldedVector =
+        vector.take(embeddingDimensionality).toList(growable: false);
+    if (vector.length > embeddingDimensionality) {
+      for (var i = 0, j = embeddingDimensionality;
+          j < vector.length;
+          i++, j++) {
+        foldedVector[i % embeddingDimensionality] += vector[j];
+      }
+    }
+
+    return foldedVector;
+  }
+
   Future<List<double>> obtainEmbedding(String prompt) async {
     final preferences = GetIt.I.get<PreferencesService>();
     final model = GenerativeModel(
@@ -195,7 +211,7 @@ class AiService with ToolsMixin {
     final content = Content.text(prompt);
     final embeddingResult = await model.embedContent(content);
 
-    return embeddingResult.embedding.values;
+    return dimensionalityReduction(embeddingResult.embedding.values);
   }
 
   String historyToString(Iterable<Content> history) {

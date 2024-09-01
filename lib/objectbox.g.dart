@@ -48,7 +48,7 @@ final _entities = <obx_int.ModelEntity>[
             flags: 8,
             indexId: const obx_int.IdUid(1, 1226222394629305260),
             hnswParams: obx_int.ModelHnswParams(
-              dimensions: 768,
+              dimensions: 256,
             )),
         obx_int.ModelProperty(
             id: const obx_int.IdUid(6, 7649402395927810343),
@@ -96,7 +96,7 @@ final _entities = <obx_int.ModelEntity>[
             flags: 8,
             indexId: const obx_int.IdUid(2, 132003794771134220),
             hnswParams: obx_int.ModelHnswParams(
-              dimensions: 768,
+              dimensions: 256,
             )),
         obx_int.ModelProperty(
             id: const obx_int.IdUid(7, 5287262397676395151),

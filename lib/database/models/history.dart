@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inspector_gadget/common/constants.dart';
 import 'package:objectbox/objectbox.dart';
 
 @Entity()
@@ -21,7 +22,7 @@ class History {
   String locale;
   String rewrite = '';
 
-  @HnswIndex(dimensions: 768)
+  @HnswIndex(dimensions: embeddingDimensionality)
   @Property(type: PropertyType.floatVector)
   List<double>? embedding;
 

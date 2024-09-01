@@ -1,3 +1,4 @@
+import 'package:inspector_gadget/common/constants.dart';
 import 'package:objectbox/objectbox.dart';
 
 @Entity()
@@ -12,7 +13,7 @@ class Personalization {
   String content;
   String locale;
 
-  @HnswIndex(dimensions: 768)
+  @HnswIndex(dimensions: embeddingDimensionality)
   @Property(type: PropertyType.floatVector)
   List<double>? embedding;
 
