@@ -146,6 +146,7 @@ MockPreferencesService setUpServices() {
     when(
       () => aiService.translate(
         InteractionPage.llmTestPrompt,
+        PreferencesService.inputLocaleDefault,
         PreferencesService.outputLocaleDefault,
       ),
     ).thenAnswer((_) async {

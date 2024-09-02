@@ -100,7 +100,7 @@ class InteractionPageState extends State<InteractionPage>
       }
 
       debugPrint('targetLocale: $targetLocale');
-      response = await aiService.translate(prompt, targetLocale);
+      response = await aiService.translate(prompt, locale, targetLocale);
     } else {
       targetLocale = inputLocale;
       debugPrint('targetLocale: $targetLocale');

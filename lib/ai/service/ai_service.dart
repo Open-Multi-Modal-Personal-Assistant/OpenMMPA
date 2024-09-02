@@ -251,13 +251,38 @@ class AiService with ToolsMixin {
 
   Future<GenerateContentResponse?> translate(
     String transcript,
+    String sourceLocale,
     String targetLocale,
   ) async {
+    final database = GetIt.I.get<DatabaseService>();
+    final userEmbedding = await obtainEmbedding(transcript);
+    database.addUpdateHistory(
+      History(
+        'user',
+        InteractionMode.translate.toString(),
+        transcript,
+        sourceLocale,
+        '',
+        userEmbedding,
+      ),
+    );
+
     final preferences = GetIt.I.get<PreferencesService>();
     if (preferences.classicGoogleTranslate) {
       final translator = GoogleTranslator();
       final translation =
           await translator.translate(transcript, to: targetLocale.left(2));
+      final modelEmbedding = await obtainEmbedding(translation.text);
+      database.addUpdateHistory(
+        History(
+          'model',
+          InteractionMode.translate.toString(),
+          translation.text,
+          targetLocale,
+          '',
+          modelEmbedding,
+        ),
+      );
       return GenerateContentResponse(
         [
           Candidate(
@@ -293,6 +318,21 @@ class AiService with ToolsMixin {
     final stuffedPrompt = translateInstruction.replaceAll('%%%', targetLocale);
     final content = Content.text(stuffedPrompt + transcript);
     final response = await model.generateContent([content]);
+
+    if (response.text != null && response.text!.isNotEmpty) {
+      final modelEmbedding = await obtainEmbedding(response.text ?? '');
+      database.addUpdateHistory(
+        History(
+          'model',
+          InteractionMode.translate.toString(),
+          response.text ?? '',
+          targetLocale,
+          '',
+          modelEmbedding,
+        ),
+      );
+    }
+
     return response;
   }
 }
