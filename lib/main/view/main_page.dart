@@ -60,7 +60,7 @@ class MainPage extends StatelessWidget {
                 icon: Icon(Icons.chat, size: iconSize),
                 onPressed: () => navigateWithMode(
                   context,
-                  InteractionMode.uniModalMode,
+                  InteractionMode.textChat,
                 ),
               ),
             ),
@@ -82,7 +82,7 @@ class MainPage extends StatelessWidget {
                 icon: Icon(Icons.translate, size: iconSize),
                 onPressed: () => navigateWithMode(
                   context,
-                  InteractionMode.translateMode,
+                  InteractionMode.translate,
                 ),
               ),
             ),

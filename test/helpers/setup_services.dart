@@ -134,8 +134,13 @@ MockPreferencesService setUpServices() {
       ],
       null,
     );
-    when(() => aiService.chatStep(InteractionPage.llmTestPrompt, ''))
-        .thenAnswer((_) async {
+    when(
+      () => aiService.chatStep(
+        InteractionPage.llmTestPrompt,
+        '',
+        InteractionMode.textChat,
+      ),
+    ).thenAnswer((_) async {
       return mockResponse;
     });
     when(

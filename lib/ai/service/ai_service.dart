@@ -13,6 +13,7 @@ import 'package:inspector_gadget/common/constants.dart';
 import 'package:inspector_gadget/database/models/history.dart';
 import 'package:inspector_gadget/database/service/database.dart';
 import 'package:inspector_gadget/heart_rate/service/heart_rate.dart';
+import 'package:inspector_gadget/interaction/view/interaction_page.dart';
 import 'package:inspector_gadget/location/service/location.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:mime/mime.dart';
@@ -57,6 +58,7 @@ class AiService with ToolsMixin {
   Future<GenerateContentResponse?> chatStep(
     String prompt,
     String mediaPath,
+    InteractionMode interactionMode,
   ) async {
     debugPrint('prompt: $prompt');
     final preferences = GetIt.I.get<PreferencesService>();
@@ -81,6 +83,7 @@ class AiService with ToolsMixin {
     database.addUpdateHistory(
       History(
         'user',
+        interactionMode.toString(),
         prompt,
         PreferencesService.inputLocaleDefault,
         resolved,
@@ -173,16 +176,19 @@ class AiService with ToolsMixin {
       response = await chat!.sendMessage(content);
     }
 
-    final modelEmbedding = await obtainEmbedding(response.text ?? '');
-    database.addUpdateHistory(
-      History(
-        'model',
-        response.text ?? '',
-        PreferencesService.inputLocaleDefault,
-        '',
-        modelEmbedding,
-      ),
-    );
+    if (response.text != null && response.text!.isNotEmpty) {
+      final modelEmbedding = await obtainEmbedding(response.text ?? '');
+      database.addUpdateHistory(
+        History(
+          'model',
+          interactionMode.toString(),
+          response.text ?? '',
+          PreferencesService.inputLocaleDefault,
+          '',
+          modelEmbedding,
+        ),
+      );
+    }
 
     return response;
   }

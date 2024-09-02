@@ -803,7 +803,7 @@ class CameraPageState extends State<CameraPage>
               context,
               MaterialPageRoute<void>(
                 builder: (context) => InteractionPage(
-                  InteractionMode.multiModalMode,
+                  InteractionMode.imageChat,
                   mediaPath: file.path,
                 ),
               ),
@@ -926,7 +926,7 @@ class CameraPageState extends State<CameraPage>
             context,
             MaterialPageRoute<void>(
               builder: (context) => InteractionPage(
-                InteractionMode.multiModalMode,
+                InteractionMode.imageChat,
                 mediaPath: file.path,
               ),
             ),

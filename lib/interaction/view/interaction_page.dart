@@ -22,9 +22,9 @@ import 'package:inspector_gadget/speech/view/tts_mixin.dart';
 import 'package:watch_it/watch_it.dart';
 
 enum InteractionMode {
-  uniModalMode,
-  translateMode,
-  multiModalMode,
+  textChat,
+  translate,
+  imageChat,
 }
 
 class InteractionPage extends StatefulWidget with WatchItStatefulWidgetMixin {
@@ -85,7 +85,7 @@ class InteractionPageState extends State<InteractionPage>
     final inputLocale = preferences.inputLocale;
     final outputLocale = preferences.outputLocale;
     final aiService = GetIt.I.get<AiService>();
-    if (widget.interactionMode == InteractionMode.translateMode) {
+    if (widget.interactionMode == InteractionMode.translate) {
       final ttsService = GetIt.I.get<TtsService>();
       final matchedLocale = ttsService.matchLanguage(locale);
       if (matchedLocale.localeMatch(inputLocale)) {
@@ -108,11 +108,15 @@ class InteractionPageState extends State<InteractionPage>
       unawaited(GetIt.I.get<LocationService>().obtain());
 
       var mediaPath = '';
-      if (widget.interactionMode == InteractionMode.multiModalMode) {
+      if (widget.interactionMode == InteractionMode.imageChat) {
         mediaPath = widget.mediaPath;
       }
 
-      response = await aiService.chatStep(prompt, mediaPath);
+      response = await aiService.chatStep(
+        prompt,
+        mediaPath,
+        widget.interactionMode,
+      );
     }
 
     debugPrint('Final: ${response?.text}');
@@ -152,7 +156,7 @@ class InteractionPageState extends State<InteractionPage>
             final sttService = GetIt.I.get<SttService>();
             areSpeechServicesNative = preferences.areSpeechServicesNative &&
                 sttService.hasSpeech &&
-                widget.interactionMode != InteractionMode.translateMode;
+                widget.interactionMode != InteractionMode.translate;
 
             final ttsService = GetIt.I.get<TtsService>();
             if (ttsService.languages.isEmpty &&

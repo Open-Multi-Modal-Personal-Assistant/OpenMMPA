@@ -6,6 +6,7 @@ import 'package:objectbox/objectbox.dart';
 class History {
   History(
     this.role,
+    this.mode,
     this.content,
     this.locale, [
     this.rewrite = '',
@@ -17,7 +18,11 @@ class History {
   @Id()
   int id = 0;
 
-  String role; // "system", "user", "model", "image", or function name
+  // "system", "user", "model", "image", or function name
+  String role;
+  // "text_chat", "image_chat", "translate", "image_gen", "image_edit",
+  // "shazam", "sound_gen"
+  String mode;
   String content;
   String locale;
   String rewrite = '';
