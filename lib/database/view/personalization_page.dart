@@ -95,6 +95,7 @@ class PersonalizationPageState extends State<PersonalizationPage>
 
   void addToDeferredQueue(DeferredAction deferredAction) {
     deferredActionQueue.add(deferredAction);
+    setState(() {});
   }
 
   Future<void> _processDeferredActionQueue(BuildContext context) async {

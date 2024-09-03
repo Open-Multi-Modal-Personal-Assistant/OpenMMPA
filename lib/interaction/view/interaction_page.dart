@@ -144,6 +144,7 @@ class InteractionPageState extends State<InteractionPage>
 
   void addToDeferredQueue(DeferredAction deferredAction) {
     deferredActionQueue.add(deferredAction);
+    setState(() {});
   }
 
   Future<void> processDeferredActionQueue(BuildContext context) async {
