@@ -3,7 +3,6 @@ const outputFormattingLower = 'p$outputFormattingStub';
 const thinkInstruction =
     'Silently think about your answer first before you respond. ';
 const closingInstructions = '''
-$thinkInstruction
 P$outputFormattingStub
 <response>
 ''';
