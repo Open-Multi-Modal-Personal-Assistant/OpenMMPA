@@ -109,12 +109,8 @@ class AiService with ToolsMixin {
     debugPrint('prompt: $prompt');
     final preferences = GetIt.I.get<PreferencesService>();
     if (chat == null) {
-      final stuffedInstruction = systemInstructionTemplate.replaceAll(
-        systemInstructionFunctionVariable,
-        getFunctionCallPromptStuffing(preferences),
-      );
-      debugPrint('stuffedInstruction: $stuffedInstruction');
-      final model = getModel(stuffedInstruction);
+      debugPrint('systemInstruction: $systemInstructionTemplate');
+      final model = getModel(systemInstructionTemplate);
       chat = model.startChat();
     }
 

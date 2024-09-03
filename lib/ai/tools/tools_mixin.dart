@@ -65,48 +65,6 @@ mixin ToolsMixin {
     );
   }
 
-  String getFunctionCallPromptStuffing(PreferencesService preferences) {
-    final funcTools = initializeFunctionTools(preferences);
-    final buffer = StringBuffer();
-    for (final funcTool in funcTools) {
-      if (funcTool.isAvailable(preferences)) {
-        for (final function in funcTool.getFunctionDeclarations(preferences)) {
-          buffer
-            ..writeln('  <function>')
-            ..writeln('    <name>${function.name}</name>')
-            ..writeln('    <description>${function.description}</description>');
-          if (function.parameters != null) {
-            final par = function.parameters!;
-            buffer
-              ..writeln('    <schema>')
-              ..writeln('      <schemaType>${par.type}</schemaType>');
-            if (par.properties != null) {
-              buffer.writeln('      <properties>');
-              for (final prop in par.properties!.entries) {
-                buffer
-                  ..writeln('        <property>')
-                  ..writeln('          <name>${prop.key}</name>')
-                  ..writeln('          <type>${prop.value.type}</type>')
-                  ..writeln(
-                    '          <description>${prop.value.description}</description>',
-                  )
-                  ..writeln('        </property>');
-              }
-
-              buffer.writeln('      </properties>');
-            }
-
-            buffer.writeln('    </schema>');
-          }
-
-          buffer.writeln('  </function>');
-        }
-      }
-    }
-
-    return buffer.toString();
-  }
-
   Future<FunctionResponse?> dispatchFunctionCall(
     FunctionCall call,
     Location? location,
