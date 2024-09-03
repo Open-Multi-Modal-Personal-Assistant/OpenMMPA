@@ -4,8 +4,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:inspector_gadget/ai/prompts/closing_parts.dart';
+import 'package:inspector_gadget/ai/prompts/history_rag_stuffing.dart';
+import 'package:inspector_gadget/ai/prompts/personalization_rag_stuffing.dart';
+import 'package:inspector_gadget/ai/prompts/request_instruction.dart';
 import 'package:inspector_gadget/ai/prompts/resolver_few_shot.dart';
-import 'package:inspector_gadget/ai/prompts/stuffed_user_utterance.dart';
 import 'package:inspector_gadget/ai/prompts/system_instruction.dart';
 import 'package:inspector_gadget/ai/prompts/translate_instruction.dart';
 import 'package:inspector_gadget/ai/tools/tools_mixin.dart';
@@ -55,6 +58,49 @@ class AiService with ToolsMixin {
     );
   }
 
+  String extractResponseContent(String response) {
+    if (response.contains('<response>')) {
+      final responseBeginIndex = response.indexOf('<response>');
+      if (response.contains('</response>', responseBeginIndex)) {
+        final responseEndIndex = response.indexOf('</response>');
+        return response.substring(
+          responseBeginIndex + '<response>'.length,
+          responseEndIndex,
+        );
+      }
+    }
+
+    return response;
+  }
+
+  Future<int> persistModelResponse(
+    DatabaseService database,
+    InteractionMode mode,
+    String response,
+    String locale,
+  ) async {
+    if (response.isEmpty) {
+      return -1;
+    }
+
+    final content = extractResponseContent(response);
+    if (content.isEmpty) {
+      return -1;
+    }
+
+    final modelEmbedding = await obtainEmbedding(content);
+    return database.addUpdateHistory(
+      History(
+        'model',
+        mode.toString(),
+        content,
+        locale,
+        '',
+        modelEmbedding,
+      ),
+    );
+  }
+
   Future<GenerateContentResponse?> chatStep(
     String prompt,
     String mediaPath,
@@ -93,33 +139,56 @@ class AiService with ToolsMixin {
     final stuffedPrompt = StringBuffer();
     final nearestHistory = await database.getNearestHistory(userEmbedding);
     if (nearestHistory.isNotEmpty) {
-      log('ANN Peers ${nearestHistory.map((p) => p.score)}');
+      log('History ANN Peers ${nearestHistory.map((p) => p.score)}');
       final annThreshold = preferences.historyRagThreshold;
-      stuffedPrompt.writeln(conversationStuffing);
+      final historyStuffing = StringBuffer();
       for (final history
           in nearestHistory.where((h) => h.score < annThreshold)) {
-        stuffedPrompt
-            .writeln('- ${history.object.role}: ${history.object.content}');
+        historyStuffing.writeln('<history>${history.object.role}: '
+            '${history.object.content}</history>');
+      }
+
+      if (historyStuffing.isNotEmpty) {
+        stuffedPrompt.writeln(
+          historyRagStuffingTemplate.replaceAll(
+            historyRagStuffingVariable,
+            historyStuffing.toString(),
+          ),
+        );
       }
     }
 
-    final nearestPersonalization =
+    final nearestP13ns =
         await database.getNearestPersonalization(userEmbedding);
-    if (nearestPersonalization.isNotEmpty) {
-      log('ANN Peers ${nearestPersonalization.map((p) => p.score)}');
+    if (nearestP13ns.isNotEmpty) {
+      log('P13n ANN Peers ${nearestP13ns.map((p) => p.score)}');
       final annThreshold = preferences.personalizationRagThreshold;
-      stuffedPrompt.writeln(personalizationStuffing);
+      final p13Stuffing = StringBuffer();
       for (final personalization
-          in nearestPersonalization.where((p) => p.score < annThreshold)) {
-        stuffedPrompt.writeln('- ${personalization.object.content}');
+          in nearestP13ns.where((p) => p.score < annThreshold)) {
+        p13Stuffing.writeln(
+          '<personalFact>${personalization.object.content}</personalFact>',
+        );
+      }
+
+      if (p13Stuffing.isNotEmpty) {
+        stuffedPrompt.writeln(
+          p13nStuffingTemplate.replaceAll(
+            p13nRagStuffingVariable,
+            p13Stuffing.toString(),
+          ),
+        );
       }
     }
 
-    if (stuffedPrompt.isNotEmpty) {
-      stuffedPrompt.write(questionStuffing);
-    }
-
-    stuffedPrompt.write(prompt);
+    stuffedPrompt
+      ..write(
+        requestInstructionTemplate.replaceAll(
+          requestInstructionVariable,
+          prompt,
+        ),
+      )
+      ..write(closingInstructions);
 
     final stuffed = stuffedPrompt.toString();
     debugPrint('stuffed: $stuffed');
@@ -177,16 +246,11 @@ class AiService with ToolsMixin {
     }
 
     if (response.text != null && response.text!.isNotEmpty) {
-      final modelEmbedding = await obtainEmbedding(response.text ?? '');
-      database.addUpdateHistory(
-        History(
-          'model',
-          interactionMode.toString(),
-          response.text ?? '',
-          PreferencesService.inputLocaleDefault,
-          '',
-          modelEmbedding,
-        ),
+      await persistModelResponse(
+        database,
+        interactionMode,
+        response.text!,
+        PreferencesService.inputLocaleDefault,
       );
     }
 
@@ -242,7 +306,10 @@ class AiService with ToolsMixin {
 
     final nearHistory = historyToString(chat?.history ?? []);
     final fullHistory = history + nearHistory;
-    final stuffedPrompt = resolverFewShotPrompt.replaceAll('%%%', fullHistory);
+    final stuffedPrompt = resolverFewShotTemplate.replaceAll(
+      resolverFewShotVariable,
+      fullHistory,
+    );
     final content = Content.text(stuffedPrompt);
     final response = await model.generateContent([content]);
 
@@ -272,16 +339,11 @@ class AiService with ToolsMixin {
       final translator = GoogleTranslator();
       final translation =
           await translator.translate(transcript, to: targetLocale.left(2));
-      final modelEmbedding = await obtainEmbedding(translation.text);
-      database.addUpdateHistory(
-        History(
-          'model',
-          InteractionMode.translate.toString(),
-          translation.text,
-          targetLocale,
-          '',
-          modelEmbedding,
-        ),
+      await persistModelResponse(
+        database,
+        InteractionMode.translate,
+        translation.text,
+        targetLocale,
       );
       return GenerateContentResponse(
         [
@@ -315,21 +377,18 @@ class AiService with ToolsMixin {
     }
 
     final model = getModel(translateSystemInstruction, withTools: false);
-    final stuffedPrompt = translateInstruction.replaceAll('%%%', targetLocale);
-    final content = Content.text(stuffedPrompt + transcript);
+    final stuffedPrompt = translateInstruction
+        .replaceAll(translationSubjectVariable, transcript)
+        .replaceAll(translationTargetLocaleVariable, targetLocale);
+    final content = Content.text(stuffedPrompt);
     final response = await model.generateContent([content]);
 
     if (response.text != null && response.text!.isNotEmpty) {
-      final modelEmbedding = await obtainEmbedding(response.text ?? '');
-      database.addUpdateHistory(
-        History(
-          'model',
-          InteractionMode.translate.toString(),
-          response.text ?? '',
-          targetLocale,
-          '',
-          modelEmbedding,
-        ),
+      await persistModelResponse(
+        database,
+        InteractionMode.translate,
+        response.text!,
+        targetLocale,
       );
     }
 
