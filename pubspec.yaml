@@ -4,7 +4,7 @@ version: 1.0.1+1
 publish_to: none
 
 environment:
-  sdk: ^3.5.1
+  sdk: ^3.5.2
 
 dependency_overrides:
   collection: ^1.19.0  # Flutter SDK (flutter_test pinned it)
