@@ -271,7 +271,7 @@ class AiService with ToolsMixin {
   Future<List<double>> obtainEmbedding(String prompt) async {
     final preferences = GetIt.I.get<PreferencesService>();
     final model = GenerativeModel(
-      model: 'text-multilingual-embedding-002',
+      model: 'text-embedding-004',
       apiKey: preferences.geminiApiKey,
     );
     final content = Content.text(prompt);
