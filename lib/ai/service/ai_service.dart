@@ -24,7 +24,12 @@ import 'package:strings/strings.dart';
 import 'package:translator/translator.dart';
 
 class AiService with ToolsMixin {
-  ChatSession? chat;
+  AiService() {
+    watermark = DateTime.now();
+  }
+
+  late DateTime watermark;
+  ChatSession? chatSession;
 
   GenerativeModel getModel(
     String systemInstruction, {
@@ -56,6 +61,20 @@ class AiService with ToolsMixin {
       systemInstruction: Content.text(systemInstruction),
       tools: withTools ? [getFunctionDeclarations(preferences)] : null,
     );
+  }
+
+  ChatSession? getChatSession(
+    String systemInstruction, {
+    bool withTools = true,
+  }) {
+    if (chatSession == null) {
+      debugPrint('systemInstruction: $systemInstructionTemplate');
+      final model = getModel(systemInstructionTemplate, withTools: withTools);
+      chatSession = model.startChat();
+      watermark = DateTime.now();
+    }
+
+    return chatSession;
   }
 
   String extractResponseContent(String response) {
@@ -101,25 +120,33 @@ class AiService with ToolsMixin {
     );
   }
 
+  Future<String> persistedHistoryString(
+    DatabaseService database,
+    int limit,
+  ) async {
+    final historyList = await database.limitedHistory(100, watermark);
+    final buffer = StringBuffer();
+    for (final utterance in historyList) {
+      buffer.writeln('${utterance.role}: ${utterance.content}');
+    }
+
+    return buffer.toString();
+  }
+
   Future<GenerateContentResponse?> chatStep(
     String prompt,
     String mediaPath,
     InteractionMode interactionMode,
   ) async {
     debugPrint('prompt: $prompt');
-    final preferences = GetIt.I.get<PreferencesService>();
-    if (chat == null) {
-      debugPrint('systemInstruction: $systemInstructionTemplate');
-      final model = getModel(systemInstructionTemplate);
-      chat = model.startChat();
-    }
-
+    final chat = getChatSession(systemInstructionTemplate);
     if (chat == null) {
       return null;
     }
 
+    final preferences = GetIt.I.get<PreferencesService>();
     final database = GetIt.I.get<DatabaseService>();
-    final history = await database.limitedHistoryString(100);
+    final history = await persistedHistoryString(database, 100);
     final resolved = await resolvePromptToStandAlone(prompt, history);
     final userEmbedding = await obtainEmbedding(resolved);
     database.addUpdateHistory(
@@ -133,7 +160,8 @@ class AiService with ToolsMixin {
       ),
     );
     final stuffedPrompt = StringBuffer();
-    final nearestHistory = await database.getNearestHistory(userEmbedding);
+    final nearestHistory =
+        await database.getNearestHistory(userEmbedding, watermark);
     if (nearestHistory.isNotEmpty) {
       log('History ANN Peers ${nearestHistory.map((p) => p.score)}');
       final annThreshold = preferences.historyRagThreshold;
@@ -207,7 +235,7 @@ class AiService with ToolsMixin {
       }
     }
 
-    var response = await chat!.sendMessage(message);
+    var response = await chat.sendMessage(message);
 
     List<FunctionCall> functionCalls;
     var content = Content.text('');
@@ -238,7 +266,7 @@ class AiService with ToolsMixin {
       content = response.candidates.first.content;
       content.parts.addAll(responses);
       // TODO(MrCsabaToth): Store in history?
-      response = await chat!.sendMessage(content);
+      response = await chat.sendMessage(content);
     }
 
     if (response.text != null && response.text!.isNotEmpty) {
@@ -280,7 +308,7 @@ class AiService with ToolsMixin {
     return dimensionalityReduction(embeddingResult.embedding.values);
   }
 
-  String historyToString(Iterable<Content> history) {
+  String nativeHistoryToString(Iterable<Content> history) {
     final buffer = StringBuffer();
     for (final utterance in history) {
       buffer.writeln('${utterance.role}: $utterance');
@@ -293,14 +321,8 @@ class AiService with ToolsMixin {
     String prompt,
     String history,
   ) async {
-    final preferences = GetIt.I.get<PreferencesService>();
-    final modelType = preferences.fastLlmMode ? 'flash' : 'pro';
-    final model = GenerativeModel(
-      model: 'gemini-1.5-$modelType',
-      apiKey: preferences.geminiApiKey,
-    );
-
-    final nearHistory = historyToString(chat?.history ?? []);
+    final model = getModel(resolverSystemInstruction, withTools: false);
+    final nearHistory = nativeHistoryToString(chatSession?.history ?? []);
     final fullHistory = history + nearHistory;
     final stuffedPrompt = resolverFewShotTemplate.replaceAll(
       resolverFewShotVariable,
@@ -372,12 +394,16 @@ class AiService with ToolsMixin {
       );
     }
 
-    final model = getModel(translateSystemInstruction, withTools: false);
+    final chat = getChatSession(systemInstructionTemplate, withTools: false);
+    if (chat == null) {
+      return null;
+    }
+
     final stuffedPrompt = translateInstruction
         .replaceAll(translationSubjectVariable, transcript)
         .replaceAll(translationTargetLocaleVariable, targetLocale);
     final content = Content.text(stuffedPrompt);
-    final response = await model.generateContent([content]);
+    final response = await chat.sendMessage(content);
 
     if (response.text != null && response.text!.isNotEmpty) {
       await persistModelResponse(

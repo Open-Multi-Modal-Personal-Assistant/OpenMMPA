@@ -91,14 +91,14 @@ class DatabaseService with StateLoggingMixin {
     return objectBox?.store.box<History>().put(history) ?? -1;
   }
 
-  Future<List<History>> limitedHistory(int limit) async {
+  Future<List<History>> limitedHistory(int limit, DateTime watermark) async {
     if (objectBox == null) {
       return [];
     }
 
     final box = objectBox!.store.box<History>();
     final query = box
-        .query(History_.id.notNull())
+        .query(History_.dateTime.lessThanDate(watermark))
         .order(History_.id, flags: Order.descending)
         .build()
       ..limit = limit;
@@ -107,23 +107,14 @@ class DatabaseService with StateLoggingMixin {
     return history;
   }
 
-  Future<String> limitedHistoryString(int limit) async {
-    final historyList = await limitedHistory(limit);
-    final buffer = StringBuffer();
-    for (final utterance in historyList) {
-      buffer.writeln('${utterance.role}: ${utterance.content}');
-    }
-
-    return buffer.toString();
-  }
-
   int clearHistory() {
     final box = objectBox!.store.box<History>();
     return box.removeAll();
   }
 
   Future<List<ObjectWithScore<History>>> getNearestHistory(
-    List<double> embedding, [
+    List<double> embedding,
+    DateTime watermark, [
     int bigLimit = 20,
     int littleLimit = 5,
   ]) async {
@@ -133,7 +124,11 @@ class DatabaseService with StateLoggingMixin {
 
     final box = objectBox!.store.box<History>();
     final query = box
-        .query(History_.embedding.nearestNeighborsF32(embedding, bigLimit))
+        .query(
+          History_.dateTime
+              .lessThanDate(watermark)
+              .and(History_.embedding.nearestNeighborsF32(embedding, bigLimit)),
+        )
         .build()
       ..limit = littleLimit;
     // TODO(MrCsabaToth): Weaviate style auto-cut and also slash too low scores

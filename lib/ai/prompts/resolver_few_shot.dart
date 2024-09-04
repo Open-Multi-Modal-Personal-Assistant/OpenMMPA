@@ -1,8 +1,11 @@
 import 'package:inspector_gadget/ai/prompts/closing_parts.dart';
 
+const resolverSystemInstruction =
+    'You are a conversation specialist helping isolating a conversation '
+    'piece from a chat history by resolving all references.';
 const resolverFewShotVariable = '{{INPUT}}';
 const resolverFewShotTemplate = """
-Resolve any contextual references in the last user request so it would be able to stand alone as a request without the rest fo the interaction. You'll receive the interaction as a context and $outputFormattingLower
+Resolve any contextual references in the last user request so it would be able to stand alone as a request without the rest of the interaction. You'll receive the interaction as a context, $outputFormattingLower
 <examples>
 <example>
 <interaction>
