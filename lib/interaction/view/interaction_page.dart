@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:dart_helper_utils/dart_helper_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:inspector_gadget/ai/service/ai_service.dart';
+import 'package:inspector_gadget/ai/service/generated_content_response.dart';
 import 'package:inspector_gadget/common/base_state.dart';
 import 'package:inspector_gadget/common/deferred_action.dart';
 import 'package:inspector_gadget/common/string_ex.dart';
@@ -120,9 +120,12 @@ class InteractionPageState extends State<InteractionPage>
     }
 
     debugPrint('Final: ${response?.text}');
-    if (response == null ||
-        response.text.isNullOrWhiteSpace ||
-        !context.mounted) {
+    if (response == null) {
+      interactionState.errorState();
+      return;
+    }
+
+    if (response.strippedText().isEmpty || !context.mounted) {
       interactionState.errorState();
       return;
     }
@@ -132,7 +135,7 @@ class InteractionPageState extends State<InteractionPage>
     } else if (context.mounted) {
       await tts(
         context,
-        response.text ?? '',
+        response.strippedText(),
         targetLocale,
         GetIt.I.get<InteractionState>(),
         StateBase.doneStateLabel,

@@ -11,6 +11,7 @@ import 'package:inspector_gadget/ai/prompts/request_instruction.dart';
 import 'package:inspector_gadget/ai/prompts/resolver_few_shot.dart';
 import 'package:inspector_gadget/ai/prompts/system_instruction.dart';
 import 'package:inspector_gadget/ai/prompts/translate_instruction.dart';
+import 'package:inspector_gadget/ai/service/generated_content_response.dart';
 import 'package:inspector_gadget/ai/tools/tools_mixin.dart';
 import 'package:inspector_gadget/common/constants.dart';
 import 'package:inspector_gadget/database/models/history.dart';
@@ -77,21 +78,6 @@ class AiService with ToolsMixin {
     return chatSession;
   }
 
-  String extractResponseContent(String response) {
-    if (response.contains('<response>')) {
-      final responseBeginIndex = response.indexOf('<response>');
-      if (response.contains('</response>', responseBeginIndex)) {
-        final responseEndIndex = response.indexOf('</response>');
-        return response.substring(
-          responseBeginIndex + '<response>'.length,
-          responseEndIndex,
-        );
-      }
-    }
-
-    return response;
-  }
-
   Future<int> persistModelResponse(
     DatabaseService database,
     InteractionMode mode,
@@ -102,17 +88,12 @@ class AiService with ToolsMixin {
       return -1;
     }
 
-    final content = extractResponseContent(response);
-    if (content.isEmpty) {
-      return -1;
-    }
-
-    final modelEmbedding = await obtainEmbedding(content);
+    final modelEmbedding = await obtainEmbedding(response);
     return database.addUpdateHistory(
       History(
         'model',
         mode.toString(),
-        content,
+        response,
         locale,
         '',
         modelEmbedding,
@@ -273,7 +254,7 @@ class AiService with ToolsMixin {
       await persistModelResponse(
         database,
         interactionMode,
-        response.text!,
+        response.strippedText(),
         PreferencesService.inputLocaleDefault,
       );
     }
@@ -409,7 +390,7 @@ class AiService with ToolsMixin {
       await persistModelResponse(
         database,
         InteractionMode.translate,
-        response.text!,
+        response.strippedText(),
         targetLocale,
       );
     }
