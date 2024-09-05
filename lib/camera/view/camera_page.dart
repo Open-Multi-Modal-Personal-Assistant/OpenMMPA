@@ -147,7 +147,7 @@ class CameraPageState extends State<CameraPage>
     final size = MediaQuery.of(context).size;
     const appBarHeight = 56;
     // https://www.geeksforgeeks.org/flutter-set-the-height-of-the-appbar/
-    iconSize = m.min(size.width, size.height - appBarHeight) / 3;
+    iconSize = m.min(size.width, size.height - appBarHeight) / 10;
 
     return Scaffold(
       appBar: AppBar(
