@@ -451,7 +451,7 @@ class CameraPageState extends State<CameraPage>
       sizeFactor: _exposureModeControlRowAnimation,
       child: ClipRect(
         child: ColoredBox(
-          color: Colors.grey.shade50,
+          color: Colors.transparent,
           child: Column(
             children: [
               const Center(
@@ -534,7 +534,7 @@ class CameraPageState extends State<CameraPage>
       sizeFactor: _focusModeControlRowAnimation,
       child: ClipRect(
         child: ColoredBox(
-          color: Colors.grey.shade50,
+          color: Colors.transparent,
           child: Column(
             children: [
               const Center(
