@@ -179,11 +179,14 @@ class CameraPageState extends State<CameraPage>
         ],
       ),
       floatingActionButton: _floatingActionConstruct(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
   Widget _floatingActionConstruct(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         _captureControlRowWidget(),
         _modeControlRowWidget(context),
