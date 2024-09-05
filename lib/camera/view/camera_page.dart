@@ -662,12 +662,13 @@ class CameraPageState extends State<CameraPage>
     } else {
       for (final cameraDescription in _cameras) {
         toggles.add(
-          IconButton.filledTonal(
+          IconButton(
             onPressed: () async => onNewCameraSelected(cameraDescription),
             icon: outlinedIcon(
               context,
               getCameraLensIcon(cameraDescription.lensDirection),
               iconSize,
+              color: Colors.blue,
             ),
           ),
         );
@@ -682,9 +683,14 @@ class CameraPageState extends State<CameraPage>
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _cameraTogglesRowWidget(context),
-        IconButton.filledTonal(
+        IconButton(
           onPressed: () async => onAttachImageSelected(),
-          icon: outlinedIcon(context, Icons.folder_open, iconSize),
+          icon: outlinedIcon(
+            context,
+            Icons.folder_open,
+            iconSize,
+            color: Colors.blue,
+          ),
         ),
       ],
     );
