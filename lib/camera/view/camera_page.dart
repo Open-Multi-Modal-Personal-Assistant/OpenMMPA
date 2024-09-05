@@ -722,39 +722,43 @@ class CameraPageState extends State<CameraPage>
   Future<void> _initializeCameraController(
     CameraDescription cameraDescription,
   ) async {
-    final cameraController = CameraController(
+    cameraController = CameraController(
       cameraDescription,
       ResolutionPreset.high,
       enableAudio: enableAudio,
       imageFormatGroup: ImageFormatGroup.jpeg,
     );
 
+    if (cameraController == null) {
+      return;
+    }
+
     // If the controller is updated then update the UI.
-    cameraController.addListener(() {
+    cameraController?.addListener(() {
       if (mounted) {
         setState(() {});
       }
 
-      if (cameraController.value.hasError) {
-        log('Camera error ${cameraController.value.errorDescription}');
+      if (cameraController?.value.hasError ?? false) {
+        log('Camera error ${cameraController?.value.errorDescription}');
       }
     });
 
     try {
-      await cameraController.initialize();
+      await cameraController?.initialize();
       await Future.wait(<Future<Object?>>[
         ...<Future<Object?>>[
-          cameraController
+          cameraController!
               .getMinExposureOffset()
               .then((double value) => _minAvailableExposureOffset = value),
-          cameraController
+          cameraController!
               .getMaxExposureOffset()
               .then((double value) => _maxAvailableExposureOffset = value),
         ],
-        cameraController
+        cameraController!
             .getMaxZoomLevel()
             .then((double value) => _maxAvailableZoom = value),
-        cameraController
+        cameraController!
             .getMinZoomLevel()
             .then((double value) => _minAvailableZoom = value),
       ]);
