@@ -55,6 +55,8 @@ class CameraPageState extends State<CameraPage>
   double _minAvailableExposureOffset = 0;
   double _maxAvailableExposureOffset = 0;
   double _currentExposureOffset = 0;
+  late AnimationController _settingsControlRowAnimationController;
+  late Animation<double> _settingsControlRowAnimation;
   late AnimationController _flashModeControlRowAnimationController;
   late Animation<double> _flashModeControlRowAnimation;
   late AnimationController _exposureModeControlRowAnimationController;
@@ -79,6 +81,14 @@ class CameraPageState extends State<CameraPage>
 
     WidgetsBinding.instance.addObserver(this);
 
+    _settingsControlRowAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _settingsControlRowAnimation = CurvedAnimation(
+      parent: _settingsControlRowAnimationController,
+      curve: Curves.easeInCubic,
+    );
     _flashModeControlRowAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -119,6 +129,7 @@ class CameraPageState extends State<CameraPage>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _settingsControlRowAnimationController.dispose();
     _flashModeControlRowAnimationController.dispose();
     _exposureModeControlRowAnimationController.dispose();
     _focusModeControlRowAnimationController.dispose();
@@ -190,15 +201,7 @@ class CameraPageState extends State<CameraPage>
       children: [
         _captureControlRowWidget(),
         _modeControlRowWidget(context),
-        Padding(
-          padding: const EdgeInsets.all(5),
-          child: Row(
-            children: [
-              _captureAndOpenWidget(context),
-              _thumbnailWidget(),
-            ],
-          ),
-        ),
+        _camToggleAndThumbnailRowWidget(),
       ],
     );
   }
@@ -229,7 +232,6 @@ class CameraPageState extends State<CameraPage>
                 onScaleUpdate: _handleScaleUpdate,
                 onTapDown: (TapDownDetails details) =>
                     onViewFinderTap(details, constraints),
-                // onTap: onTakePictureButtonPressed,
               );
             },
           ),
@@ -256,112 +258,115 @@ class CameraPageState extends State<CameraPage>
 
   /// Display the thumbnail of the captured image or video.
   Widget _thumbnailWidget() {
-    return Expanded(
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (videoController == null && imageFile == null)
-              Container()
-            else
-              SizedBox(
-                width: 64,
-                height: 64,
-                child: (videoController == null)
-                    ? (Image.file(File(imageFile!.path)))
-                    : Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.pink),
-                        ),
-                        child: Center(
-                          child: AspectRatio(
-                            aspectRatio: videoController!.value.aspectRatio,
-                            child: VideoPlayer(videoController!),
-                          ),
-                        ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (videoController == null && imageFile == null)
+          Container()
+        else
+          SizedBox(
+            width: 64,
+            height: 64,
+            child: (videoController == null)
+                ? (Image.file(File(imageFile!.path)))
+                : Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.pink),
+                    ),
+                    child: Center(
+                      child: AspectRatio(
+                        aspectRatio: videoController!.value.aspectRatio,
+                        child: VideoPlayer(videoController!),
                       ),
-              ),
-          ],
-        ),
-      ),
+                    ),
+                  ),
+          ),
+      ],
     );
   }
 
   /// Display a bar with buttons to change the flash and exposure modes
   Widget _modeControlRowWidget(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return SizeTransition(
+      sizeFactor: _settingsControlRowAnimation,
+      child: ClipRect(
+        child: Column(
           children: [
-            IconButton(
-              icon: outlinedIcon(
-                context,
-                Icons.flash_on,
-                iconSize,
-                color: Colors.blue,
-              ),
-              color: Colors.transparent,
-              onPressed:
-                  cameraController != null ? onFlashModeButtonPressed : null,
-            ),
-            ...[
-              IconButton(
-                icon: outlinedIcon(
-                  context,
-                  Icons.exposure,
-                  iconSize,
-                  color: Colors.blue,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: outlinedIcon(
+                    context,
+                    Icons.flash_on,
+                    iconSize,
+                    color: Colors.blue,
+                  ),
+                  color: Colors.transparent,
+                  onPressed: cameraController != null
+                      ? onFlashModeButtonPressed
+                      : null,
                 ),
-                color: Colors.transparent,
-                onPressed: cameraController != null
-                    ? onExposureModeButtonPressed
-                    : null,
-              ),
-              IconButton(
-                icon: outlinedIcon(
-                  context,
-                  Icons.filter_center_focus,
-                  iconSize,
-                  color: Colors.blue,
+                ...[
+                  IconButton(
+                    icon: outlinedIcon(
+                      context,
+                      Icons.exposure,
+                      iconSize,
+                      color: Colors.blue,
+                    ),
+                    color: Colors.transparent,
+                    onPressed: cameraController != null
+                        ? onExposureModeButtonPressed
+                        : null,
+                  ),
+                  IconButton(
+                    icon: outlinedIcon(
+                      context,
+                      Icons.filter_center_focus,
+                      iconSize,
+                      color: Colors.blue,
+                    ),
+                    color: Colors.transparent,
+                    onPressed: cameraController != null
+                        ? onFocusModeButtonPressed
+                        : null,
+                  ),
+                ],
+                IconButton(
+                  icon: outlinedIcon(
+                    context,
+                    enableAudio ? Icons.volume_up : Icons.volume_mute,
+                    iconSize,
+                    color: Colors.blue,
+                  ),
+                  color: Colors.transparent,
+                  onPressed: cameraController != null
+                      ? onAudioModeButtonPressed
+                      : null,
                 ),
-                color: Colors.transparent,
-                onPressed:
-                    cameraController != null ? onFocusModeButtonPressed : null,
-              ),
-            ],
-            IconButton(
-              icon: outlinedIcon(
-                context,
-                enableAudio ? Icons.volume_up : Icons.volume_mute,
-                iconSize,
-                color: Colors.blue,
-              ),
-              color: Colors.transparent,
-              onPressed:
-                  cameraController != null ? onAudioModeButtonPressed : null,
+                IconButton(
+                  icon: outlinedIcon(
+                    context,
+                    cameraController?.value.isCaptureOrientationLocked ?? false
+                        ? Icons.screen_lock_rotation
+                        : Icons.screen_rotation,
+                    iconSize,
+                    color: Colors.blue,
+                  ),
+                  color: Colors.transparent,
+                  onPressed: cameraController != null
+                      ? onCaptureOrientationLockButtonPressed
+                      : null,
+                ),
+              ],
             ),
-            IconButton(
-              icon: outlinedIcon(
-                context,
-                cameraController?.value.isCaptureOrientationLocked ?? false
-                    ? Icons.screen_lock_rotation
-                    : Icons.screen_rotation,
-                iconSize,
-                color: Colors.blue,
-              ),
-              color: Colors.transparent,
-              onPressed: cameraController != null
-                  ? onCaptureOrientationLockButtonPressed
-                  : null,
-            ),
+            _flashModeControlRowWidget(),
+            _exposureModeControlRowWidget(),
+            _focusModeControlRowWidget(),
           ],
         ),
-        _flashModeControlRowWidget(),
-        _exposureModeControlRowWidget(),
-        _focusModeControlRowWidget(),
-      ],
+      ),
     );
   }
 
@@ -370,7 +375,7 @@ class CameraPageState extends State<CameraPage>
       sizeFactor: _flashModeControlRowAnimation,
       child: ClipRect(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
               icon: outlinedIcon(
@@ -458,7 +463,7 @@ class CameraPageState extends State<CameraPage>
                 child: Text('Exposure Mode'),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
                     style: styleAuto,
@@ -495,7 +500,7 @@ class CameraPageState extends State<CameraPage>
                 child: Text('Exposure Offset'),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(_minAvailableExposureOffset.toString()),
                   Slider(
@@ -541,7 +546,7 @@ class CameraPageState extends State<CameraPage>
                 child: Text('Focus Mode'),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
                     style: styleAuto,
@@ -575,7 +580,7 @@ class CameraPageState extends State<CameraPage>
   /// Display the control bar with buttons to take pictures and record videos.
   Widget _captureControlRowWidget() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
           icon: outlinedIcon(
@@ -653,12 +658,12 @@ class CameraPageState extends State<CameraPage>
 
   /// Display a row of toggle to select the camera
   /// (or a message if no camera is available).
-  Widget _cameraTogglesRowWidget(BuildContext context) {
+  List<Widget> _cameraTogglesRowWidget(BuildContext context) {
     final toggles = <Widget>[];
 
     if (_cameras.isEmpty) {
       log('Error: No camera found.');
-      return const Text('No camera');
+      return [const Text('No camera')];
     } else {
       for (final cameraDescription in _cameras) {
         toggles.add(
@@ -675,23 +680,41 @@ class CameraPageState extends State<CameraPage>
       }
     }
 
-    return Row(children: toggles);
+    return toggles;
   }
 
-  Widget _captureAndOpenWidget(BuildContext context) {
+  Widget _attachImageWidget(BuildContext context) {
+    return IconButton(
+      onPressed: () async => onAttachImageSelected(),
+      icon: outlinedIcon(
+        context,
+        Icons.folder_open,
+        iconSize,
+        color: Colors.blue,
+      ),
+    );
+  }
+
+  Widget _settingsShowHideWidget(BuildContext context) {
+    return IconButton(
+      onPressed: cameraController != null ? onSettingsButtonPressed : null,
+      icon: outlinedIcon(
+        context,
+        Icons.settings,
+        iconSize,
+        color: Colors.blue,
+      ),
+    );
+  }
+
+  Widget _camToggleAndThumbnailRowWidget() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _cameraTogglesRowWidget(context),
-        IconButton(
-          onPressed: () async => onAttachImageSelected(),
-          icon: outlinedIcon(
-            context,
-            Icons.folder_open,
-            iconSize,
-            color: Colors.blue,
-          ),
-        ),
+        ..._cameraTogglesRowWidget(context),
+        _attachImageWidget(context),
+        _settingsShowHideWidget(context),
+        _thumbnailWidget(),
       ],
     );
   }
@@ -810,21 +833,29 @@ class CameraPageState extends State<CameraPage>
           videoController = null;
         });
 
-        if (file != null && file.path.isNotEmpty) {
-          WidgetsBinding.instance.addPostFrameCallback((_) async {
-            await Navigator.pushReplacement(
-              context,
-              MaterialPageRoute<void>(
-                builder: (context) => InteractionPage(
-                  InteractionMode.imageChat,
-                  mediaPath: file.path,
-                ),
-              ),
-            );
-          });
-        }
+        // if (file != null && file.path.isNotEmpty) {
+        //   WidgetsBinding.instance.addPostFrameCallback((_) async {
+        //     await Navigator.pushReplacement(
+        //       context,
+        //       MaterialPageRoute<void>(
+        //         builder: (context) => InteractionPage(
+        //           InteractionMode.imageChat,
+        //           mediaPath: file.path,
+        //         ),
+        //       ),
+        //     );
+        //   });
+        // }
       }
     });
+  }
+
+  void onSettingsButtonPressed() {
+    if (_settingsControlRowAnimationController.value == 1) {
+      _settingsControlRowAnimationController.reverse();
+    } else {
+      _settingsControlRowAnimationController.forward();
+    }
   }
 
   void onFlashModeButtonPressed() {
