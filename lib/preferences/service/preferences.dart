@@ -67,19 +67,11 @@ class PreferencesService with ChangeNotifier {
   static const String harmCategoryDangerousContentTag =
       'HARM_CATEGORY_DANGEROUS_CONTENT';
   static const String harmCategoryHarassmentDefault = harmBlockThresholdNone;
-  static const HarmBlockThreshold harmCategoryHarassmentNativeDefault =
-      HarmBlockThreshold.none;
   static const String harmCategoryHateSpeechDefault = harmBlockThresholdNone;
-  static const HarmBlockThreshold harmCategoryHateSpeechNativeDefault =
-      HarmBlockThreshold.none;
   static const String harmCategorySexuallyExplicitDefault =
       harmBlockThresholdHigh;
-  static const HarmBlockThreshold harmCategorySexuallyExplicitNativeDefault =
-      HarmBlockThreshold.high;
   static const String harmCategoryDangerousContentDefault =
       harmBlockThresholdNone;
-  static const HarmBlockThreshold harmCategoryDangerousContentNativeDefault =
-      HarmBlockThreshold.none;
   static const String classicGoogleTranslateTag = 'classic_google_translate';
   static const bool classicGoogleTranslateDefault = false;
   static const String detailedCameraControlsTag = 'detailed_camera_controls';
