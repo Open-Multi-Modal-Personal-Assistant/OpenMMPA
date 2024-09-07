@@ -55,8 +55,6 @@ MockPreferencesService setUpServices() {
         .thenReturn(PreferencesService.outputLocaleDefault);
     when(() => mockPreferences.appLocale)
         .thenReturn(PreferencesService.appLocaleDefault);
-    when(() => mockPreferences.detailedCameraControls)
-        .thenReturn(PreferencesService.detailedCameraControlsDefault);
     final mockPrefService = MockPrefService();
     when(() => mockPreferences.prefService).thenReturn(mockPrefService);
     GetIt.I.registerSingleton<PreferencesService>(mockPreferences);
@@ -137,7 +135,7 @@ MockPreferencesService setUpServices() {
     when(
       () => aiService.chatStep(
         InteractionPage.llmTestPrompt,
-        '',
+        [],
         InteractionMode.textChat,
       ),
     ).thenAnswer((_) async {

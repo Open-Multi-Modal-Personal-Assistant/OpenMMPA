@@ -38,10 +38,26 @@ class SystemPreferencesPage extends StatelessWidget {
         value: PreferencesService.themeSelectionDark,
         pref: PreferencesService.themeSelectionTag,
       ),
-      PrefCheckbox(
-        title: Text(l10n.detailedCameraControlsLabel),
-        subtitle: Text(l10n.detailedCameraControlsDescription),
-        pref: PreferencesService.detailedCameraControlsTag,
+      PrefLabel(title: Text(l10n.cameraResolutionLabel)),
+      PrefRadio<String>(
+        title: Text(l10n.cameraResolutionLowLabel),
+        value: PreferencesService.cameraResolutionLow,
+        pref: PreferencesService.cameraResolutionTag,
+      ),
+      PrefRadio<String>(
+        title: Text(l10n.cameraResolutionMediumLabel),
+        value: PreferencesService.cameraResolutionMedium,
+        pref: PreferencesService.cameraResolutionTag,
+      ),
+      PrefRadio<String>(
+        title: Text(l10n.cameraResolutionHighLabel),
+        value: PreferencesService.cameraResolutionHigh,
+        pref: PreferencesService.cameraResolutionTag,
+      ),
+      PrefRadio<String>(
+        title: Text(l10n.cameraResolutionVeryHighLabel),
+        value: PreferencesService.cameraResolutionVeryHigh,
+        pref: PreferencesService.cameraResolutionTag,
       ),
       const PrefLabel(title: Divider(height: 1)),
       PrefLabel(title: Text(l10n.localeSelectionLabel)),

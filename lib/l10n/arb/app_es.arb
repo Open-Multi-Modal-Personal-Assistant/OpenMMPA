@@ -208,16 +208,28 @@
     "@classicGoogleTranslateLabel": {
         "description": "Texto que se muestra en las Preferencias de la Traducción Clásica de Google"
     },
-    "detailedCameraControlsLabel": "Más controles de cámara",
-    "@detailedCameraControlsLabel": {
-        "description": "Texto que se muestra en la configuración de preferencias para los controles detallados de la cámara"
-    },
-    "detailedCameraControlsDescription": "Controles de modo de flash, exposición y enfoque",
-    "@detailedCameraControlsDescription": {
-        "description": "Texto que se muestra en la configuración de preferencias para la descripción detallada del control de la cámara"
-    },
     "cameraSelectionInstruction": "Toca una cámara",
     "@cameraSelectionInstruction": {
         "description": "Texto que se muestra en la página de captura de la cámara cuando no se selecciona ninguna cámara"
+    },
+    "cameraResolutionLabel": "Resolución de la cámara",
+    "@cameraResolutionLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias del selector de resolución de la cámara"
+    },
+    "cameraResolutionLowLabel": "Bajo (240p)",
+    "@cameraResolutionLowLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias para la selección de Resolución de cámara baja"
+    },
+    "cameraResolutionMediumLabel": "Mediano (480p)",
+    "@cameraResolutionMediumLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias Selección de resolución de cámara media"
+    },
+    "cameraResolutionHighLabel": "Alta (720p)",
+    "@cameraResolutionHighLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias Selección de alta resolución de cámara"
+    },
+    "cameraResolutionVeryHighLabel": "Muy alta (1080p)",
+    "@cameraResolutionVeryHighLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias Selección de resolución de cámara muy alta"
     }
 }

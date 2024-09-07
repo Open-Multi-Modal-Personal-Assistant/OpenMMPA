@@ -208,16 +208,28 @@
     "@classicGoogleTranslateLabel": {
         "description": "Text shown in the Preferences for the Classic Google Translation"
     },
-    "detailedCameraControlsLabel": "More Camera Controls",
-    "@detailedCameraControlsLabel": {
-        "description": "Text shown in the preferences settings for Detailed Camera Controls"
-    },
-    "detailedCameraControlsDescription": "Flash, Exposure, and Focus Mode controls",
-    "@detailedCameraControlsDescription": {
-        "description": "Text shown in the preferences settings for Detailed Camera Control Description"
-    },
     "cameraSelectionInstruction": "Tap a camera",
     "@cameraSelectionInstruction": {
         "description": "Text shown in the camera capture page when no camera is selected"
+    },
+    "cameraResolutionLabel": "Camera Resolution",
+    "@cameraResolutionLabel": {
+        "description": "Text shown in the preferences settings for Camera Resolution selector"
+    },
+    "cameraResolutionLowLabel": "Low (240p)",
+    "@cameraResolutionLowLabel": {
+        "description": "Text shown in the preferences settings for Low Camera Resolution selection"
+    },
+    "cameraResolutionMediumLabel": "Medium (480p)",
+    "@cameraResolutionMediumLabel": {
+        "description": "Text shown in the preferences settings Medium Camera Resolution selection"
+    },
+    "cameraResolutionHighLabel": "High (720p)",
+    "@cameraResolutionHighLabel": {
+        "description": "Text shown in the preferences settings High Camera Resolution selection"
+    },
+    "cameraResolutionVeryHighLabel": "Very High (1080p)",
+    "@cameraResolutionVeryHighLabel": {
+        "description": "Text shown in the preferences settings Very High Camera Resolution selection"
     }
 }

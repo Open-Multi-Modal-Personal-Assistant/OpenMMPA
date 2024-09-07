@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:pref/pref.dart';
@@ -74,8 +75,12 @@ class PreferencesService with ChangeNotifier {
       harmBlockThresholdNone;
   static const String classicGoogleTranslateTag = 'classic_google_translate';
   static const bool classicGoogleTranslateDefault = false;
-  static const String detailedCameraControlsTag = 'detailed_camera_controls';
-  static const bool detailedCameraControlsDefault = false;
+  static const String cameraResolutionTag = 'camera_resolution';
+  static const String cameraResolutionDefault = cameraResolutionMedium;
+  static const String cameraResolutionLow = 'low';
+  static const String cameraResolutionMedium = 'medium';
+  static const String cameraResolutionHigh = 'high';
+  static const String cameraResolutionVeryHigh = 'veryHigh';
 
   final String prefix = 'ommpa'; // Inspector Gadget
 
@@ -105,7 +110,7 @@ class PreferencesService with ChangeNotifier {
         harmCategorySexuallyExplicitTag: harmCategoryHarassmentDefault,
         harmCategoryDangerousContentTag: harmCategorySexuallyExplicitDefault,
         classicGoogleTranslateTag: classicGoogleTranslateDefault,
-        detailedCameraControlsTag: detailedCameraControlsDefault,
+        cameraResolutionTag: cameraResolutionDefault,
       },
     );
 
@@ -163,9 +168,6 @@ class PreferencesService with ChangeNotifier {
   bool get classicGoogleTranslate =>
       prefService?.get<bool>(classicGoogleTranslateTag) ??
       classicGoogleTranslateDefault;
-  bool get detailedCameraControls =>
-      prefService?.get<bool>(detailedCameraControlsTag) ??
-      detailedCameraControlsDefault;
   String get theme =>
       prefService?.get<String>(themeSelectionTag) ?? themeSelectionDefault;
   ThemeMode get themeMode {
@@ -211,6 +213,21 @@ class PreferencesService with ChangeNotifier {
   void setOutputLocale(String locale) {
     if (locale.isNotEmpty) {
       prefService?.set<String>(outputLocaleTag, locale);
+    }
+  }
+
+  String get cameraResolution =>
+      prefService?.get<String>(cameraResolutionTag) ?? cameraResolutionDefault;
+  ResolutionPreset get cameraResolutionPreset {
+    switch (cameraResolution) {
+      case cameraResolutionVeryHigh:
+        return ResolutionPreset.veryHigh;
+      case cameraResolutionHigh:
+        return ResolutionPreset.high;
+      case cameraResolutionMedium:
+        return ResolutionPreset.medium;
+      default: // also low
+        return ResolutionPreset.low;
     }
   }
 
