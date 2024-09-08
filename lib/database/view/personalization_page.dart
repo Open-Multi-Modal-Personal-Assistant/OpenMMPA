@@ -17,8 +17,7 @@ import 'package:inspector_gadget/speech/view/tts_mixin.dart';
 import 'package:listview_utils_plus/listview_utils_plus.dart';
 import 'package:watch_it/watch_it.dart';
 
-class PersonalizationPage extends StatefulWidget
-    with WatchItStatefulWidgetMixin {
+class PersonalizationPage extends WatchingStatefulWidget {
   const PersonalizationPage({super.key});
 
   @override

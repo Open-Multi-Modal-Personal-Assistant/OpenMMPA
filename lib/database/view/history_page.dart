@@ -15,7 +15,7 @@ import 'package:inspector_gadget/speech/view/tts_mixin.dart';
 import 'package:listview_utils_plus/listview_utils_plus.dart';
 import 'package:watch_it/watch_it.dart';
 
-class HistoryPage extends StatefulWidget with WatchItStatefulWidgetMixin {
+class HistoryPage extends WatchingStatefulWidget {
   const HistoryPage({super.key});
 
   @override
