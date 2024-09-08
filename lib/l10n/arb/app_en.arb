@@ -68,6 +68,10 @@
     "@interactionAppBarTitle": {
         "description": "Text shown in the AppBar of the Interaction Page"
     },
+    "legendDialogTitle": "Legend",
+    "@legendDialogTitle": {
+        "description": "Text shown on the legend dialog title"
+    },
     "uniModalButtonDescription": "Voice chat",
     "@uniModalButtonDescription": {
         "description": "Text shown on the legend dialog for Uni Modal Button"

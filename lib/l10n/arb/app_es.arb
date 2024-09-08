@@ -68,6 +68,10 @@
     "@interactionAppBarTitle": {
         "description": "Texto que se muestra en la AppBar de la página de expresión"
     },
+    "legendDialogTitle": "Leyenda",
+    "@legendDialogTitle": {
+        "description": "Texto que se muestra en el título del cuadro de diálogo de leyenda"
+    },
     "uniModalButtonDescription": "Chat de voz",
     "@uniModalButtonDescription": {
         "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón Unimodal"
