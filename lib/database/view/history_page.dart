@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
 import 'package:inspector_gadget/common/base_state.dart';
 import 'package:inspector_gadget/common/deferred_action.dart';
+import 'package:inspector_gadget/common/ok_cancel_alert_dialog.dart';
 import 'package:inspector_gadget/database/models/history.dart';
 import 'package:inspector_gadget/database/service/database.dart';
 import 'package:inspector_gadget/database/service/history_state.dart';
@@ -177,15 +178,7 @@ class HistoryPageState extends State<HistoryPage>
       floatingActionButton: IconButton(
         icon: const Icon(Icons.delete),
         onPressed: () async {
-          final result = await showOkCancelAlertDialog(
-            context: context,
-            message: l10n.areYouSureText,
-            okLabel: l10n.okLabel,
-            cancelLabel: l10n.cancelLabel,
-            defaultType: OkCancelAlertDefaultType.cancel,
-          );
-
-          if (result == OkCancelResult.ok) {
+          if (await okCancelAlertDialog(context) == OkCancelResult.ok) {
             database.clearHistory();
             setState(() {
               _editCount++;
