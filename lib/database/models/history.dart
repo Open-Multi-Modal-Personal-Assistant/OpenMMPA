@@ -35,17 +35,12 @@ class History {
   late DateTime dateTime;
 
   IconData getIcon() {
-    switch (role) {
-      case 'system':
-        return Icons.computer;
-      case 'user':
-        return Icons.account_circle;
-      case 'model':
-        return Icons.reply;
-      case 'image':
-        return Icons.image;
-      default:
-        return Icons.extension;
-    }
+    return switch (role) {
+      'system' => Icons.computer,
+      'user' => Icons.account_circle,
+      'model' => Icons.reply,
+      'image' => Icons.image,
+      _ => Icons.extension,
+    };
   }
 }

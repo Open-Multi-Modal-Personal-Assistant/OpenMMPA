@@ -21,23 +21,28 @@ class CameraPage extends StatefulWidget {
 
 /// Returns a suitable camera icon for [direction].
 IconData getCameraLensIcon(CameraLensDirection direction) {
-  switch (direction) {
-    case CameraLensDirection.back:
-      return Icons.camera_rear;
-    case CameraLensDirection.front:
-      return Icons.camera_front;
-    case CameraLensDirection.external:
-      return Icons.camera;
-  }
-
-  // This enum is from a different package, so a new value could be added at
-  // any time. The example should keep working if that happens.
-  // ignore: dead_code
-  return Icons.camera;
+  return switch (direction) {
+    CameraLensDirection.back => Icons.camera_rear,
+    CameraLensDirection.front => Icons.camera_front,
+    _ => Icons.camera, // CameraLensDirection.external
+  };
 }
 
-void _logError(String code, String? message) {
-  log('Error: $code${message == null ? '' : '\nError Message: $message'}');
+/// Returns an icon indicating how many media is in stack.
+IconData getNumberIcon(int number) {
+  return switch (number) {
+    0 => Icons.filter,
+    1 => Icons.filter_1,
+    2 => Icons.filter_2,
+    3 => Icons.filter_3,
+    4 => Icons.filter_4,
+    5 => Icons.filter_5,
+    6 => Icons.filter_6,
+    7 => Icons.filter_7,
+    8 => Icons.filter_8,
+    9 => Icons.filter_9,
+    _ => Icons.filter_9_plus
+  };
 }
 
 class CameraPageState extends State<CameraPage>
@@ -795,27 +800,23 @@ class CameraPageState extends State<CameraPage>
             .then((double value) => _minAvailableZoom = value),
       ]);
     } on CameraException catch (e) {
-      switch (e.code) {
-        case 'CameraAccessDenied':
-          showInSnackBar('You have denied camera access.');
-        case 'CameraAccessDeniedWithoutPrompt':
-          // iOS only
-          showInSnackBar('Please go to Settings app to enable camera access.');
-        case 'CameraAccessRestricted':
-          // iOS only
-          showInSnackBar('Camera access is restricted.');
-        case 'AudioAccessDenied':
-          showInSnackBar('You have denied audio access.');
-        case 'AudioAccessDeniedWithoutPrompt':
-          // iOS only
-          showInSnackBar('Please go to Settings app to enable audio access.');
-        case 'AudioAccessRestricted':
-          // iOS only
-          showInSnackBar('Audio access is restricted.');
-        default:
-          _logError(e.code, e.description);
-          break;
-      }
+      // ignore: unused_local_variable
+      final unused = switch (e.code) {
+        'CameraAccessDenied' =>
+          showInSnackBar('You have denied camera access.'),
+        'CameraAccessDeniedWithoutPrompt' => showInSnackBar(
+            'Please go to Settings app to enable camera access.',
+          ), // iOS only
+        'CameraAccessRestricted' =>
+          showInSnackBar('Camera access is restricted.'), // iOS only
+        'AudioAccessDenied' => showInSnackBar('You have denied audio access.'),
+        'AudioAccessDeniedWithoutPrompt' => showInSnackBar(
+            'Please go to Settings app to enable audio access.',
+          ), // iOS only
+        'AudioAccessRestricted' =>
+          showInSnackBar('Audio access is restricted.'), // iOS only
+        _ => logError(e.code, e.description),
+      };
     }
 
     if (mounted) {

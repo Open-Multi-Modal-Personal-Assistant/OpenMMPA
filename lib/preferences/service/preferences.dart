@@ -170,31 +170,20 @@ class PreferencesService with ChangeNotifier {
       classicGoogleTranslateDefault;
   String get theme =>
       prefService?.get<String>(themeSelectionTag) ?? themeSelectionDefault;
-  ThemeMode get themeMode {
-    switch (theme) {
-      case themeSelectionLight:
-        return ThemeMode.light;
-      case themeSelectionDark:
-        return ThemeMode.dark;
-      default:
-        return ThemeMode.system;
-    }
-  }
+  ThemeMode get themeMode => switch (theme) {
+        themeSelectionLight => ThemeMode.light,
+        themeSelectionDark => ThemeMode.dark,
+        _ => ThemeMode.system,
+      };
 
-  HarmBlockThreshold getHarmBlockThreshold(String harmBlockThreshold) {
-    switch (harmBlockThreshold) {
-      case harmBlockThresholdLow:
-        return HarmBlockThreshold.low;
-      case harmBlockThresholdMedium:
-        return HarmBlockThreshold.medium;
-      case harmBlockThresholdHigh:
-        return HarmBlockThreshold.high;
-      case harmBlockThresholdNone:
-        return HarmBlockThreshold.none;
-      default:
-        return HarmBlockThreshold.unspecified;
-    }
-  }
+  HarmBlockThreshold getHarmBlockThreshold(String harmBlockThreshold) =>
+      switch (harmBlockThreshold) {
+        harmBlockThresholdLow => HarmBlockThreshold.low,
+        harmBlockThresholdMedium => HarmBlockThreshold.medium,
+        harmBlockThresholdHigh => HarmBlockThreshold.high,
+        harmBlockThresholdNone => HarmBlockThreshold.none,
+        _ => HarmBlockThreshold.unspecified,
+      };
 
   double get personalizationRagThreshold =>
       (prefService?.get<int>(personalizationRagThresholdTag) ??
@@ -218,18 +207,12 @@ class PreferencesService with ChangeNotifier {
 
   String get cameraResolution =>
       prefService?.get<String>(cameraResolutionTag) ?? cameraResolutionDefault;
-  ResolutionPreset get cameraResolutionPreset {
-    switch (cameraResolution) {
-      case cameraResolutionVeryHigh:
-        return ResolutionPreset.veryHigh;
-      case cameraResolutionHigh:
-        return ResolutionPreset.high;
-      case cameraResolutionMedium:
-        return ResolutionPreset.medium;
-      default: // also low
-        return ResolutionPreset.low;
-    }
-  }
+  ResolutionPreset get cameraResolutionPreset => switch (cameraResolution) {
+        cameraResolutionVeryHigh => ResolutionPreset.veryHigh,
+        cameraResolutionHigh => ResolutionPreset.high,
+        cameraResolutionMedium => ResolutionPreset.medium,
+        _ => ResolutionPreset.low // also low
+      };
 
   void emit() {
     notifyListeners();
