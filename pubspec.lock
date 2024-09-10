@@ -282,18 +282,18 @@ packages:
     dependency: "direct main"
     description:
       name: dart_helper_utils
-      sha256: aeef28dd39805c415b7c9167ccf8a3793227849319632633025d06cb44e3d251
+      sha256: b5f2a5e2b21c650e66c99d37eb49ac4a42365f21326a025080c30ff3b2ae0229
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.2"
+    version: "2.5.3"
   dart_style:
     dependency: transitive
     description:
       name: dart_style
-      sha256: "99e066ce75c89d6b29903d788a7bb9369cf754f7b24bf70bf4b6d6d6b26853b9"
+      sha256: "7856d364b589d1f08986e140938578ed36ed948581fbc3bc9aef1805039ac5ab"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.6"
+    version: "2.3.7"
   daylight:
     dependency: "direct main"
     description:
@@ -502,10 +502,10 @@ packages:
     dependency: "direct main"
     description:
       name: google_generative_ai
-      sha256: eac2338da8f223af2930b83da11fc56dab5369653db172902031e4c54132a17a
+      sha256: "81dae159c89e4d9bdc46955b6f4ee5ae0a291f9e8f990d76f43944e0d6041d4f"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.5"
+    version: "0.4.6"
   gradient_borders:
     dependency: transitive
     description:
