@@ -5,6 +5,7 @@ import 'package:flutter_easy_animations/flutter_easy_animations.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:inspector_gadget/ai/service/ai_service.dart';
 import 'package:inspector_gadget/ai/service/generated_content_response.dart';
+import 'package:inspector_gadget/camera/service/m_file.dart';
 import 'package:inspector_gadget/common/base_state.dart';
 import 'package:inspector_gadget/common/deferred_action.dart';
 import 'package:inspector_gadget/common/string_ex.dart';
@@ -27,11 +28,15 @@ enum InteractionMode {
   imageChat,
 }
 
-class InteractionPage extends StatefulWidget with WatchItStatefulWidgetMixin {
-  const InteractionPage(this.interactionMode, {this.mediaPath = '', super.key});
+class InteractionPage extends WatchingStatefulWidget {
+  const InteractionPage(
+    this.interactionMode, {
+    required this.mediaFiles,
+    super.key,
+  });
 
   final InteractionMode interactionMode;
-  final String mediaPath;
+  final List<MFile> mediaFiles;
   static const llmTestPrompt = "What is part 121G on O'Reilly Auto Parts?";
 
   @override
@@ -107,14 +112,9 @@ class InteractionPageState extends State<InteractionPage>
 
       unawaited(GetIt.I.get<LocationService>().obtain());
 
-      var mediaPath = '';
-      if (widget.interactionMode == InteractionMode.imageChat) {
-        mediaPath = widget.mediaPath;
-      }
-
       response = await aiService.chatStep(
         prompt,
-        mediaPath,
+        widget.mediaFiles,
         widget.interactionMode,
       );
     }

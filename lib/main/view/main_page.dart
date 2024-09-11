@@ -24,7 +24,8 @@ class MainPage extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (context) => InteractionPage(interactionMode),
+        builder: (context) =>
+            InteractionPage(interactionMode, mediaFiles: const []),
       ),
     );
   }

@@ -29,6 +29,7 @@ dependencies:
     sdk: flutter
   flutter_localized_locales: ^2.0.5
   flutter_tts: ^4.0.2
+  gap: ^3.0.1
   get_it: ^7.7.0
   google_generative_ai: ^0.4.6
   heart_rate_flutter: ^0.0.2
@@ -45,6 +46,7 @@ dependencies:
   path_provider: ^2.1.4
   pref: ^2.8.0
   record: ^5.1.2
+  smooth_page_indicator: ^1.2.0+3
   speech_to_text: ^7.0.0
   statemachine: ^3.3.1
   strings: ^3.1.2

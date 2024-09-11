@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
@@ -13,6 +12,7 @@ import 'package:inspector_gadget/ai/prompts/system_instruction.dart';
 import 'package:inspector_gadget/ai/prompts/translate_instruction.dart';
 import 'package:inspector_gadget/ai/service/generated_content_response.dart';
 import 'package:inspector_gadget/ai/tools/tools_mixin.dart';
+import 'package:inspector_gadget/camera/service/m_file.dart';
 import 'package:inspector_gadget/common/constants.dart';
 import 'package:inspector_gadget/database/models/history.dart';
 import 'package:inspector_gadget/database/service/database.dart';
@@ -20,7 +20,6 @@ import 'package:inspector_gadget/heart_rate/service/heart_rate.dart';
 import 'package:inspector_gadget/interaction/view/interaction_page.dart';
 import 'package:inspector_gadget/location/service/location.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
-import 'package:mime/mime.dart';
 import 'package:strings/strings.dart';
 import 'package:translator/translator.dart';
 
@@ -116,7 +115,7 @@ class AiService with ToolsMixin {
 
   Future<GenerateContentResponse?> chatStep(
     String prompt,
-    String mediaPath,
+    List<MFile> mediaFiles,
     InteractionMode interactionMode,
   ) async {
     debugPrint('prompt: $prompt');
@@ -154,6 +153,8 @@ class AiService with ToolsMixin {
       }
 
       if (historyStuffing.isNotEmpty) {
+        // TODO(MrCsabaToth): extend the history (let's say 2 interaction
+        // before and after) around the picked ones
         stuffedPrompt.writeln(
           historyRagStuffingTemplate.replaceAll(
             historyRagStuffingVariable,
@@ -197,20 +198,22 @@ class AiService with ToolsMixin {
 
     final stuffed = stuffedPrompt.toString();
     debugPrint('stuffed: $stuffed');
+    // TODO(MrCsabaToth): +prompt for media transcription + store in history
     var message = Content.text('');
-    debugPrint('mediaPath: $mediaPath');
-    if (mediaPath.isEmpty) {
+    if (mediaFiles.isEmpty) {
       message = Content.text(stuffed);
     } else {
-      final mediaContent = await File(mediaPath).readAsBytes();
-      final mimeType = lookupMimeType(
-        mediaPath,
-        headerBytes: mediaContent.take(16).toList(growable: false),
-      );
-      if (mimeType != null) {
-        message = Content.multi(
-          [TextPart(stuffed), DataPart(mimeType, mediaContent)],
-        );
+      final parts = <Part>[];
+      for (final mediumFile in mediaFiles) {
+        debugPrint('mediumFile: ${mediumFile.xFile.path}');
+        if (!mediumFile.mimeTypeIsUnknown()) {
+          parts.add(DataPart(mediumFile.mimeType, await mediumFile.content()));
+        }
+      }
+
+      if (parts.isNotEmpty) {
+        parts.add(TextPart(stuffed));
+        message = Content.multi(parts);
       } else {
         message = Content.text(stuffed);
       }

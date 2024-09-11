@@ -1,18 +1,19 @@
 import 'dart:developer';
-import 'dart:io';
 import 'dart:math' as m;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:inspector_gadget/camera/service/m_file.dart';
+import 'package:inspector_gadget/camera/service/page_state.dart';
 import 'package:inspector_gadget/camera/view/capture_state.dart';
+import 'package:inspector_gadget/camera/view/thumbnail_carousel.dart';
 import 'package:inspector_gadget/interaction/view/interaction_page.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/outlined_icon.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
-import 'package:video_player/video_player.dart';
+import 'package:watch_it/watch_it.dart';
 
-class CameraPage extends StatefulWidget {
+class CameraPage extends WatchingStatefulWidget {
   const CameraPage({super.key});
 
   @override
@@ -47,86 +48,85 @@ IconData getNumberIcon(int number) {
 
 class CameraPageState extends State<CameraPage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
-  bool detailedCameraControl = PreferencesService.detailedCameraControlsDefault;
   AppLocalizations? l10n;
   double iconSize = 5;
-  List<CameraDescription> _cameras = <CameraDescription>[];
+  List<CameraDescription> cameras = <CameraDescription>[];
   CameraController? cameraController;
-  XFile? imageFile;
-  XFile? videoFile;
-  VideoPlayerController? videoController;
-  VoidCallback? videoPlayerListener;
+  List<MFile> files = [];
   bool enableAudio = false;
-  double _minAvailableExposureOffset = 0;
-  double _maxAvailableExposureOffset = 0;
-  double _currentExposureOffset = 0;
-  late AnimationController _settingsControlRowAnimationController;
-  late Animation<double> _settingsControlRowAnimation;
-  late AnimationController _flashModeControlRowAnimationController;
-  late Animation<double> _flashModeControlRowAnimation;
-  late AnimationController _exposureModeControlRowAnimationController;
-  late Animation<double> _exposureModeControlRowAnimation;
-  late AnimationController _focusModeControlRowAnimationController;
-  late Animation<double> _focusModeControlRowAnimation;
-  double _minAvailableZoom = 1;
-  double _maxAvailableZoom = 1;
-  double _currentScale = 1;
-  double _baseScale = 1;
+  double minAvailableExposureOffset = 0;
+  double maxAvailableExposureOffset = 0;
+  double currentExposureOffset = 0;
+  late AnimationController settingsControlRowAnimationController;
+  late Animation<double> settingsControlRowAnimation;
+  late AnimationController flashModeControlRowAnimationController;
+  late Animation<double> flashModeControlRowAnimation;
+  late AnimationController exposureModeControlRowAnimationController;
+  late Animation<double> exposureModeControlRowAnimation;
+  late AnimationController focusModeControlRowAnimationController;
+  late Animation<double> focusModeControlRowAnimation;
+  double minAvailableZoom = 1;
+  double maxAvailableZoom = 1;
+  double currentScale = 1;
+  double baseScale = 1;
 
   // Counting pointers (number of user fingers on screen)
-  int _pointers = 0;
+  int pointers = 0;
+  // For counting pages for files
+  late final PageState pageState;
 
   @override
   void initState() {
     super.initState();
 
-    detailedCameraControl =
-        GetIt.I.get<PreferencesService>().detailedCameraControls;
+    pageState = GetIt.I.get<PageState>();
+    pageState.setPageCount(files.length);
+
     GetIt.I.get<CaptureState>().setState(CaptureState.previewStateLabel);
 
     WidgetsBinding.instance.addObserver(this);
 
-    _settingsControlRowAnimationController = AnimationController(
+    settingsControlRowAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    _settingsControlRowAnimation = CurvedAnimation(
-      parent: _settingsControlRowAnimationController,
+    settingsControlRowAnimation = CurvedAnimation(
+      parent: settingsControlRowAnimationController,
       curve: Curves.easeInCubic,
     );
-    _flashModeControlRowAnimationController = AnimationController(
+    flashModeControlRowAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    _flashModeControlRowAnimation = CurvedAnimation(
-      parent: _flashModeControlRowAnimationController,
+    flashModeControlRowAnimation = CurvedAnimation(
+      parent: flashModeControlRowAnimationController,
       curve: Curves.easeInCubic,
     );
-    _exposureModeControlRowAnimationController = AnimationController(
+    exposureModeControlRowAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    _exposureModeControlRowAnimation = CurvedAnimation(
-      parent: _exposureModeControlRowAnimationController,
+    exposureModeControlRowAnimation = CurvedAnimation(
+      parent: exposureModeControlRowAnimationController,
       curve: Curves.easeInCubic,
     );
-    _focusModeControlRowAnimationController = AnimationController(
+    focusModeControlRowAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    _focusModeControlRowAnimation = CurvedAnimation(
-      parent: _focusModeControlRowAnimationController,
+    focusModeControlRowAnimation = CurvedAnimation(
+      parent: focusModeControlRowAnimationController,
       curve: Curves.easeInCubic,
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        _cameras = await availableCameras();
-        if (_cameras.isNotEmpty) {
-          await onNewCameraSelected(_cameras[0]);
+        cameras = await availableCameras();
+        if (cameras.isNotEmpty) {
+          await onNewCameraSelected(cameras[0]);
         }
       } on CameraException catch (e) {
-        _logError(e.code, e.description);
+        logError(e.code, e.description);
       }
     });
   }
@@ -134,10 +134,10 @@ class CameraPageState extends State<CameraPage>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _settingsControlRowAnimationController.dispose();
-    _flashModeControlRowAnimationController.dispose();
-    _exposureModeControlRowAnimationController.dispose();
-    _focusModeControlRowAnimationController.dispose();
+    settingsControlRowAnimationController.dispose();
+    flashModeControlRowAnimationController.dispose();
+    exposureModeControlRowAnimationController.dispose();
+    focusModeControlRowAnimationController.dispose();
     super.dispose();
   }
 
@@ -152,7 +152,7 @@ class CameraPageState extends State<CameraPage>
     if (state == AppLifecycleState.inactive) {
       cameraController?.dispose();
     } else if (state == AppLifecycleState.resumed) {
-      _initializeCameraController(cameraController!.description);
+      initializeCameraController(cameraController!.description);
     }
   }
   // #enddocregion AppLifecycle
@@ -187,33 +187,33 @@ class CameraPageState extends State<CameraPage>
               child: Padding(
                 padding: const EdgeInsets.all(1),
                 child: Center(
-                  child: _cameraPreviewWidget(),
+                  child: cameraPreviewWidget(),
                 ),
               ),
             ),
           ),
         ],
       ),
-      floatingActionButton: _floatingActionConstruct(context),
+      floatingActionButton: floatingActionConstruct(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
-  Widget _floatingActionConstruct(BuildContext context) {
+  Widget floatingActionConstruct(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        _captureControlRowWidget(),
-        _modeControlRowWidget(context),
-        _camToggleAndThumbnailRowWidget(),
+        captureControlRowWidget(),
+        modeControlRowWidget(context),
+        camToggleRowWidget(),
       ],
     );
   }
 
   /// Display the preview from the camera
   /// (or a message if the preview is not available).
-  Widget _cameraPreviewWidget() {
+  Widget cameraPreviewWidget() {
     if (cameraController == null || !cameraController!.value.isInitialized) {
       return Text(
         l10n!.cameraSelectionInstruction,
@@ -225,16 +225,16 @@ class CameraPageState extends State<CameraPage>
       );
     } else {
       return Listener(
-        onPointerDown: (_) => _pointers++,
-        onPointerUp: (_) => _pointers--,
+        onPointerDown: (_) => pointers++,
+        onPointerUp: (_) => pointers--,
         child: CameraPreview(
           cameraController!,
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
               return GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onScaleStart: _handleScaleStart,
-                onScaleUpdate: _handleScaleUpdate,
+                onScaleStart: handleScaleStart,
+                onScaleUpdate: handleScaleUpdate,
                 onTapDown: (TapDownDetails details) =>
                     onViewFinderTap(details, constraints),
               );
@@ -245,55 +245,62 @@ class CameraPageState extends State<CameraPage>
     }
   }
 
-  void _handleScaleStart(ScaleStartDetails details) {
-    _baseScale = _currentScale;
+  void handleScaleStart(ScaleStartDetails details) {
+    baseScale = currentScale;
   }
 
-  Future<void> _handleScaleUpdate(ScaleUpdateDetails details) async {
+  Future<void> handleScaleUpdate(ScaleUpdateDetails details) async {
     // When there are not exactly two fingers on screen don't scale
-    if (cameraController == null || _pointers != 2) {
+    if (cameraController == null || pointers != 2) {
       return;
     }
 
-    _currentScale = (_baseScale * details.scale)
-        .clamp(_minAvailableZoom, _maxAvailableZoom);
+    currentScale =
+        (baseScale * details.scale).clamp(minAvailableZoom, maxAvailableZoom);
 
-    await cameraController!.setZoomLevel(_currentScale);
+    await cameraController!.setZoomLevel(currentScale);
   }
 
-  /// Display the thumbnail of the captured image or video.
-  Widget _thumbnailWidget() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (videoController == null && imageFile == null)
-          Container()
-        else
-          SizedBox(
-            width: 64,
-            height: 64,
-            child: (videoController == null)
-                ? (Image.file(File(imageFile!.path)))
-                : Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.pink),
-                    ),
-                    child: Center(
-                      child: AspectRatio(
-                        aspectRatio: videoController!.value.aspectRatio,
-                        child: VideoPlayer(videoController!),
-                      ),
-                    ),
-                  ),
-          ),
-      ],
+  /// Display the thumbnail carousel in a bottom
+  Future<void> onCardStackPressed() async {
+    // https://stackoverflow.com/questions/48968176/how-do-you-adjust-the-height-and-borderradius-of-a-bottomsheet-in-flutter
+    await showModalBottomSheet<void>(
+      isScrollControlled: true,
+      enableDrag: false,
+      context: context,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          expand: false,
+          initialChildSize:
+              0.90, // Initial height as a fraction of screen height
+          builder: (BuildContext context, ScrollController scrollController) {
+            return ThumbnailCarouselWidget(
+              files,
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget cardStackWidget() {
+    final pageCount = watchPropertyValue((PageState p) => p.pageCount);
+    return IconButton(
+      icon: outlinedIcon(
+        context,
+        getNumberIcon(pageCount),
+        iconSize,
+        color: Colors.blue,
+      ),
+      color: Colors.transparent,
+      onPressed: pageCount > 0 ? onCardStackPressed : null,
     );
   }
 
   /// Display a bar with buttons to change the flash and exposure modes
-  Widget _modeControlRowWidget(BuildContext context) {
+  Widget modeControlRowWidget(BuildContext context) {
     return SizeTransition(
-      sizeFactor: _settingsControlRowAnimation,
+      sizeFactor: settingsControlRowAnimation,
       child: ClipRect(
         child: Column(
           children: [
@@ -366,18 +373,18 @@ class CameraPageState extends State<CameraPage>
                 ),
               ],
             ),
-            _flashModeControlRowWidget(),
-            _exposureModeControlRowWidget(),
-            _focusModeControlRowWidget(),
+            flashModeControlRowWidget(),
+            exposureModeControlRowWidget(),
+            focusModeControlRowWidget(),
           ],
         ),
       ),
     );
   }
 
-  Widget _flashModeControlRowWidget() {
+  Widget flashModeControlRowWidget() {
     return SizeTransition(
-      sizeFactor: _flashModeControlRowAnimation,
+      sizeFactor: flashModeControlRowAnimation,
       child: ClipRect(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -444,7 +451,7 @@ class CameraPageState extends State<CameraPage>
     );
   }
 
-  Widget _exposureModeControlRowWidget() {
+  Widget exposureModeControlRowWidget() {
     final styleAuto = TextButton.styleFrom(
       foregroundColor: cameraController?.value.exposureMode == ExposureMode.auto
           ? Colors.orange
@@ -458,7 +465,7 @@ class CameraPageState extends State<CameraPage>
     );
 
     return SizeTransition(
-      sizeFactor: _exposureModeControlRowAnimation,
+      sizeFactor: exposureModeControlRowAnimation,
       child: ClipRect(
         child: ColoredBox(
           color: Colors.transparent,
@@ -507,18 +514,18 @@ class CameraPageState extends State<CameraPage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(_minAvailableExposureOffset.toString()),
+                  Text(minAvailableExposureOffset.toString()),
                   Slider(
-                    value: _currentExposureOffset,
-                    min: _minAvailableExposureOffset,
-                    max: _maxAvailableExposureOffset,
-                    label: _currentExposureOffset.toString(),
-                    onChanged: _minAvailableExposureOffset ==
-                            _maxAvailableExposureOffset
-                        ? null
-                        : setExposureOffset,
+                    value: currentExposureOffset,
+                    min: minAvailableExposureOffset,
+                    max: maxAvailableExposureOffset,
+                    label: currentExposureOffset.toString(),
+                    onChanged:
+                        minAvailableExposureOffset == maxAvailableExposureOffset
+                            ? null
+                            : setExposureOffset,
                   ),
-                  Text(_maxAvailableExposureOffset.toString()),
+                  Text(maxAvailableExposureOffset.toString()),
                 ],
               ),
             ],
@@ -528,7 +535,7 @@ class CameraPageState extends State<CameraPage>
     );
   }
 
-  Widget _focusModeControlRowWidget() {
+  Widget focusModeControlRowWidget() {
     final styleAuto = TextButton.styleFrom(
       foregroundColor: cameraController?.value.focusMode == FocusMode.auto
           ? Colors.orange
@@ -541,7 +548,7 @@ class CameraPageState extends State<CameraPage>
     );
 
     return SizeTransition(
-      sizeFactor: _focusModeControlRowAnimation,
+      sizeFactor: focusModeControlRowAnimation,
       child: ClipRect(
         child: ColoredBox(
           color: Colors.transparent,
@@ -583,7 +590,7 @@ class CameraPageState extends State<CameraPage>
   }
 
   /// Display the control bar with buttons to take pictures and record videos.
-  Widget _captureControlRowWidget() {
+  Widget captureControlRowWidget() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -663,14 +670,14 @@ class CameraPageState extends State<CameraPage>
 
   /// Display a row of toggle to select the camera
   /// (or a message if no camera is available).
-  List<Widget> _cameraTogglesRowWidget(BuildContext context) {
+  List<Widget> cameraTogglesRowWidget(BuildContext context) {
     final toggles = <Widget>[];
 
-    if (_cameras.isEmpty) {
+    if (cameras.isEmpty) {
       log('Error: No camera found.');
       return [const Text('No camera')];
     } else {
-      for (final cameraDescription in _cameras) {
+      for (final cameraDescription in cameras) {
         toggles.add(
           IconButton(
             onPressed: () async => onNewCameraSelected(cameraDescription),
@@ -688,7 +695,7 @@ class CameraPageState extends State<CameraPage>
     return toggles;
   }
 
-  Widget _attachImageWidget(BuildContext context) {
+  Widget attachImageWidget(BuildContext context) {
     return IconButton(
       onPressed: () async => onAttachImageSelected(),
       icon: outlinedIcon(
@@ -700,7 +707,7 @@ class CameraPageState extends State<CameraPage>
     );
   }
 
-  Widget _settingsShowHideWidget(BuildContext context) {
+  Widget settingsShowHideWidget(BuildContext context) {
     return IconButton(
       onPressed: cameraController != null ? onSettingsButtonPressed : null,
       icon: outlinedIcon(
@@ -712,14 +719,27 @@ class CameraPageState extends State<CameraPage>
     );
   }
 
-  Widget _camToggleAndThumbnailRowWidget() {
+  Widget moveOnWidget(BuildContext context) {
+    return IconButton(
+      onPressed: () => onMoveOnButtonPressed(context),
+      icon: outlinedIcon(
+        context,
+        Icons.arrow_forward,
+        iconSize,
+        color: Colors.blue,
+      ),
+    );
+  }
+
+  Widget camToggleRowWidget() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ..._cameraTogglesRowWidget(context),
-        _attachImageWidget(context),
-        _settingsShowHideWidget(context),
-        _thumbnailWidget(),
+        ...cameraTogglesRowWidget(context),
+        attachImageWidget(context),
+        settingsShowHideWidget(context),
+        cardStackWidget(),
+        moveOnWidget(context),
       ],
     );
   }
@@ -750,18 +770,19 @@ class CameraPageState extends State<CameraPage>
     if (cameraController != null) {
       return cameraController!.setDescription(cameraDescription);
     } else {
-      return _initializeCameraController(cameraDescription);
+      return initializeCameraController(cameraDescription);
     }
   }
 
   Future<void> onAttachImageSelected() async {}
 
-  Future<void> _initializeCameraController(
+  Future<void> initializeCameraController(
     CameraDescription cameraDescription,
   ) async {
+    final preferences = GetIt.I.get<PreferencesService>();
     cameraController = CameraController(
       cameraDescription,
-      ResolutionPreset.high,
+      preferences.cameraResolutionPreset,
       enableAudio: enableAudio,
       imageFormatGroup: ImageFormatGroup.jpeg,
     );
@@ -787,17 +808,17 @@ class CameraPageState extends State<CameraPage>
         ...<Future<Object?>>[
           cameraController!
               .getMinExposureOffset()
-              .then((double value) => _minAvailableExposureOffset = value),
+              .then((double value) => minAvailableExposureOffset = value),
           cameraController!
               .getMaxExposureOffset()
-              .then((double value) => _maxAvailableExposureOffset = value),
+              .then((double value) => maxAvailableExposureOffset = value),
         ],
         cameraController!
             .getMaxZoomLevel()
-            .then((double value) => _maxAvailableZoom = value),
+            .then((double value) => maxAvailableZoom = value),
         cameraController!
             .getMinZoomLevel()
-            .then((double value) => _minAvailableZoom = value),
+            .then((double value) => minAvailableZoom = value),
       ]);
     } on CameraException catch (e) {
       // ignore: unused_local_variable
@@ -825,67 +846,69 @@ class CameraPageState extends State<CameraPage>
   }
 
   void onTakePictureButtonPressed() {
-    takePicture().then((XFile? file) {
-      if (mounted) {
-        log('Picture saved to ${file?.path}');
-        setState(() {
-          imageFile = file;
-          videoController?.dispose();
-          videoController = null;
-        });
-
-        // if (file != null && file.path.isNotEmpty) {
-        //   WidgetsBinding.instance.addPostFrameCallback((_) async {
-        //     await Navigator.pushReplacement(
-        //       context,
-        //       MaterialPageRoute<void>(
-        //         builder: (context) => InteractionPage(
-        //           InteractionMode.imageChat,
-        //           mediaPath: file.path,
-        //         ),
-        //       ),
-        //     );
-        //   });
-        // }
+    takePicture().then((XFile? file) async {
+      log('Picture saved to ${file?.path}');
+      if (file != null) {
+        pageState.incrementPageCount(1);
+        final mimeType =
+            await MFile.obtainMimeType(file, contentInspection: false);
+        files.add(MFile(file, mimeType));
+        if (mounted) {
+          setState(() {});
+        }
       }
     });
   }
 
+  void onMoveOnButtonPressed(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Navigator.pushReplacement(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) => InteractionPage(
+            InteractionMode.imageChat,
+            mediaFiles: files,
+          ),
+        ),
+      );
+    });
+  }
+
   void onSettingsButtonPressed() {
-    if (_settingsControlRowAnimationController.value == 1) {
-      _settingsControlRowAnimationController.reverse();
+    if (settingsControlRowAnimationController.value == 1) {
+      settingsControlRowAnimationController.reverse();
     } else {
-      _settingsControlRowAnimationController.forward();
+      settingsControlRowAnimationController.forward();
     }
   }
 
   void onFlashModeButtonPressed() {
-    if (_flashModeControlRowAnimationController.value == 1) {
-      _flashModeControlRowAnimationController.reverse();
+    if (flashModeControlRowAnimationController.value == 1) {
+      flashModeControlRowAnimationController.reverse();
     } else {
-      _flashModeControlRowAnimationController.forward();
-      _exposureModeControlRowAnimationController.reverse();
-      _focusModeControlRowAnimationController.reverse();
+      flashModeControlRowAnimationController.forward();
+      exposureModeControlRowAnimationController.reverse();
+      focusModeControlRowAnimationController.reverse();
     }
   }
 
   void onExposureModeButtonPressed() {
-    if (_exposureModeControlRowAnimationController.value == 1) {
-      _exposureModeControlRowAnimationController.reverse();
+    if (exposureModeControlRowAnimationController.value == 1) {
+      exposureModeControlRowAnimationController.reverse();
     } else {
-      _exposureModeControlRowAnimationController.forward();
-      _flashModeControlRowAnimationController.reverse();
-      _focusModeControlRowAnimationController.reverse();
+      exposureModeControlRowAnimationController.forward();
+      flashModeControlRowAnimationController.reverse();
+      focusModeControlRowAnimationController.reverse();
     }
   }
 
   void onFocusModeButtonPressed() {
-    if (_focusModeControlRowAnimationController.value == 1) {
-      _focusModeControlRowAnimationController.reverse();
+    if (focusModeControlRowAnimationController.value == 1) {
+      focusModeControlRowAnimationController.reverse();
     } else {
-      _focusModeControlRowAnimationController.forward();
-      _flashModeControlRowAnimationController.reverse();
-      _exposureModeControlRowAnimationController.reverse();
+      focusModeControlRowAnimationController.forward();
+      flashModeControlRowAnimationController.reverse();
+      exposureModeControlRowAnimationController.reverse();
     }
   }
 
@@ -955,30 +978,15 @@ class CameraPageState extends State<CameraPage>
   }
 
   void onStopButtonPressed() {
-    stopVideoRecording().then((XFile? file) {
-      if (mounted) {
-        setState(() {
-          imageFile = null;
-        });
-      }
-
-      if (file != null && file.path.isNotEmpty) {
-        log('Video recorded to ${file.path}');
-        videoFile = file;
-
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          await Navigator.pushReplacement(
-            context,
-            MaterialPageRoute<void>(
-              builder: (context) => InteractionPage(
-                InteractionMode.imageChat,
-                mediaPath: file.path,
-              ),
-            ),
-          );
-        });
-
-        // _startVideoPlayer();
+    stopVideoRecording().then((XFile? file) async {
+      log('Video recorded to ${file?.path}');
+      if (file != null && file.path.trim().isNotEmpty) {
+        pageState.incrementPageCount(1);
+        final mimeType = await MFile.obtainMimeType(file);
+        files.add(MFile(file, mimeType));
+        if (mounted) {
+          setState(() {});
+        }
       }
     });
   }
@@ -1111,9 +1119,9 @@ class CameraPageState extends State<CameraPage>
 
     try {
       final appliedOffset = await cameraController!.setExposureOffset(offset);
-      if (appliedOffset != _currentExposureOffset) {
+      if (appliedOffset != currentExposureOffset) {
         setState(() {
-          _currentExposureOffset = appliedOffset;
+          currentExposureOffset = appliedOffset;
         });
       }
     } on CameraException catch (e) {
@@ -1135,39 +1143,6 @@ class CameraPageState extends State<CameraPage>
     }
   }
 
-  // ignore: unused_element
-  Future<void> _startVideoPlayer() async {
-    if (videoFile == null) {
-      return;
-    }
-
-    final vController = VideoPlayerController.file(File(videoFile!.path));
-
-    videoPlayerListener = () {
-      if (videoController != null) {
-        // Refreshing the state to update video player with the correct ratio.
-        if (mounted) {
-          setState(() {});
-        }
-
-        videoController!.removeListener(videoPlayerListener!);
-      }
-    };
-
-    vController.addListener(videoPlayerListener!);
-    await vController.setLooping(true);
-    await vController.initialize();
-    await videoController?.dispose();
-    if (mounted) {
-      setState(() {
-        imageFile = null;
-        videoController = vController;
-      });
-    }
-
-    await vController.play();
-  }
-
   Future<XFile?> takePicture() async {
     if (cameraController == null || !cameraController!.value.isInitialized) {
       showInSnackBar('Error: select a camera first.');
@@ -1183,7 +1158,7 @@ class CameraPageState extends State<CameraPage>
       final file = await cameraController?.takePicture();
       return file;
     } on CameraException catch (e) {
-      _logError(e.code, e.description);
+      logError(e.code, e.description);
       return null;
     }
   }
