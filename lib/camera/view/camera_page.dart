@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:math' as m;
 
 import 'package:camera/camera.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:inspector_gadget/camera/service/m_file.dart';
 import 'package:inspector_gadget/camera/service/page_state.dart';
@@ -204,9 +205,37 @@ class CameraPageState extends State<CameraPage>
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
+        extraActionsRowWidget(),
         captureControlRowWidget(),
         modeControlRowWidget(context),
         camToggleRowWidget(),
+      ],
+    );
+  }
+
+  Widget extraActionsRowWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: outlinedIcon(
+            context,
+            Icons.attach_file,
+            iconSize,
+            color: Colors.blue,
+          ),
+          color: Colors.transparent,
+          onPressed: onAttachFileButtonPressed,
+        ),
+        IconButton(
+          onPressed: () => onMoveOnButtonPressed(context),
+          icon: outlinedIcon(
+            context,
+            Icons.arrow_forward,
+            iconSize,
+            color: Colors.green,
+          ),
+        ),
       ],
     );
   }
@@ -719,18 +748,6 @@ class CameraPageState extends State<CameraPage>
     );
   }
 
-  Widget moveOnWidget(BuildContext context) {
-    return IconButton(
-      onPressed: () => onMoveOnButtonPressed(context),
-      icon: outlinedIcon(
-        context,
-        Icons.arrow_forward,
-        iconSize,
-        color: Colors.blue,
-      ),
-    );
-  }
-
   Widget camToggleRowWidget() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -739,7 +756,6 @@ class CameraPageState extends State<CameraPage>
         attachImageWidget(context),
         settingsShowHideWidget(context),
         cardStackWidget(),
-        moveOnWidget(context),
       ],
     );
   }
@@ -1160,6 +1176,56 @@ class CameraPageState extends State<CameraPage>
     } on CameraException catch (e) {
       logError(e.code, e.description);
       return null;
+    }
+  }
+
+  Future<void> onAttachFileButtonPressed() async {
+    final result = await FilePicker.platform.pickFiles(
+      allowedExtensions: [
+        // image formats
+        'jpg',
+        'jpeg',
+        'png',
+        // video formats
+        'mov',
+        'mpeg',
+        'mp4',
+        'mpg',
+        'avi',
+        'wmv',
+        'mpegps',
+        'flv',
+        // document formats
+        'txt',
+        'pdf',
+        'docx',
+        // audio formats
+        'wav',
+        'mp3',
+        'aiff',
+        'aac',
+        'ogg',
+        'flac',
+      ],
+      allowMultiple: true,
+    );
+    if (result != null && result.files.isNotEmpty) {
+      var added = false;
+      for (final file in result.files) {
+        if (file.path != null && file.path!.isNotEmpty) {
+          final mimeType = await MFile.obtainMimeType(file.xFile);
+          final mFile = MFile(file.xFile, mimeType);
+          if (!mFile.mimeTypeIsUnknown()) {
+            files.add(mFile);
+            pageState.incrementPageCount(1);
+            added = true;
+          }
+        }
+      }
+
+      if (added) {
+        setState(() {});
+      }
     }
   }
 }

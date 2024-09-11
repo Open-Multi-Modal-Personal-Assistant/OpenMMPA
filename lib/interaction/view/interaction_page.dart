@@ -231,7 +231,7 @@ class InteractionPageState extends State<InteractionPage>
                 outlinedIcon(context, Icons.mic, 200),
               ),
               onTap: () async {
-                await stopRecording(
+                await stopSpeechRecording(
                   context,
                   interactionState,
                   areSpeechServicesNative: areSpeechServicesNative,

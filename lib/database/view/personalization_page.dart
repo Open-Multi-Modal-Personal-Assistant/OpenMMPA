@@ -220,7 +220,7 @@ class PersonalizationPageState extends State<PersonalizationPage>
               const Icon(Icons.mic, size: 220),
             ),
             onTap: () async {
-              await stopRecording(
+              await stopSpeechRecording(
                 context,
                 personalizationViewState,
                 areSpeechServicesNative: areSpeechServicesNative,

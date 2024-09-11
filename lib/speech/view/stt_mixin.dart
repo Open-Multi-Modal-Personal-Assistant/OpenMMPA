@@ -61,10 +61,13 @@ mixin SttMixin {
     await recorder.start(config, path: path);
   }
 
-  Future<void> startRecording() async {
+  Future<void> startRecording({bool forSpeech = true}) async {
     try {
       if (await _audioRecorder?.hasPermission() ?? false) {
-        const encoder = AudioEncoder.wav;
+        // Chirp needs RIFF header, not raw PCM 16bit
+        final encoder = forSpeech
+            ? AudioEncoder.wav
+            : (Platform.isAndroid ? AudioEncoder.opus : AudioEncoder.aacLc);
 
         if (!await isEncoderSupported(encoder)) {
           return;
@@ -73,21 +76,24 @@ mixin SttMixin {
         final devs = await _audioRecorder?.listInputDevices() ?? [];
         debugPrint(devs.toString());
 
-        const config = RecordConfig(
+        // Going with 44kHz for audio - could be more supported than 22kHz
+        // https://github.com/llfbandit/record/issues/345
+        // https://learn.microsoft.com/en-us/windows/win32/medfound/aac-encoder
+        final config = RecordConfig(
           encoder: encoder,
           numChannels: 1,
-          sampleRate: 8000,
+          sampleRate: forSpeech ? 8000 : (Platform.isAndroid ? 22050 : 44100),
         );
 
         await recordFile(_audioRecorder!, config);
       }
     } catch (e) {
-      log('Error during start recording: $e');
+      log('Error during start recording (speech $forSpeech): $e');
     }
   }
   /* END Audio Recorder utilities */
 
-  Future<void> stopRecording(
+  Future<void> stopSpeechRecording(
     BuildContext context,
     StateBase state, {
     bool areSpeechServicesNative =
@@ -101,9 +107,9 @@ mixin SttMixin {
       if (path != null) {
         final recordingFile = File(path);
         final recordingBytes = await recordingFile.readAsBytes();
-        final gzippedPcm = gzip.encode(recordingBytes);
+        final gzippedWav = gzip.encode(recordingBytes);
         if (context.mounted) {
-          await sttPhase(context, state, gzippedPcm);
+          await sttPhase(context, state, gzippedWav);
         }
       } else {
         final ctx = context;
@@ -112,10 +118,19 @@ mixin SttMixin {
               .showSnackBar(const SnackBar(content: Text('Recording error')));
         }
 
-        log('Error during stop recording, path $path');
+        log('Error during stop speech recording, path $path');
         state.errorState();
       }
     }
+  }
+
+  Future<String> stopAudioRecording() async {
+    final path = await _audioRecorder?.stop();
+    if (path == null || path.isEmpty) {
+      log('Error during stop audio recording, path $path');
+    }
+
+    return path ?? '';
   }
 
   Future<void> sttPhase(
