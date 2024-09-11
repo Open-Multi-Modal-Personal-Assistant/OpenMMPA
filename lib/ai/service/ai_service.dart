@@ -1,24 +1,35 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:inspector_gadget/ai/prompts/closing_parts.dart';
+import 'package:inspector_gadget/ai/prompts/history_rag_stuffing.dart';
+import 'package:inspector_gadget/ai/prompts/personalization_rag_stuffing.dart';
+import 'package:inspector_gadget/ai/prompts/request_instruction.dart';
 import 'package:inspector_gadget/ai/prompts/resolver_few_shot.dart';
-import 'package:inspector_gadget/ai/prompts/stuffed_user_utterance.dart';
 import 'package:inspector_gadget/ai/prompts/system_instruction.dart';
 import 'package:inspector_gadget/ai/prompts/translate_instruction.dart';
+import 'package:inspector_gadget/ai/service/generated_content_response.dart';
 import 'package:inspector_gadget/ai/tools/tools_mixin.dart';
+import 'package:inspector_gadget/camera/service/m_file.dart';
+import 'package:inspector_gadget/common/constants.dart';
 import 'package:inspector_gadget/database/models/history.dart';
 import 'package:inspector_gadget/database/service/database.dart';
 import 'package:inspector_gadget/heart_rate/service/heart_rate.dart';
+import 'package:inspector_gadget/interaction/view/interaction_page.dart';
 import 'package:inspector_gadget/location/service/location.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:strings/strings.dart';
 import 'package:translator/translator.dart';
 
 class AiService with ToolsMixin {
-  ChatSession? chat;
+  AiService() {
+    watermark = DateTime.now();
+  }
+
+  late DateTime watermark;
+  ChatSession? chatSession;
 
   GenerativeModel getModel(
     String systemInstruction, {
@@ -27,7 +38,7 @@ class AiService with ToolsMixin {
     final preferences = GetIt.I.get<PreferencesService>();
     final modelType = preferences.fastLlmMode ? 'flash' : 'pro';
     return GenerativeModel(
-      model: 'gemini-1.5-$modelType',
+      model: 'gemini-1.5-$modelType-preview',
       apiKey: preferences.geminiApiKey,
       safetySettings: [
         SafetySetting(
@@ -52,33 +63,76 @@ class AiService with ToolsMixin {
     );
   }
 
-  Future<GenerateContentResponse?> chatStep(
-    String prompt,
-    String imagePath,
-  ) async {
-    debugPrint('prompt: $prompt');
-    final preferences = GetIt.I.get<PreferencesService>();
-    if (chat == null) {
-      final stuffedInstruction = systemInstruction.replaceAll(
-        '%%%',
-        getFunctionCallPromptStuffing(preferences),
-      );
-      debugPrint('stuffedInstruction: $stuffedInstruction');
-      final model = getModel(stuffedInstruction);
-      chat = model.startChat();
+  ChatSession? getChatSession(
+    String systemInstruction, {
+    bool withTools = true,
+  }) {
+    if (chatSession == null) {
+      debugPrint('systemInstruction: $systemInstructionTemplate');
+      final model = getModel(systemInstructionTemplate, withTools: withTools);
+      chatSession = model.startChat();
+      watermark = DateTime.now();
     }
 
+    return chatSession;
+  }
+
+  Future<int> persistModelResponse(
+    DatabaseService database,
+    InteractionMode mode,
+    String response,
+    String locale,
+  ) async {
+    if (response.isEmpty) {
+      return -1;
+    }
+
+    final modelEmbedding = await obtainEmbedding(response);
+    return database.addUpdateHistory(
+      History(
+        'model',
+        mode.toString(),
+        response,
+        locale,
+        '',
+        modelEmbedding,
+      ),
+    );
+  }
+
+  Future<String> persistedHistoryString(
+    DatabaseService database,
+    int limit,
+  ) async {
+    final historyList = await database.limitedHistory(100, watermark);
+    final buffer = StringBuffer();
+    for (final utterance in historyList) {
+      buffer.writeln('${utterance.role}: ${utterance.content}');
+    }
+
+    return buffer.toString();
+  }
+
+  Future<GenerateContentResponse?> chatStep(
+    String prompt,
+    List<MFile> mediaFiles,
+    InteractionMode interactionMode,
+  ) async {
+    debugPrint('prompt: $prompt');
+    final chat = getChatSession(systemInstructionTemplate);
     if (chat == null) {
       return null;
     }
 
+    final preferences = GetIt.I.get<PreferencesService>();
     final database = GetIt.I.get<DatabaseService>();
-    final history = await database.limitedHistoryString(100);
+    final history = await persistedHistoryString(database, 100);
     final resolved = await resolvePromptToStandAlone(prompt, history);
     final userEmbedding = await obtainEmbedding(resolved);
     database.addUpdateHistory(
       History(
         'user',
+        interactionMode.toString(),
         prompt,
         PreferencesService.inputLocaleDefault,
         resolved,
@@ -86,51 +140,86 @@ class AiService with ToolsMixin {
       ),
     );
     final stuffedPrompt = StringBuffer();
-    final nearestHistory = await database.getNearestHistory(userEmbedding);
+    final nearestHistory =
+        await database.getNearestHistory(userEmbedding, watermark);
     if (nearestHistory.isNotEmpty) {
-      log('ANN Peers ${nearestHistory.map((p) => p.score)}');
+      log('History ANN Peers ${nearestHistory.map((p) => p.score)}');
       final annThreshold = preferences.historyRagThreshold;
-      stuffedPrompt.writeln(conversationStuffing);
+      final historyStuffing = StringBuffer();
       for (final history
           in nearestHistory.where((h) => h.score < annThreshold)) {
-        stuffedPrompt
-            .writeln('- ${history.object.role}: ${history.object.content}');
+        historyStuffing.writeln('<history>${history.object.role}: '
+            '${history.object.content}</history>');
+      }
+
+      if (historyStuffing.isNotEmpty) {
+        // TODO(MrCsabaToth): extend the history (let's say 2 interaction
+        // before and after) around the picked ones
+        stuffedPrompt.writeln(
+          historyRagStuffingTemplate.replaceAll(
+            historyRagStuffingVariable,
+            historyStuffing.toString(),
+          ),
+        );
       }
     }
 
-    final nearestPersonalization =
+    final nearestP13ns =
         await database.getNearestPersonalization(userEmbedding);
-    if (nearestPersonalization.isNotEmpty) {
-      log('ANN Peers ${nearestPersonalization.map((p) => p.score)}');
+    if (nearestP13ns.isNotEmpty) {
+      log('P13n ANN Peers ${nearestP13ns.map((p) => p.score)}');
       final annThreshold = preferences.personalizationRagThreshold;
-      stuffedPrompt.writeln(personalizationStuffing);
+      final p13Stuffing = StringBuffer();
       for (final personalization
-          in nearestPersonalization.where((p) => p.score < annThreshold)) {
-        stuffedPrompt.writeln('- ${personalization.object.content}');
+          in nearestP13ns.where((p) => p.score < annThreshold)) {
+        p13Stuffing.writeln(
+          '<personalFact>${personalization.object.content}</personalFact>',
+        );
+      }
+
+      if (p13Stuffing.isNotEmpty) {
+        stuffedPrompt.writeln(
+          p13nStuffingTemplate.replaceAll(
+            p13nRagStuffingVariable,
+            p13Stuffing.toString(),
+          ),
+        );
       }
     }
 
-    if (stuffedPrompt.isNotEmpty) {
-      stuffedPrompt.write(questionStuffing);
-    }
-
-    stuffedPrompt.write(prompt);
+    stuffedPrompt
+      ..write(
+        requestInstructionTemplate.replaceAll(
+          requestInstructionVariable,
+          prompt,
+        ),
+      )
+      ..write(closingInstructions);
 
     final stuffed = stuffedPrompt.toString();
     debugPrint('stuffed: $stuffed');
+    // TODO(MrCsabaToth): +prompt for media transcription + store in history
     var message = Content.text('');
-    debugPrint('imagePath: $imagePath');
-    if (imagePath.isEmpty) {
+    if (mediaFiles.isEmpty) {
       message = Content.text(stuffed);
     } else {
-      message = Content.multi([
-        TextPart(stuffed),
-        // TODO(MrCsabaToth): other image formats (png, jpg, webp, heic, heif)
-        DataPart('image/jpeg', await File(imagePath).readAsBytes()),
-      ]);
+      final parts = <Part>[];
+      for (final mediumFile in mediaFiles) {
+        debugPrint('mediumFile: ${mediumFile.xFile.path}');
+        if (!mediumFile.mimeTypeIsUnknown()) {
+          parts.add(DataPart(mediumFile.mimeType, await mediumFile.content()));
+        }
+      }
+
+      if (parts.isNotEmpty) {
+        parts.add(TextPart(stuffed));
+        message = Content.multi(parts);
+      } else {
+        message = Content.text(stuffed);
+      }
     }
 
-    var response = await chat!.sendMessage(message);
+    var response = await chat.sendMessage(message);
 
     List<FunctionCall> functionCalls;
     var content = Content.text('');
@@ -161,21 +250,34 @@ class AiService with ToolsMixin {
       content = response.candidates.first.content;
       content.parts.addAll(responses);
       // TODO(MrCsabaToth): Store in history?
-      response = await chat!.sendMessage(content);
+      response = await chat.sendMessage(content);
     }
 
-    final modelEmbedding = await obtainEmbedding(response.text ?? '');
-    database.addUpdateHistory(
-      History(
-        'model',
-        response.text ?? '',
+    if (response.text != null && response.text!.isNotEmpty) {
+      await persistModelResponse(
+        database,
+        interactionMode,
+        response.strippedText(),
         PreferencesService.inputLocaleDefault,
-        '',
-        modelEmbedding,
-      ),
-    );
+      );
+    }
 
     return response;
+  }
+
+  List<double> dimensionalityReduction(List<double> vector) {
+    // Reduction by addition of values
+    final foldedVector =
+        vector.take(embeddingDimensionality).toList(growable: false);
+    if (vector.length > embeddingDimensionality) {
+      for (var i = 0, j = embeddingDimensionality;
+          j < vector.length;
+          i++, j++) {
+        foldedVector[i % embeddingDimensionality] += vector[j];
+      }
+    }
+
+    return foldedVector;
   }
 
   Future<List<double>> obtainEmbedding(String prompt) async {
@@ -187,10 +289,10 @@ class AiService with ToolsMixin {
     final content = Content.text(prompt);
     final embeddingResult = await model.embedContent(content);
 
-    return embeddingResult.embedding.values;
+    return dimensionalityReduction(embeddingResult.embedding.values);
   }
 
-  String historyToString(Iterable<Content> history) {
+  String nativeHistoryToString(Iterable<Content> history) {
     final buffer = StringBuffer();
     for (final utterance in history) {
       buffer.writeln('${utterance.role}: $utterance');
@@ -203,16 +305,13 @@ class AiService with ToolsMixin {
     String prompt,
     String history,
   ) async {
-    final preferences = GetIt.I.get<PreferencesService>();
-    final modelType = preferences.fastLlmMode ? 'flash' : 'pro';
-    final model = GenerativeModel(
-      model: 'gemini-1.5-$modelType',
-      apiKey: preferences.geminiApiKey,
-    );
-
-    final nearHistory = historyToString(chat?.history ?? []);
+    final model = getModel(resolverSystemInstruction, withTools: false);
+    final nearHistory = nativeHistoryToString(chatSession?.history ?? []);
     final fullHistory = history + nearHistory;
-    final stuffedPrompt = resolverFewShotPrompt.replaceAll('%%%', fullHistory);
+    final stuffedPrompt = resolverFewShotTemplate.replaceAll(
+      resolverFewShotVariable,
+      fullHistory,
+    );
     final content = Content.text(stuffedPrompt);
     final response = await model.generateContent([content]);
 
@@ -221,13 +320,33 @@ class AiService with ToolsMixin {
 
   Future<GenerateContentResponse?> translate(
     String transcript,
+    String sourceLocale,
     String targetLocale,
   ) async {
+    final database = GetIt.I.get<DatabaseService>();
+    final userEmbedding = await obtainEmbedding(transcript);
+    database.addUpdateHistory(
+      History(
+        'user',
+        InteractionMode.translate.toString(),
+        transcript,
+        sourceLocale,
+        '',
+        userEmbedding,
+      ),
+    );
+
     final preferences = GetIt.I.get<PreferencesService>();
     if (preferences.classicGoogleTranslate) {
       final translator = GoogleTranslator();
       final translation =
           await translator.translate(transcript, to: targetLocale.left(2));
+      await persistModelResponse(
+        database,
+        InteractionMode.translate,
+        translation.text,
+        targetLocale,
+      );
       return GenerateContentResponse(
         [
           Candidate(
@@ -259,10 +378,26 @@ class AiService with ToolsMixin {
       );
     }
 
-    final model = getModel(translateSystemInstruction, withTools: false);
-    final stuffedPrompt = translateInstruction.replaceAll('%%%', targetLocale);
-    final content = Content.text(stuffedPrompt + transcript);
-    final response = await model.generateContent([content]);
+    final chat = getChatSession(systemInstructionTemplate, withTools: false);
+    if (chat == null) {
+      return null;
+    }
+
+    final stuffedPrompt = translateInstruction
+        .replaceAll(translationSubjectVariable, transcript)
+        .replaceAll(translationTargetLocaleVariable, targetLocale);
+    final content = Content.text(stuffedPrompt);
+    final response = await chat.sendMessage(content);
+
+    if (response.text != null && response.text!.isNotEmpty) {
+      await persistModelResponse(
+        database,
+        InteractionMode.translate,
+        response.strippedText(),
+        targetLocale,
+      );
+    }
+
     return response;
   }
 }

@@ -1,41 +1,31 @@
-import 'package:inspector_gadget/state_mixin.dart';
+import 'package:inspector_gadget/common/base_state.dart';
 
-class InteractionState extends StateMixin {
-  InteractionState() : super(waitingStateLabel) {
-    final waitingState = newStartState(waitingStateLabel);
+class InteractionState extends StateBase {
+  InteractionState() : super(StateBase.waitingStateLabel) {
+    final waitingState = newStartState(StateBase.waitingStateLabel);
 
     stateMap = {
-      waitingStateLabel: waitingState,
-      recordingStateLabel: newState(recordingStateLabel),
-      sttStateLabel: newState(sttStateLabel),
-      llmStateLabel: newState(llmStateLabel),
-      ttsStateLabel: newState(ttsStateLabel),
-      playingStateLabel: newState(playingStateLabel),
-      doneStateLabel: newState(doneStateLabel),
-      errorStateLabel: newState(errorStateLabel),
+      StateBase.waitingStateLabel: waitingState,
+      StateBase.recordingStateLabel: newState(StateBase.recordingStateLabel),
+      StateBase.sttStateLabel: newState(StateBase.sttStateLabel),
+      StateBase.llmStateLabel: newState(StateBase.llmStateLabel),
+      StateBase.ttsStateLabel: newState(StateBase.ttsStateLabel),
+      StateBase.playingStateLabel: newState(StateBase.playingStateLabel),
+      StateBase.doneStateLabel: newState(StateBase.doneStateLabel),
+      StateBase.errorStateLabel: newState(StateBase.errorStateLabel),
     };
 
     stateIndexMap = {
-      waitingStateLabel: 0,
-      recordingStateLabel: 1,
-      sttStateLabel: 2,
-      llmStateLabel: 3,
-      ttsStateLabel: 4,
-      playingStateLabel: 5,
-      doneStateLabel: 6,
-      errorStateLabel: 7,
+      StateBase.waitingStateLabel: 0,
+      StateBase.recordingStateLabel: 1,
+      StateBase.sttStateLabel: 2,
+      StateBase.llmStateLabel: 3,
+      StateBase.ttsStateLabel: 4,
+      StateBase.playingStateLabel: 5,
+      StateBase.doneStateLabel: 6,
+      StateBase.errorStateLabel: 7,
     };
 
     waitingState.enter();
   }
-
-  static const String dummyStateLabel = 'dummy';
-  static const String waitingStateLabel = 'waiting';
-  static const String recordingStateLabel = 'recording';
-  static const String sttStateLabel = 'stt';
-  static const String llmStateLabel = 'llm';
-  static const String ttsStateLabel = 'tts';
-  static const String playingStateLabel = 'playing';
-  static const String doneStateLabel = 'done';
-  static const String errorStateLabel = 'error';
 }

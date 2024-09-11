@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:tuple/tuple.dart';
 
 Future<void> legendDialog(
@@ -8,7 +9,7 @@ Future<void> legendDialog(
   await showDialog<int>(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text('Legend'),
+      title: Text(context.l10n.legendDialogTitle),
       content: SizedBox(
         width: double.maxFinite,
         child: ListView(

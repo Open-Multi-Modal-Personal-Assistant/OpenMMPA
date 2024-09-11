@@ -1,6 +1,6 @@
-import 'package:inspector_gadget/state_mixin.dart';
+import 'package:inspector_gadget/common/base_state.dart';
 
-class CaptureState extends StateMixin {
+class CaptureState extends StateBase {
   CaptureState() : super(previewStateLabel) {
     final previewState = newStartState(previewStateLabel);
 

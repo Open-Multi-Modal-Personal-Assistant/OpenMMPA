@@ -2,8 +2,8 @@ import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:get_it/get_it.dart';
+import 'package:inspector_gadget/common/locale_ex.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
-import 'package:inspector_gadget/locale_ex.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:pref/pref.dart';
 
@@ -37,6 +37,27 @@ class SystemPreferencesPage extends StatelessWidget {
         title: Text(l10n.themeSelectionDarkLabel),
         value: PreferencesService.themeSelectionDark,
         pref: PreferencesService.themeSelectionTag,
+      ),
+      PrefLabel(title: Text(l10n.cameraResolutionLabel)),
+      PrefRadio<String>(
+        title: Text(l10n.cameraResolutionLowLabel),
+        value: PreferencesService.cameraResolutionLow,
+        pref: PreferencesService.cameraResolutionTag,
+      ),
+      PrefRadio<String>(
+        title: Text(l10n.cameraResolutionMediumLabel),
+        value: PreferencesService.cameraResolutionMedium,
+        pref: PreferencesService.cameraResolutionTag,
+      ),
+      PrefRadio<String>(
+        title: Text(l10n.cameraResolutionHighLabel),
+        value: PreferencesService.cameraResolutionHigh,
+        pref: PreferencesService.cameraResolutionTag,
+      ),
+      PrefRadio<String>(
+        title: Text(l10n.cameraResolutionVeryHighLabel),
+        value: PreferencesService.cameraResolutionVeryHigh,
+        pref: PreferencesService.cameraResolutionTag,
       ),
       const PrefLabel(title: Divider(height: 1)),
       PrefLabel(title: Text(l10n.localeSelectionLabel)),

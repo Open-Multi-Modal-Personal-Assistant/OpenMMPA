@@ -68,6 +68,10 @@
     "@interactionAppBarTitle": {
         "description": "Text shown in the AppBar of the Interaction Page"
     },
+    "legendDialogTitle": "Legend",
+    "@legendDialogTitle": {
+        "description": "Text shown on the legend dialog title"
+    },
     "uniModalButtonDescription": "Voice chat",
     "@uniModalButtonDescription": {
         "description": "Text shown on the legend dialog for Uni Modal Button"
@@ -207,5 +211,29 @@
     "classicGoogleTranslateLabel": "Classic Google Translation",
     "@classicGoogleTranslateLabel": {
         "description": "Text shown in the Preferences for the Classic Google Translation"
+    },
+    "cameraSelectionInstruction": "Tap a camera",
+    "@cameraSelectionInstruction": {
+        "description": "Text shown in the camera capture page when no camera is selected"
+    },
+    "cameraResolutionLabel": "Camera Resolution",
+    "@cameraResolutionLabel": {
+        "description": "Text shown in the preferences settings for Camera Resolution selector"
+    },
+    "cameraResolutionLowLabel": "Low (240p)",
+    "@cameraResolutionLowLabel": {
+        "description": "Text shown in the preferences settings for Low Camera Resolution selection"
+    },
+    "cameraResolutionMediumLabel": "Medium (480p)",
+    "@cameraResolutionMediumLabel": {
+        "description": "Text shown in the preferences settings Medium Camera Resolution selection"
+    },
+    "cameraResolutionHighLabel": "High (720p)",
+    "@cameraResolutionHighLabel": {
+        "description": "Text shown in the preferences settings High Camera Resolution selection"
+    },
+    "cameraResolutionVeryHighLabel": "Very High (1080p)",
+    "@cameraResolutionVeryHighLabel": {
+        "description": "Text shown in the preferences settings Very High Camera Resolution selection"
     }
 }

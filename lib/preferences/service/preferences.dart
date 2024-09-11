@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:pref/pref.dart';
@@ -67,21 +68,19 @@ class PreferencesService with ChangeNotifier {
   static const String harmCategoryDangerousContentTag =
       'HARM_CATEGORY_DANGEROUS_CONTENT';
   static const String harmCategoryHarassmentDefault = harmBlockThresholdNone;
-  static const HarmBlockThreshold harmCategoryHarassmentNativeDefault =
-      HarmBlockThreshold.none;
   static const String harmCategoryHateSpeechDefault = harmBlockThresholdNone;
-  static const HarmBlockThreshold harmCategoryHateSpeechNativeDefault =
-      HarmBlockThreshold.none;
   static const String harmCategorySexuallyExplicitDefault =
       harmBlockThresholdHigh;
-  static const HarmBlockThreshold harmCategorySexuallyExplicitNativeDefault =
-      HarmBlockThreshold.high;
   static const String harmCategoryDangerousContentDefault =
       harmBlockThresholdNone;
-  static const HarmBlockThreshold harmCategoryDangerousContentNativeDefault =
-      HarmBlockThreshold.none;
   static const String classicGoogleTranslateTag = 'classic_google_translate';
   static const bool classicGoogleTranslateDefault = false;
+  static const String cameraResolutionTag = 'camera_resolution';
+  static const String cameraResolutionDefault = cameraResolutionMedium;
+  static const String cameraResolutionLow = 'low';
+  static const String cameraResolutionMedium = 'medium';
+  static const String cameraResolutionHigh = 'high';
+  static const String cameraResolutionVeryHigh = 'veryHigh';
 
   final String prefix = 'ommpa'; // Inspector Gadget
 
@@ -111,6 +110,7 @@ class PreferencesService with ChangeNotifier {
         harmCategorySexuallyExplicitTag: harmCategoryHarassmentDefault,
         harmCategoryDangerousContentTag: harmCategorySexuallyExplicitDefault,
         classicGoogleTranslateTag: classicGoogleTranslateDefault,
+        cameraResolutionTag: cameraResolutionDefault,
       },
     );
 
@@ -170,31 +170,20 @@ class PreferencesService with ChangeNotifier {
       classicGoogleTranslateDefault;
   String get theme =>
       prefService?.get<String>(themeSelectionTag) ?? themeSelectionDefault;
-  ThemeMode get themeMode {
-    switch (theme) {
-      case themeSelectionLight:
-        return ThemeMode.light;
-      case themeSelectionDark:
-        return ThemeMode.dark;
-      default:
-        return ThemeMode.system;
-    }
-  }
+  ThemeMode get themeMode => switch (theme) {
+        themeSelectionLight => ThemeMode.light,
+        themeSelectionDark => ThemeMode.dark,
+        _ => ThemeMode.system,
+      };
 
-  HarmBlockThreshold getHarmBlockThreshold(String harmBlockThreshold) {
-    switch (harmBlockThreshold) {
-      case harmBlockThresholdLow:
-        return HarmBlockThreshold.low;
-      case harmBlockThresholdMedium:
-        return HarmBlockThreshold.medium;
-      case harmBlockThresholdHigh:
-        return HarmBlockThreshold.high;
-      case harmBlockThresholdNone:
-        return HarmBlockThreshold.none;
-      default:
-        return HarmBlockThreshold.unspecified;
-    }
-  }
+  HarmBlockThreshold getHarmBlockThreshold(String harmBlockThreshold) =>
+      switch (harmBlockThreshold) {
+        harmBlockThresholdLow => HarmBlockThreshold.low,
+        harmBlockThresholdMedium => HarmBlockThreshold.medium,
+        harmBlockThresholdHigh => HarmBlockThreshold.high,
+        harmBlockThresholdNone => HarmBlockThreshold.none,
+        _ => HarmBlockThreshold.unspecified,
+      };
 
   double get personalizationRagThreshold =>
       (prefService?.get<int>(personalizationRagThresholdTag) ??
@@ -215,6 +204,15 @@ class PreferencesService with ChangeNotifier {
       prefService?.set<String>(outputLocaleTag, locale);
     }
   }
+
+  String get cameraResolution =>
+      prefService?.get<String>(cameraResolutionTag) ?? cameraResolutionDefault;
+  ResolutionPreset get cameraResolutionPreset => switch (cameraResolution) {
+        cameraResolutionVeryHigh => ResolutionPreset.veryHigh,
+        cameraResolutionHigh => ResolutionPreset.high,
+        cameraResolutionMedium => ResolutionPreset.medium,
+        _ => ResolutionPreset.low // also low
+      };
 
   void emit() {
     notifyListeners();

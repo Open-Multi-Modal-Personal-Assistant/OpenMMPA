@@ -68,6 +68,10 @@
     "@interactionAppBarTitle": {
         "description": "Texto que se muestra en la AppBar de la página de expresión"
     },
+    "legendDialogTitle": "Leyenda",
+    "@legendDialogTitle": {
+        "description": "Texto que se muestra en el título del cuadro de diálogo de leyenda"
+    },
     "uniModalButtonDescription": "Chat de voz",
     "@uniModalButtonDescription": {
         "description": "Texto que se muestra en el cuadro de diálogo de leyenda del botón Unimodal"
@@ -207,5 +211,29 @@
     "classicGoogleTranslateLabel": "Traducción clásica de Google",
     "@classicGoogleTranslateLabel": {
         "description": "Texto que se muestra en las Preferencias de la Traducción Clásica de Google"
+    },
+    "cameraSelectionInstruction": "Toca una cámara",
+    "@cameraSelectionInstruction": {
+        "description": "Texto que se muestra en la página de captura de la cámara cuando no se selecciona ninguna cámara"
+    },
+    "cameraResolutionLabel": "Resolución de la cámara",
+    "@cameraResolutionLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias del selector de resolución de la cámara"
+    },
+    "cameraResolutionLowLabel": "Bajo (240p)",
+    "@cameraResolutionLowLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias para la selección de Resolución de cámara baja"
+    },
+    "cameraResolutionMediumLabel": "Mediano (480p)",
+    "@cameraResolutionMediumLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias Selección de resolución de cámara media"
+    },
+    "cameraResolutionHighLabel": "Alta (720p)",
+    "@cameraResolutionHighLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias Selección de alta resolución de cámara"
+    },
+    "cameraResolutionVeryHighLabel": "Muy alta (1080p)",
+    "@cameraResolutionVeryHighLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias Selección de resolución de cámara muy alta"
     }
 }

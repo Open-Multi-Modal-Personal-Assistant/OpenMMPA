@@ -65,20 +65,6 @@ mixin ToolsMixin {
     );
   }
 
-  String getFunctionCallPromptStuffing(PreferencesService preferences) {
-    final funcTools = initializeFunctionTools(preferences);
-    final buffer = StringBuffer();
-    for (final funcTool in funcTools) {
-      if (funcTool.isAvailable(preferences)) {
-        for (final function in funcTool.getFunctionDeclarations(preferences)) {
-          buffer.writeln('- ${function.name}: ${function.description}');
-        }
-      }
-    }
-
-    return buffer.toString();
-  }
-
   Future<FunctionResponse?> dispatchFunctionCall(
     FunctionCall call,
     Location? location,
