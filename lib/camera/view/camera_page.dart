@@ -724,18 +724,6 @@ class CameraPageState extends State<CameraPage>
     return toggles;
   }
 
-  Widget attachImageWidget(BuildContext context) {
-    return IconButton(
-      onPressed: () async => onAttachImageSelected(),
-      icon: outlinedIcon(
-        context,
-        Icons.folder_open,
-        iconSize,
-        color: Colors.blue,
-      ),
-    );
-  }
-
   Widget settingsShowHideWidget(BuildContext context) {
     return IconButton(
       onPressed: cameraController != null ? onSettingsButtonPressed : null,
@@ -753,7 +741,6 @@ class CameraPageState extends State<CameraPage>
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ...cameraTogglesRowWidget(context),
-        attachImageWidget(context),
         settingsShowHideWidget(context),
         cardStackWidget(context),
       ],
@@ -789,8 +776,6 @@ class CameraPageState extends State<CameraPage>
       return initializeCameraController(cameraDescription);
     }
   }
-
-  Future<void> onAttachImageSelected() async {}
 
   Future<void> initializeCameraController(
     CameraDescription cameraDescription,
