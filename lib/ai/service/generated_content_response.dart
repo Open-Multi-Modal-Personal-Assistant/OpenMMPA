@@ -6,17 +6,16 @@ extension GeneratedContentResponse on GenerateContentResponse {
       return '';
     }
 
-    if (text!.contains('<response>')) {
-      final responseBeginIndex = text!.indexOf('<response>');
-      if (text!.contains('</response>', responseBeginIndex)) {
-        final responseEndIndex = text!.indexOf('</response>');
-        return text!
-            .substring(
-              responseBeginIndex + '<response>'.length,
-              responseEndIndex,
-            )
-            .trim();
+    if (text!.contains('</response>')) {
+      var responseBeginIndex = text!.indexOf('<response>');
+      if (responseBeginIndex > 0) {
+        responseBeginIndex += '<response>'.length;
+      } else {
+        responseBeginIndex = 0;
       }
+
+      final responseEndIndex = text!.indexOf('</response>');
+      return text!.substring(responseBeginIndex, responseEndIndex).trim();
     }
 
     return text!;
