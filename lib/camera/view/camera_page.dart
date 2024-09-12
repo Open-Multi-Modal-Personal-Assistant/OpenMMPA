@@ -1166,6 +1166,7 @@ class CameraPageState extends State<CameraPage>
 
   Future<void> onAttachFileButtonPressed() async {
     final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
       allowedExtensions: [
         // image formats
         'jpg',
