@@ -10,5 +10,6 @@ Future<OkCancelResult> okCancelAlertDialog(BuildContext context) async {
     okLabel: l10n.okLabel,
     cancelLabel: l10n.cancelLabel,
     defaultType: OkCancelAlertDefaultType.cancel,
+    isDestructiveAction: true,
   );
 }
