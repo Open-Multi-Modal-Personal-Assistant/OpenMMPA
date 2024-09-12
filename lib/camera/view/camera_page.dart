@@ -205,15 +205,15 @@ class CameraPageState extends State<CameraPage>
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        extraActionsRowWidget(),
-        captureControlRowWidget(),
+        extraActionsRowWidget(context),
+        captureControlRowWidget(context),
         modeControlRowWidget(context),
-        camToggleRowWidget(),
+        camToggleRowWidget(context),
       ],
     );
   }
 
-  Widget extraActionsRowWidget() {
+  Widget extraActionsRowWidget(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -312,7 +312,7 @@ class CameraPageState extends State<CameraPage>
     );
   }
 
-  Widget cardStackWidget() {
+  Widget cardStackWidget(BuildContext context) {
     final pageCount = watchPropertyValue((PageState p) => p.pageCount);
     return IconButton(
       icon: outlinedIcon(
@@ -402,7 +402,7 @@ class CameraPageState extends State<CameraPage>
                 ),
               ],
             ),
-            flashModeControlRowWidget(),
+            flashModeControlRowWidget(context),
             exposureModeControlRowWidget(),
             focusModeControlRowWidget(),
           ],
@@ -411,7 +411,7 @@ class CameraPageState extends State<CameraPage>
     );
   }
 
-  Widget flashModeControlRowWidget() {
+  Widget flashModeControlRowWidget(BuildContext context) {
     return SizeTransition(
       sizeFactor: flashModeControlRowAnimation,
       child: ClipRect(
@@ -619,7 +619,7 @@ class CameraPageState extends State<CameraPage>
   }
 
   /// Display the control bar with buttons to take pictures and record videos.
-  Widget captureControlRowWidget() {
+  Widget captureControlRowWidget(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -748,14 +748,14 @@ class CameraPageState extends State<CameraPage>
     );
   }
 
-  Widget camToggleRowWidget() {
+  Widget camToggleRowWidget(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ...cameraTogglesRowWidget(context),
         attachImageWidget(context),
         settingsShowHideWidget(context),
-        cardStackWidget(),
+        cardStackWidget(context),
       ],
     );
   }
