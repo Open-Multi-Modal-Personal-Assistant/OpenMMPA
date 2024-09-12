@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
@@ -104,11 +105,11 @@ class InteractionPageState extends State<InteractionPage>
         targetLocale = inputLocale;
       }
 
-      debugPrint('targetLocale: $targetLocale');
+      log('targetLocale: $targetLocale');
       response = await aiService.translate(prompt, locale, targetLocale);
     } else {
       targetLocale = inputLocale;
-      debugPrint('targetLocale: $targetLocale');
+      log('targetLocale: $targetLocale');
 
       unawaited(GetIt.I.get<LocationService>().obtain());
 
@@ -119,7 +120,7 @@ class InteractionPageState extends State<InteractionPage>
       );
     }
 
-    debugPrint('Final: ${response?.text}');
+    log('Final: ${response?.text}');
     if (response == null) {
       interactionState.errorState();
       return;

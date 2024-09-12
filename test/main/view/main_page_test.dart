@@ -40,7 +40,7 @@ void main() {
     });
 
     testWidgets(
-        'navigates to interaction when the multi modal button is tapped',
+        'navigates to camera page when the multi modal button is tapped',
         (tester) async {
       await tester.pumpApp(const MainPage());
       await tester.tap(find.byKey(const Key(MainPage.multiModalKey)));

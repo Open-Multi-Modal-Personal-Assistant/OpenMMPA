@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:inspector_gadget/ai/service/ai_service.dart';
+import 'package:inspector_gadget/camera/service/page_state.dart';
 import 'package:inspector_gadget/camera/view/capture_state.dart';
 import 'package:inspector_gadget/common/base_state.dart';
 import 'package:inspector_gadget/database/service/database.dart';
@@ -41,6 +42,8 @@ class MockLocationService extends Mock implements LocationService {}
 class MockCaptureState extends Mock implements CaptureState {}
 
 class MockPersonalizationState extends Mock implements PersonalizationState {}
+
+class MockPageState extends Mock implements PageState {}
 
 MockPreferencesService setUpServices() {
   var mockPreferences = MockPreferencesService();
@@ -206,6 +209,13 @@ MockPreferencesService setUpServices() {
     ).thenReturn(StateBase.browsingStateLabel);
     when(() => personalizationState.stateIndex).thenReturn(0);
     GetIt.I.registerSingleton<PersonalizationState>(personalizationState);
+  }
+
+  if (!GetIt.I.isRegistered<PageState>()) {
+    final pageState = MockPageState();
+    when(() => pageState.setPageCount(0)).thenReturn(true);
+    when(() => pageState.pageCount).thenReturn(0);
+    GetIt.I.registerSingleton<PageState>(pageState);
   }
 
   return mockPreferences;
