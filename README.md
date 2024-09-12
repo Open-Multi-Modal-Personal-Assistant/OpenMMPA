@@ -56,7 +56,7 @@ Notes:
 1. A demo video of the app: https://www.youtube.com/watch?v=kCtHH6XG5as
 2. This project was submitted to the [Gemini API Developer Competition](https://ai.google.dev/competition).
 3. Please find the related cloud functions - which comprise the backend - in the
-[Open Multi-Modal Personal Assistant](https://github.com/orgs/Open-Multi-Modal-Personal-Assistant/) organization.
+[Open Multi-Modal Personal Assistant](https://github.com/Open-Multi-Modal-Personal-Assistant) organization.
 Once the judging is over this repository will eventually be renamed and transferred there as well.
 4. The repository state at the time of the submission was the last commit on August 12th before I recorded the demo:
 https://github.com/CsabaConsulting/InspectorGadgetApp/tree/b7de11fa3d9122fd96b85e7c708802b371bb15c9
