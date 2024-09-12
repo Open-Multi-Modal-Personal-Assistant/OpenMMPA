@@ -36,10 +36,11 @@ class AiService with ToolsMixin {
     bool withTools = true,
   }) {
     final preferences = GetIt.I.get<PreferencesService>();
-    final modelType = preferences.fastLlmMode ? 'flash' : 'pro';
+    final modelType = preferences.fastLlmMode ? 'flash-preview' : 'pro';
     return GenerativeModel(
-      model: 'gemini-1.5-$modelType-preview',
+      model: 'gemini-1.5-$modelType',
       apiKey: preferences.geminiApiKey,
+      // requestOptions: const RequestOptions(apiVersion: 'v2beta'),
       safetySettings: [
         SafetySetting(
           HarmCategory.harassment,
