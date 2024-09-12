@@ -47,16 +47,31 @@ mixin SttMixin {
     return isSupported;
   }
 
-  Future<String> getPath() async {
+  static String getFileExtension(RecordConfig config) {
+    return switch (config.encoder) {
+      AudioEncoder.aacLc => 'aac',
+      AudioEncoder.aacEld => 'aac',
+      AudioEncoder.aacHe => 'aac',
+      AudioEncoder.amrNb => 'amr',
+      AudioEncoder.amrWb => 'amr',
+      AudioEncoder.opus => 'ogg',
+      AudioEncoder.flac => 'flac',
+      AudioEncoder.wav => 'wav',
+      AudioEncoder.pcm16bits => 'pcm',
+    };
+  }
+
+  Future<String> getPath(RecordConfig config) async {
     final dir = await getApplicationDocumentsDirectory();
+    final extension = getFileExtension(config);
     return p.join(
       dir.path,
-      'audio_${DateTime.now().millisecondsSinceEpoch}.wav',
+      'audio_${DateTime.now().millisecondsSinceEpoch}.$extension',
     );
   }
 
   Future<void> recordFile(AudioRecorder recorder, RecordConfig config) async {
-    final path = await getPath();
+    final path = await getPath(config);
 
     await recorder.start(config, path: path);
   }
