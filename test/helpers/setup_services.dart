@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:inspector_gadget/ai/service/ai_service.dart';
 import 'package:inspector_gadget/camera/view/capture_state.dart';
+import 'package:inspector_gadget/common/base_state.dart';
 import 'package:inspector_gadget/database/service/database.dart';
 import 'package:inspector_gadget/database/service/personalization_state.dart';
 import 'package:inspector_gadget/heart_rate/service/heart_rate.dart';
@@ -64,19 +65,19 @@ MockPreferencesService setUpServices() {
 
   if (!GetIt.I.isRegistered<InteractionState>()) {
     final sm.State<String> initialState = MockState();
-    when(() => initialState.name)
-        .thenReturn(InteractionState.waitingStateLabel);
+    when(() => initialState.name).thenReturn(StateBase.waitingStateLabel);
     final InteractionState interactionState = MockInteractionState();
     when(() => interactionState.current).thenReturn(initialState);
-    when(() => interactionState.setState(InteractionState.waitingStateLabel))
-        .thenReturn(InteractionState.waitingStateLabel);
-    when(() => interactionState.setState(InteractionState.recordingStateLabel))
-        .thenReturn(InteractionState.recordingStateLabel);
-    when(() => interactionState.setState(InteractionState.llmStateLabel))
-        .thenReturn(InteractionState.llmStateLabel);
-    when(() => interactionState.setState(InteractionState.errorStateLabel))
-        .thenReturn(InteractionState.errorStateLabel);
+    when(() => interactionState.setState(StateBase.waitingStateLabel))
+        .thenReturn(StateBase.waitingStateLabel);
+    when(() => interactionState.setState(StateBase.recordingStateLabel))
+        .thenReturn(StateBase.recordingStateLabel);
+    when(() => interactionState.setState(StateBase.llmStateLabel))
+        .thenReturn(StateBase.llmStateLabel);
+    when(() => interactionState.setState(StateBase.errorStateLabel))
+        .thenReturn(StateBase.errorStateLabel);
     when(() => interactionState.stateIndex).thenReturn(0);
+    when(interactionState.errorState).thenReturn(StateBase.errorStateLabel);
     GetIt.I.registerSingleton<InteractionState>(interactionState);
   }
 
@@ -131,13 +132,19 @@ MockPreferencesService setUpServices() {
       ],
       null,
     );
-    when(() => aiService.chatStep(InteractionPage.llmTestPrompt, ''))
-        .thenAnswer((_) async {
+    when(
+      () => aiService.chatStep(
+        InteractionPage.llmTestPrompt,
+        [],
+        InteractionMode.textChat,
+      ),
+    ).thenAnswer((_) async {
       return mockResponse;
     });
     when(
       () => aiService.translate(
         InteractionPage.llmTestPrompt,
+        PreferencesService.inputLocaleDefault,
         PreferencesService.outputLocaleDefault,
       ),
     ).thenAnswer((_) async {
@@ -190,15 +197,13 @@ MockPreferencesService setUpServices() {
 
   if (!GetIt.I.isRegistered<PersonalizationState>()) {
     final sm.State<String> initialState = MockState();
-    when(() => initialState.name)
-        .thenReturn(PersonalizationState.browsingStateLabel);
+    when(() => initialState.name).thenReturn(StateBase.browsingStateLabel);
     final PersonalizationState personalizationState =
         MockPersonalizationState();
     when(() => personalizationState.current).thenReturn(initialState);
     when(
-      () => personalizationState
-          .setState(PersonalizationState.browsingStateLabel),
-    ).thenReturn(PersonalizationState.browsingStateLabel);
+      () => personalizationState.setState(StateBase.browsingStateLabel),
+    ).thenReturn(StateBase.browsingStateLabel);
     when(() => personalizationState.stateIndex).thenReturn(0);
     GetIt.I.registerSingleton<PersonalizationState>(personalizationState);
   }

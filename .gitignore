@@ -111,5 +111,9 @@ app.*.map.json
 !.idea/dictionaries/
 !.idea/runConfigurations/
 
+# Project secrets
 secrets.dart
 untranslated_messages.txt
+firebase.json
+lib/firebase_options.dart
+android/app/google-services.json

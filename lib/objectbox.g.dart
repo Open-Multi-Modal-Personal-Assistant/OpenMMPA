@@ -48,7 +48,7 @@ final _entities = <obx_int.ModelEntity>[
             flags: 8,
             indexId: const obx_int.IdUid(1, 1226222394629305260),
             hnswParams: obx_int.ModelHnswParams(
-              dimensions: 768,
+              dimensions: 256,
             )),
         obx_int.ModelProperty(
             id: const obx_int.IdUid(6, 7649402395927810343),
@@ -61,7 +61,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(3, 3521938029246052796),
       name: 'History',
-      lastPropertyId: const obx_int.IdUid(7, 5287262397676395151),
+      lastPropertyId: const obx_int.IdUid(8, 6927842716111529683),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -96,12 +96,17 @@ final _entities = <obx_int.ModelEntity>[
             flags: 8,
             indexId: const obx_int.IdUid(2, 132003794771134220),
             hnswParams: obx_int.ModelHnswParams(
-              dimensions: 768,
+              dimensions: 256,
             )),
         obx_int.ModelProperty(
             id: const obx_int.IdUid(7, 5287262397676395151),
             name: 'dateTime',
             type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(8, 6927842716111529683),
+            name: 'mode',
+            type: 9,
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
@@ -217,7 +222,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final embeddingOffset = object.embedding == null
               ? null
               : fbb.writeListFloat32(object.embedding!);
-          fbb.startTable(8);
+          final modeOffset = fbb.writeString(object.mode);
+          fbb.startTable(9);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, roleOffset);
           fbb.addOffset(2, contentOffset);
@@ -225,6 +231,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addOffset(4, rewriteOffset);
           fbb.addOffset(5, embeddingOffset);
           fbb.addInt64(6, object.dateTime.millisecondsSinceEpoch);
+          fbb.addOffset(7, modeOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -233,6 +240,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final rootOffset = buffer.derefObject(0);
           final roleParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 6, '');
+          final modeParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 18, '');
           final contentParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 8, '');
           final localeParam = const fb.StringReader(asciiOptimization: true)
@@ -242,8 +251,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final embeddingParam =
               const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
                   .vTableGetNullable(buffer, rootOffset, 14);
-          final object = History(roleParam, contentParam, localeParam,
-              rewriteParam, embeddingParam)
+          final object = History(roleParam, modeParam, contentParam,
+              localeParam, rewriteParam, embeddingParam)
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
             ..dateTime = DateTime.fromMillisecondsSinceEpoch(
                 const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0));
@@ -307,4 +316,8 @@ class History_ {
   /// See [History.dateTime].
   static final dateTime =
       obx.QueryDateProperty<History>(_entities[1].properties[6]);
+
+  /// See [History.mode].
+  static final mode =
+      obx.QueryStringProperty<History>(_entities[1].properties[7]);
 }

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:inspector_gadget/ai/service/ai_service.dart';
+import 'package:inspector_gadget/camera/service/page_state.dart';
 import 'package:inspector_gadget/camera/view/capture_state.dart';
 import 'package:inspector_gadget/database/service/database.dart';
 import 'package:inspector_gadget/database/service/history_state.dart';
@@ -46,6 +47,9 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
       final ttsService = TtsService();
       GetIt.I.registerSingleton(ttsService);
       unawaited(ttsService.init());
+
+      final pageState = PageState(0);
+      GetIt.I.registerSingleton(pageState);
 
       runApp(await builder());
     },

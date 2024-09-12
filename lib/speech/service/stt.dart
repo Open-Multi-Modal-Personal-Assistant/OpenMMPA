@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
+import 'package:inspector_gadget/common/state_logging_mixin.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
-import 'package:inspector_gadget/state_logging_mixin.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 

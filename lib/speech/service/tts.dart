@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:inspector_gadget/state_logging_mixin.dart';
+import 'package:inspector_gadget/common/state_logging_mixin.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:strings/strings.dart';
