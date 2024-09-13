@@ -49,9 +49,9 @@ mixin SttMixin {
 
   static String getFileExtension(RecordConfig config) {
     return switch (config.encoder) {
-      AudioEncoder.aacLc => 'aac',
-      AudioEncoder.aacEld => 'aac',
-      AudioEncoder.aacHe => 'aac',
+      AudioEncoder.aacLc => 'm4a',
+      AudioEncoder.aacEld => 'm4a',
+      AudioEncoder.aacHe => 'm4a',
       AudioEncoder.amrNb => 'amr',
       AudioEncoder.amrWb => 'amr',
       AudioEncoder.opus => 'ogg',
