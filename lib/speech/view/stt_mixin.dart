@@ -78,6 +78,8 @@ mixin SttMixin {
 
   Future<void> startRecording({bool forSpeech = true}) async {
     try {
+      _audioRecorder ??= AudioRecorder();
+
       if (await _audioRecorder?.hasPermission() ?? false) {
         // Chirp needs RIFF header, not raw PCM 16bit
         final encoder = forSpeech
@@ -240,7 +242,6 @@ mixin SttMixin {
         listenOptions: options,
       );
     } else {
-      _audioRecorder = AudioRecorder();
       await startRecording();
     }
   }
