@@ -235,13 +235,5 @@
     "cameraResolutionVeryHighLabel": "Very High (1080p)",
     "@cameraResolutionVeryHighLabel": {
         "description": "Text shown in the preferences settings Very High Camera Resolution selection"
-    },
-    "recordingText": "Recording...",
-    "@recordingText": {
-        "description": "Text shown in modal dialog while audio recording is in progress"
-    },
-    "stopLabel": "Stop",
-    "@stopLabel": {
-        "description": "Text shown in modal dialog stop (finish) audio recording button"
     }
 }

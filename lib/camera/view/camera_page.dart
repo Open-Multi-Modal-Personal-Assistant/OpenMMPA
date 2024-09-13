@@ -1,14 +1,13 @@
 import 'dart:developer';
 import 'dart:math' as m;
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:inspector_gadget/camera/service/m_file.dart';
 import 'package:inspector_gadget/camera/service/page_state.dart';
+import 'package:inspector_gadget/camera/view/audio_recording_widget.dart';
 import 'package:inspector_gadget/camera/view/capture_state.dart';
-import 'package:inspector_gadget/camera/view/stop_recording_dialog.dart';
 import 'package:inspector_gadget/camera/view/thumbnail_carousel.dart';
 import 'package:inspector_gadget/common/deferred_action.dart';
 import 'package:inspector_gadget/interaction/view/interaction_page.dart';
@@ -17,7 +16,6 @@ import 'package:inspector_gadget/outlined_icon.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:inspector_gadget/speech/service/stt.dart';
 import 'package:inspector_gadget/speech/service/tts.dart';
-import 'package:inspector_gadget/speech/view/stt_mixin.dart';
 import 'package:watch_it/watch_it.dart';
 
 class CameraPage extends WatchingStatefulWidget {
@@ -54,7 +52,7 @@ IconData getNumberIcon(int number) {
 }
 
 class CameraPageState extends State<CameraPage>
-    with SttMixin, TickerProviderStateMixin, WidgetsBindingObserver {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   AppLocalizations? l10n;
   double iconSize = 5;
   List<CameraDescription> cameras = <CameraDescription>[];
@@ -1258,14 +1256,15 @@ class CameraPageState extends State<CameraPage>
   }
 
   Future<void> onRecordAudioButtonPressed(BuildContext context) async {
-    await startRecording(forSpeech: false);
-    var dialogResult = OkCancelResult.cancel;
-    if (context.mounted) {
-      dialogResult = await stopRecordingDialog(context);
-    }
+    final path = await showModalBottomSheet<String>(
+      enableDrag: false,
+      context: context,
+      builder: (context) {
+        return const AudioRecordingWidget();
+      },
+    );
 
-    final path = await stopAudioRecording();
-    if (dialogResult == OkCancelResult.ok && path.isNotEmpty) {
+    if (path != null && path.isNotEmpty) {
       final xFile = XFile(path);
       final mimeType = await MFile.obtainMimeType(xFile);
       final mFile = MFile(xFile, mimeType);

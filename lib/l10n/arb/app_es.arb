@@ -235,13 +235,5 @@
     "cameraResolutionVeryHighLabel": "Muy alta (1080p)",
     "@cameraResolutionVeryHighLabel": {
         "description": "Texto que se muestra en la configuración de preferencias Selección de resolución de cámara muy alta"
-    },
-    "recordingText": "Grabación...",
-    "@recordingText": {
-        "description": "Texto que se muestra en el cuadro de diálogo modal mientras la grabación de audio está en progreso"
-    },
-    "stopLabel": "Detener",
-    "@stopLabel": {
-        "description": "Texto que se muestra en el cuadro de diálogo modal Botón para detener (finalizar) grabación de audio"
     }
 }
