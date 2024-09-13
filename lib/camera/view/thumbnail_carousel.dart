@@ -11,6 +11,7 @@ import 'package:inspector_gadget/camera/service/m_file.dart';
 import 'package:inspector_gadget/camera/service/page_state.dart';
 import 'package:inspector_gadget/camera/view/page_indicator.dart';
 import 'package:inspector_gadget/common/ok_cancel_alert_dialog.dart';
+import 'package:inspector_gadget/speech/view/tts_mixin.dart';
 import 'package:video_player/video_player.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -27,7 +28,8 @@ void logError(String code, String? message) {
   log('Error: $code${message == null ? '' : '\nError Message: $message'}');
 }
 
-class ThumbnailCarouselState extends State<ThumbnailCarouselWidget> {
+class ThumbnailCarouselState extends State<ThumbnailCarouselWidget>
+    with TtsMixin {
   static const controlIconSize = 64.0;
   late final PageState pageState;
   // Wonderous App also uses smooth_page_indicator
@@ -192,39 +194,69 @@ class ThumbnailCarouselState extends State<ThumbnailCarouselWidget> {
 
   Widget commandRowWidget(int pageCount, int currentPage) {
     final commandButtons = <Widget>[
-      IconButton.filledTonal(
-        onPressed: () async =>
-            pageCount > 0 ? onDeleteMediaClicked(pageCount, currentPage) : null,
-        icon: const Icon(Icons.clear, color: Colors.red),
-      ),
+      if (pageCount > 0)
+        IconButton.filledTonal(
+          onPressed: () async => pageCount > 0
+              ? onDeleteMediaClicked(pageCount, currentPage)
+              : null,
+          icon: const Icon(Icons.clear, color: Colors.red),
+        )
+      else
+        const Icon(Icons.do_disturb),
     ];
 
-    if (videoController?.value != null) {
-      final vPlayer = videoController!.value;
-      commandButtons.addAll([
-        const Gap(controlIconSize),
-        IconButton.filledTonal(
-          onPressed: () {
-            vPlayer.isPlaying
-                ? videoController?.pause()
-                : videoController?.play();
-            setState(() {});
-          },
-          icon: Icon(vPlayer.isPlaying ? Icons.pause : Icons.play_arrow),
-        ),
-      ]);
-      if (vPlayer.isPlaying) {
-        commandButtons.add(
+    if (pageCount > 0) {
+      final medium = widget.files[currentPage];
+      if ([MFileType.audio, MFileType.video].contains(medium.fileType)) {
+        commandButtons.add(const Gap(controlIconSize));
+      }
+
+      if (medium.fileType == MFileType.video) {
+        if (videoController?.value != null) {
+          final vPlayer = videoController!.value;
+          final isPlaying = vPlayer.isPlaying;
+          commandButtons.addAll([
+            IconButton.filledTonal(
+              onPressed: () async {
+                isPlaying
+                    ? await videoController?.pause()
+                    : await videoController?.play();
+                setState(() {});
+              },
+              icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+            ),
+            IconButton.filledTonal(
+              onPressed: isPlaying
+                  ? () async {
+                      await videoController?.pause();
+                      await videoController?.seekTo(Duration.zero);
+                      setState(() {});
+                    }
+                  : null,
+              icon: const Icon(Icons.stop),
+            ),
+          ]);
+        }
+      } else if (medium.fileType == MFileType.audio) {
+        final isPlaying = isAudioPlaying();
+        commandButtons.addAll([
           IconButton.filledTonal(
-            onPressed: () {
-              videoController
-                ?..pause()
-                ..seekTo(Duration.zero);
+            onPressed: () async {
+              await playOrPauseAudio(medium.xFile.path);
               setState(() {});
             },
+            icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+          ),
+          IconButton.filledTonal(
+            onPressed: isPlaying
+                ? () async {
+                    await stopAudio();
+                    setState(() {});
+                  }
+                : null,
             icon: const Icon(Icons.stop),
           ),
-        );
+        ]);
       }
     }
 

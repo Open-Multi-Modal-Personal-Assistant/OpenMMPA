@@ -82,6 +82,24 @@ mixin TtsMixin {
     }
   }
 
+  bool isAudioPlaying() {
+    return player?.state.playing ?? false;
+  }
+
+  Future<void> playOrPauseAudio(String filePath) async {
+    player ??= Player();
+    final buffered = player?.state.buffer.inMilliseconds ?? 0;
+    if (buffered <= 0) {
+      await player?.open(Media(filePath));
+    }
+
+    await player?.playOrPause();
+  }
+
+  Future<void> stopAudio() async {
+    await player?.stop();
+  }
+
   void disposeTts() {
     player?.dispose();
   }
