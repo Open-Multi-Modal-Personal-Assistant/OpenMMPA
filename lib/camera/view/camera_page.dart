@@ -10,10 +10,13 @@ import 'package:inspector_gadget/camera/service/page_state.dart';
 import 'package:inspector_gadget/camera/view/capture_state.dart';
 import 'package:inspector_gadget/camera/view/stop_recording_dialog.dart';
 import 'package:inspector_gadget/camera/view/thumbnail_carousel.dart';
+import 'package:inspector_gadget/common/deferred_action.dart';
 import 'package:inspector_gadget/interaction/view/interaction_page.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/outlined_icon.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
+import 'package:inspector_gadget/speech/service/stt.dart';
+import 'package:inspector_gadget/speech/service/tts.dart';
 import 'package:inspector_gadget/speech/view/stt_mixin.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -78,6 +81,7 @@ class CameraPageState extends State<CameraPage>
   int pointers = 0;
   // For counting pages for files
   late final PageState pageState;
+  List<DeferredAction> deferredActionQueue = [];
 
   @override
   void initState() {
@@ -133,6 +137,8 @@ class CameraPageState extends State<CameraPage>
         logError(e.code, e.description);
       }
     });
+
+    deferredActionQueue.add(DeferredAction(ActionKind.initialize));
   }
 
   @override
@@ -162,6 +168,26 @@ class CameraPageState extends State<CameraPage>
   }
   // #enddocregion AppLifecycle
 
+  Future<void> _processDeferredActionQueue(BuildContext context) async {
+    if (deferredActionQueue.isNotEmpty) {
+      final queueCopy = [...deferredActionQueue];
+      deferredActionQueue.clear();
+      for (final deferredAction in queueCopy) {
+        switch (deferredAction.actionKind) {
+          case ActionKind.initialize:
+            final sttService = GetIt.I.get<SttService>();
+            final ttsService = GetIt.I.get<TtsService>();
+            if (ttsService.languages.isEmpty &&
+                sttService.localeNames.isNotEmpty) {
+              ttsService.supplementLanguages(sttService.localeNames);
+            }
+          case ActionKind.speechTranscripted:
+            debugPrint('Invalid ActionKind ${deferredAction.actionKind}');
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     l10n = context.l10n;
@@ -169,6 +195,8 @@ class CameraPageState extends State<CameraPage>
     const appBarHeight = 56;
     // https://www.geeksforgeeks.org/flutter-set-the-height-of-the-appbar/
     iconSize = m.min(size.width, size.height - appBarHeight) / 10;
+
+    _processDeferredActionQueue(context);
 
     return Scaffold(
       appBar: AppBar(
