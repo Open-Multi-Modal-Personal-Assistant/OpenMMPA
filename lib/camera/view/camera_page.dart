@@ -142,7 +142,7 @@ class CameraPageState extends State<CameraPage>
     flashModeControlRowAnimationController.dispose();
     exposureModeControlRowAnimationController.dispose();
     focusModeControlRowAnimationController.dispose();
-    disposeStt();
+    // disposeStt();
     super.dispose();
   }
 

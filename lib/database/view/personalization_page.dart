@@ -67,8 +67,8 @@ class PersonalizationPageState extends State<PersonalizationPage>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _animationController.dispose();
-    disposeStt();
-    disposeTts();
+    // disposeStt();
+    // disposeTts();
     super.dispose();
   }
 

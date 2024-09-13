@@ -73,8 +73,8 @@ class InteractionPageState extends State<InteractionPage>
   @override
   void dispose() {
     _animationController.dispose();
-    disposeStt();
-    disposeTts();
+    // disposeStt();
+    // disposeTts();
     super.dispose();
   }
 
