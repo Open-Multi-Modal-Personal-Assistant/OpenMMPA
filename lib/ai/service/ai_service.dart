@@ -36,7 +36,7 @@ class AiService with ToolsMixin {
     bool withTools = true,
   }) {
     final preferences = GetIt.I.get<PreferencesService>();
-    final modelType = preferences.fastLlmMode ? 'flash-preview' : 'pro';
+    final modelType = preferences.fastLlmMode ? 'flash-latest' : 'pro';
     return GenerativeModel(
       model: 'gemini-1.5-$modelType',
       apiKey: preferences.geminiApiKey,
@@ -206,7 +206,7 @@ class AiService with ToolsMixin {
     } else {
       final parts = <Part>[];
       for (final mediumFile in mediaFiles) {
-        debugPrint('mediumFile: ${mediumFile.xFile.path}');
+        debugPrint('medium: ${mediumFile.xFile.path} (${mediumFile.mimeType})');
         if (!mediumFile.mimeTypeIsUnknown()) {
           parts.add(DataPart(mediumFile.mimeType, await mediumFile.content()));
         }
