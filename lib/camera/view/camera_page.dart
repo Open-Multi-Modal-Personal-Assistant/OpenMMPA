@@ -1205,36 +1205,7 @@ class CameraPageState extends State<CameraPage>
   }
 
   Future<void> onAttachFileButtonPressed() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: [
-        // image formats
-        'jpg',
-        'jpeg',
-        'png',
-        // video formats
-        'mov',
-        'mpeg',
-        'mp4',
-        'mpg',
-        'avi',
-        'wmv',
-        'mpegps',
-        'flv',
-        // document formats
-        'txt',
-        'pdf',
-        'docx',
-        // audio formats
-        'wav',
-        'mp3',
-        'aiff',
-        'aac',
-        'ogg',
-        'flac',
-      ],
-      allowMultiple: true,
-    );
+    final result = await FilePicker.platform.pickFiles();
     if (result != null && result.files.isNotEmpty) {
       var added = false;
       for (final file in result.files) {
