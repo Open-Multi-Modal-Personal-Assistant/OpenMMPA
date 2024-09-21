@@ -9,16 +9,24 @@ environment:
 dependency_overrides:
   collection: ^1.19.0  # Flutter SDK (flutter_test pinned it)
   js: ^0.7.1  # media_kit vs speech_to_text
+  web: ^1.0.0  # firebase_vertexai -> firebase_core_web -> web vs file_picker -> web
 
 dependencies:
-  adaptive_dialog: ^2.2.0
+  adaptive_dialog: ^2.2.1+2
   assorted_layout_widgets: ^9.0.2
   camera: ^0.11.0+2
+  cloud_functions: ^5.1.2
   collection: ^1.19.0
   country_flags: ^3.0.0
   dart_helper_utils: ^2.7.0
   daylight: ^3.1.0
   file_picker: ^8.1.2
+  firebase_app_check: ^0.3.1+2
+  firebase_auth: ^5.3.0
+  firebase_core: ^3.4.0
+  firebase_storage: ^12.3.1
+  firebase_ui_storage: ^2.0.5
+  firebase_vertexai: ^0.2.3+3
   fl_location: ^4.1.0+1
   flex_color_scheme: ^7.3.1
   flutter:
@@ -31,7 +39,6 @@ dependencies:
   flutter_tts: ^4.0.2
   gap: ^3.0.1
   get_it: ^7.7.0
-  google_generative_ai: ^0.4.6
   heart_rate_flutter: ^0.0.2
   http: ^1.2.2
   intl: ^0.19.0

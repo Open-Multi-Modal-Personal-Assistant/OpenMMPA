@@ -1,8 +1,8 @@
 import 'dart:developer';
 
+import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:inspector_gadget/ai/prompts/closing_parts.dart';
 import 'package:inspector_gadget/ai/prompts/history_rag_stuffing.dart';
 import 'package:inspector_gadget/ai/prompts/personalization_rag_stuffing.dart';
@@ -10,6 +10,7 @@ import 'package:inspector_gadget/ai/prompts/request_instruction.dart';
 import 'package:inspector_gadget/ai/prompts/resolver_few_shot.dart';
 import 'package:inspector_gadget/ai/prompts/system_instruction.dart';
 import 'package:inspector_gadget/ai/prompts/translate_instruction.dart';
+import 'package:inspector_gadget/ai/service/firebase_mixin.dart';
 import 'package:inspector_gadget/ai/service/generated_content_response.dart';
 import 'package:inspector_gadget/ai/tools/tools_mixin.dart';
 import 'package:inspector_gadget/camera/service/m_file.dart';
@@ -23,7 +24,7 @@ import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:strings/strings.dart';
 import 'package:translator/translator.dart';
 
-class AiService with ToolsMixin {
+class AiService with FirebaseMixin, ToolsMixin {
   AiService() {
     watermark = DateTime.now();
   }
@@ -37,10 +38,8 @@ class AiService with ToolsMixin {
   }) {
     final preferences = GetIt.I.get<PreferencesService>();
     final modelType = preferences.fastLlmMode ? 'flash-latest' : 'pro';
-    return GenerativeModel(
+    return FirebaseVertexAI.instance.generativeModel(
       model: 'gemini-1.5-$modelType',
-      apiKey: preferences.geminiApiKey,
-      // requestOptions: const RequestOptions(apiVersion: 'v2beta'),
       safetySettings: [
         SafetySetting(
           HarmCategory.harassment,
@@ -282,10 +281,8 @@ class AiService with ToolsMixin {
   }
 
   Future<List<double>> obtainEmbedding(String prompt) async {
-    final preferences = GetIt.I.get<PreferencesService>();
-    final model = GenerativeModel(
-      model: 'text-embedding-004',
-      apiKey: preferences.geminiApiKey,
+    final model = FirebaseVertexAI.instance.generativeModel(
+      model: 'text-embedding-004', // 'text-multilingual-embedding-002',
     );
     final content = Content.text(prompt);
     final embeddingResult = await model.embedContent(content);

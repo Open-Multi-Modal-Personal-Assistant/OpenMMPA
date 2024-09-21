@@ -18,7 +18,7 @@ class History {
   @Id()
   int id = 0;
 
-  // "system", "user", "model", "image", or function name
+  // "system", "user", "model", mime type (for media), or function name
   String role;
   // "text_chat", "image_chat", "translate", "image_gen", "image_edit",
   // "shazam", "sound_gen"

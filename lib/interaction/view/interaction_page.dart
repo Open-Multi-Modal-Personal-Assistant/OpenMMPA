@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:inspector_gadget/ai/service/ai_service.dart';
 import 'package:inspector_gadget/ai/service/generated_content_response.dart';
 import 'package:inspector_gadget/camera/service/m_file.dart';

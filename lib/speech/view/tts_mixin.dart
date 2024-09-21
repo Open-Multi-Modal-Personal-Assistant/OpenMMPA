@@ -1,12 +1,12 @@
 import 'dart:developer';
 
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/common/base_state.dart';
 import 'package:inspector_gadget/common/constants.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
-import 'package:inspector_gadget/secrets.dart';
 import 'package:inspector_gadget/speech/service/tts.dart';
 import 'package:media_kit/media_kit.dart';
 
@@ -53,31 +53,40 @@ mixin TtsMixin {
   ) async {
     try {
       state.setState(StateBase.ttsStateLabel);
-      final ttsFullUrl = Uri.https(functionUrl, ttsEndpoint, {
-        'token': chirpToken,
+      final synthResponse = await FirebaseFunctions.instance
+          .httpsCallable(ttsFunctionName)
+          .call<Map<String, String>>({
         'language_code': locale,
         'text': responseText,
       });
-      final synthetizationResponse = await http.post(ttsFullUrl);
 
-      if (synthetizationResponse.statusCode == 200) {
-        if (synthetizationResponse.bodyBytes.isNotEmpty) {
-          state.setState(StateBase.playingStateLabel);
-          player ??= Player();
-          final memoryMedia =
-              await Media.memory(synthetizationResponse.bodyBytes);
-          await player?.open(memoryMedia);
-          state.setState(afterStateLabel);
+      if (synthResponse.data.isNotEmpty &&
+          synthResponse.data.containsKey('synth_file_name')) {
+        state.setState(StateBase.playingStateLabel);
+        final synthFileName = synthResponse.data['synth_file_name'];
+        log('Synth file name: $synthFileName');
+        if (synthFileName != null && synthFileName.isNotEmpty) {
+          final synthBytes =
+              await FirebaseStorage.instance.ref(synthFileName).getData();
+          if (synthBytes != null && synthBytes.isNotEmpty) {
+            player ??= Player();
+            final memoryMedia = await Media.memory(synthBytes);
+            await player?.open(memoryMedia);
+            state.setState(afterStateLabel);
+          } else {
+            state.errorState();
+          }
         } else {
           state.errorState();
         }
       } else {
-        log('${synthetizationResponse.statusCode} '
-            '${synthetizationResponse.reasonPhrase}');
         state.errorState();
       }
+    } on FirebaseFunctionsException catch (e) {
+      log('Exception during TTS function call: $e');
+      state.errorState();
     } catch (e) {
-      log('Error during synthetization: $e');
+      log('Error during TTS synth: $e');
       state.errorState();
     }
   }

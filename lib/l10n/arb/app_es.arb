@@ -8,10 +8,6 @@
     "@preferencesAppBarTitle": {
         "description": "Texto mostrado en la AppBar de la página de Preferencias"
     },
-    "preferencesGeminiApiKeyLabel": "Clave API de Géminis",
-    "@preferencesGeminiApiKeyLabel": {
-        "description": "Texto que se muestra en la configuración de preferencias para la clave API de Gemini"
-    },
     "preferencesFastLlmModeLabel": "Modo LLM rápido",
     "@preferencesFastLlmModeLabel": {
         "description": "Texto que se muestra en la configuración de preferencias para el modo LLM rápido"

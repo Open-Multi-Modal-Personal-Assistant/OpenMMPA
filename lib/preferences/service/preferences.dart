@@ -1,14 +1,12 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:pref/pref.dart';
 import 'package:strings/strings.dart';
 
 class PreferencesService with ChangeNotifier {
-  static const String geminiApiKeyTag = 'gemini_api_key';
-  static const String geminiApiKeyDefault = '';
   static const String fastLlmModeTag = 'fast_llm_mode';
   static const bool fastLlmModeDefault = true;
   static const String alphaVantageAccessKeyTag = 'alpha_vantage_access_key';
@@ -90,7 +88,6 @@ class PreferencesService with ChangeNotifier {
     prefService = await PrefServiceShared.init(
       prefix: prefix,
       defaults: {
-        geminiApiKeyTag: geminiApiKeyDefault,
         fastLlmModeTag: fastLlmModeDefault,
         alphaVantageAccessKeyTag: alphaVantageAccessKeyDefault,
         tavilyApiKeyTag: tavilyApiKeyDefault,
@@ -123,8 +120,6 @@ class PreferencesService with ChangeNotifier {
     return this;
   }
 
-  String get geminiApiKey =>
-      prefService?.get<String>(geminiApiKeyTag) ?? geminiApiKeyDefault;
   bool get fastLlmMode =>
       prefService?.get<bool>(fastLlmModeTag) ?? fastLlmModeDefault;
   String get alphaVantageAccessKey =>

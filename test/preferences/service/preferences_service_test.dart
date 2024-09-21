@@ -5,8 +5,8 @@ void main() {
   group('PreferencesService', () {
     test('initial state is initialState', () {
       expect(
-        PreferencesService().geminiApiKey,
-        equals(PreferencesService.geminiApiKeyDefault),
+        PreferencesService().fastLlmMode,
+        equals(PreferencesService.fastLlmModeDefault),
       );
 
       expect(

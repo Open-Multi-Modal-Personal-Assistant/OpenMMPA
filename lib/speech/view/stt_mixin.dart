@@ -1,15 +1,14 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/common/base_state.dart';
 import 'package:inspector_gadget/common/constants.dart';
 import 'package:inspector_gadget/common/deferred_action.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
-import 'package:inspector_gadget/secrets.dart';
 import 'package:inspector_gadget/speech/service/stt.dart';
 import 'package:inspector_gadget/speech/service/transcription_list.dart';
 import 'package:path/path.dart' as p;
@@ -120,13 +119,17 @@ mixin SttMixin {
       debugPrint('speech stop');
       await speech?.stop();
     } else {
-      final path = await _audioRecorder?.stop();
-      if (path != null) {
-        final recordingFile = File(path);
-        final recordingBytes = await recordingFile.readAsBytes();
-        final gzippedWav = gzip.encode(recordingBytes);
+      final recordingFilePath = await _audioRecorder?.stop();
+      if (recordingFilePath != null) {
+        final recordingFileName = recordingFilePath.split('/').last;
+        final recordingFile = File(recordingFilePath);
+        final uploadTask = await FirebaseStorage.instance
+            .ref(recordingFileName)
+            .putFile(recordingFile);
+        final recordingUrl = await uploadTask.ref.getDownloadURL();
+        log('Uploaded audio: $recordingUrl');
         if (context.mounted) {
-          await sttPhase(context, state, gzippedWav);
+          await sttPhase(context, state, recordingFileName);
         }
       } else {
         final ctx = context;
@@ -135,7 +138,7 @@ mixin SttMixin {
               .showSnackBar(const SnackBar(content: Text('Recording error')));
         }
 
-        log('Error during stop speech recording, path $path');
+        log('Error during stop speech recording, path $recordingFilePath');
         state.errorState();
       }
     }
@@ -153,34 +156,26 @@ mixin SttMixin {
   Future<void> sttPhase(
     BuildContext context,
     StateBase state,
-    List<int> recordingBytes,
+    String recordingFileName,
   ) async {
     try {
-      final sttFullUrl =
-          Uri.https(functionUrl, sttEndpoint, {'token': chirpToken});
-      final transcriptionResponse = await http.post(
-        sttFullUrl,
-        body: recordingBytes,
+      final transcriptionResponse = await FirebaseFunctions.instance
+          .httpsCallable(chirpFunctionName)
+          .call<dynamic>({'recording_file_name': recordingFileName});
+      final transcriptJson = transcriptionResponse.data as Map<String, dynamic>;
+      final transcripts = Transcriptions.fromJson(transcriptJson);
+      addToDeferredQueueFunction?.call(
+        DeferredAction(
+          ActionKind.speechTranscripted,
+          text: transcripts.merged,
+          locale: transcripts.localeMode(),
+        ),
       );
-
-      if (transcriptionResponse.statusCode == 200) {
-        final transcriptJson =
-            json.decode(transcriptionResponse.body) as List<dynamic>;
-        final transcripts = Transcriptions.fromJson(transcriptJson);
-        addToDeferredQueueFunction?.call(
-          DeferredAction(
-            ActionKind.speechTranscripted,
-            text: transcripts.merged,
-            locale: transcripts.localeMode(),
-          ),
-        );
-      } else {
-        log('${transcriptionResponse.statusCode} '
-            '${transcriptionResponse.reasonPhrase}');
-        state.errorState();
-      }
+    } on FirebaseFunctionsException catch (e) {
+      log('Exception during STT function call: $e');
+      state.errorState();
     } catch (e) {
-      log('Exception during transcription: $e');
+      log('Exception during STT transcription: $e');
       state.errorState();
     }
   }

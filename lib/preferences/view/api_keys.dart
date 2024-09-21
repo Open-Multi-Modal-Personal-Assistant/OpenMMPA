@@ -22,13 +22,6 @@ class ApiKeysPreferencesPageState extends State<ApiKeysPreferencesPage> {
 
     final apiKeysPreferences = <Widget>[
       PrefText(
-        label: l10n.preferencesGeminiApiKeyLabel,
-        pref: PreferencesService.geminiApiKeyTag,
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'\w')),
-        ],
-      ),
-      PrefText(
         label: l10n.preferencesAlphaVantageAccessKeyLabel,
         pref: PreferencesService.alphaVantageAccessKeyTag,
         inputFormatters: [

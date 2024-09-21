@@ -1,6 +1,6 @@
 import 'package:dart_helper_utils/dart_helper_utils.dart';
+import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:fl_location/fl_location.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 // import 'package:inspector_gadget/ai/tools/alpha_vantage_tool.dart';
 import 'package:inspector_gadget/ai/tools/exchange_tool.dart';
 import 'package:inspector_gadget/ai/tools/function_tool.dart';

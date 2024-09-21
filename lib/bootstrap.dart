@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:inspector_gadget/ai/service/ai_service.dart';
+import 'package:inspector_gadget/ai/service/firebase_mixin.dart';
 import 'package:inspector_gadget/camera/service/page_state.dart';
 import 'package:inspector_gadget/camera/view/capture_state.dart';
 import 'package:inspector_gadget/database/service/database.dart';
@@ -38,6 +39,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
       GetIt.I.registerLazySingleton(PersonalizationState.new);
       GetIt.I.registerLazySingleton(InteractionState.new);
 
+      unawaited(FirebaseMixin.initFirebase());
       final database = DatabaseService();
       GetIt.I.registerSingleton(database);
       unawaited(database.init());

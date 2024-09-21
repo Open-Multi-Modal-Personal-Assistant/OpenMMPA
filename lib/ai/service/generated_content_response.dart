@@ -1,4 +1,4 @@
-import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:firebase_vertexai/firebase_vertexai.dart';
 
 extension GeneratedContentResponse on GenerateContentResponse {
   String strippedText() {
