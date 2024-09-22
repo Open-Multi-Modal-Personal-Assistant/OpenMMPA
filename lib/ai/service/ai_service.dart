@@ -243,7 +243,13 @@ class AiService with FirebaseMixin, ToolsMixin {
       }
     }
 
-    var response = await chat.sendMessage(message);
+    var response = GenerateContentResponse([], null);
+    try {
+      response = await chat.sendMessage(message);
+    } catch (e) {
+      log('Exception during chat.sendMessage: $e');
+      return null;
+    }
 
     List<FunctionCall> functionCalls;
     var content = Content.text('');
@@ -270,7 +276,12 @@ class AiService with FirebaseMixin, ToolsMixin {
       content = response.candidates.first.content;
       content.parts.addAll(responses);
       // TODO(MrCsabaToth): Store in history?
-      response = await chat.sendMessage(content);
+      try {
+        response = await chat.sendMessage(content);
+      } catch (e) {
+        log('Exception during function iteration chat.sendMessage: $e');
+        return null;
+      }
     }
 
     if (response.text != null && response.text!.isNotEmpty) {
