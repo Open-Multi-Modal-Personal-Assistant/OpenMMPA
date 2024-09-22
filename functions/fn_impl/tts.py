@@ -2,9 +2,9 @@ from firebase_functions import https_fn
 from firebase_admin import initialize_app, storage
 import datetime
 import firebase_admin
+import json
 import os
 
-from flask import jsonify
 from google.cloud import texttospeech
 
 @https_fn.on_request()
@@ -28,24 +28,22 @@ def tts(req: https_fn.Request) -> https_fn.Response:
 
         return ('', 204, headers)
 
-    # Set CORS headers for the main request
-    headers = {
-        'Content-Type':'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-    }
-    # END CORS
-
     if not firebase_admin._apps:
         initialize_app()
 
     request_json = req.get_json(silent=True)
     request_args = req.args
+    request_form = req.form
+
+    if request_json and 'data' in request_json:
+        request_json = request_json['data']
 
     if request_json and 'language_code' in request_json:
         language_code = request_json['language_code']
     elif request_args and 'language_code' in request_args:
         language_code = request_args['language_code']
+    elif request_form and 'language_code' in request_form:
+        language_code = request_form['language_code']
     else:
         language_code = os.environ.get('LANGUAGE_CODE', 'en-US')
 
@@ -53,6 +51,8 @@ def tts(req: https_fn.Request) -> https_fn.Response:
         text = request_json['text']
     elif request_args and 'text' in request_args:
         text = request_args['text']
+    elif request_form and 'text' in request_form:
+        text = request_form['text']
     else:
         text = ''
 
@@ -88,4 +88,8 @@ def tts(req: https_fn.Request) -> https_fn.Response:
     synth_file_name = synth_blob.public_url.split('/')[-1].split('?')[0]
     synth_result = dict(synth_file_name=synth_file_name)
 
-    return (jsonify(synth_result), 200, headers)
+    return https_fn.Response(
+        json.dumps(dict(data=synth_result)),
+        status=200,
+        content_type='application/json',
+    )
