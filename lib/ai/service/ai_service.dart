@@ -226,10 +226,15 @@ class AiService with FirebaseMixin, ToolsMixin {
         debugPrint('medium: ${mediumFile.xFile.path} (${mediumFile.mimeType})');
         if (!mediumFile.mimeTypeIsUnknown()) {
           final fileName = mediumFile.xFile.path.split('/').last;
-          final uploadTask = await FirebaseStorage.instance
-              .ref(fileName)
-              .putFile(mediumFile.file);
-          final fileUri = 'gs://$bucket/${uploadTask.ref.fullPath}';
+          final fileRef = FirebaseStorage.instance.ref(fileName);
+          try {
+            // Check if already uploaded
+            await fileRef.getDownloadURL();
+          } on FirebaseException {
+            // Not uploaded yet
+            await fileRef.putFile(mediumFile.file);
+          }
+          final fileUri = 'gs://$bucket/${fileRef.fullPath}';
           debugPrint('Storage URI: $fileUri');
           parts.add(FileData(mediumFile.mimeType, fileUri));
         }
