@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
@@ -47,4 +48,6 @@ class MFile {
   Future<Uint8List> content() async {
     return xFile.readAsBytes();
   }
+
+  File get file => File(xFile.path);
 }

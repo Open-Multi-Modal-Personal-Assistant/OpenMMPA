@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 import 'dart:math' as m;
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
@@ -112,8 +111,7 @@ class ThumbnailCarouselState extends State<ThumbnailCarouselWidget>
               ),
             ),
             switch (medium.fileType) {
-              MFileType.image =>
-                Image.file(File(medium.xFile.path), fit: BoxFit.fill),
+              MFileType.image => Image.file(medium.file, fit: BoxFit.fill),
               MFileType.video => videoController == null
                   ? Icon(Icons.hourglass_bottom, size: mediaSize)
                   : Container(
@@ -150,8 +148,7 @@ class ThumbnailCarouselState extends State<ThumbnailCarouselWidget>
       return false;
     }
 
-    final vController =
-        VideoPlayerController.file(File(currentFile.xFile.path));
+    final vController = VideoPlayerController.file(currentFile.file);
 
     videoPlayerListener = () {
       if (videoController != null) {
@@ -184,7 +181,7 @@ class ThumbnailCarouselState extends State<ThumbnailCarouselWidget>
 
     if (await okCancelAlertDialog(context) == OkCancelResult.ok) {
       final fileToRemove = widget.files[currentPage];
-      await File(fileToRemove.xFile.path).delete();
+      await fileToRemove.file.delete();
       pageState.incrementPageCount(-1);
       widget.files.removeAt(currentPage);
       await initVideoPlayer();

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
@@ -220,10 +221,17 @@ class AiService with FirebaseMixin, ToolsMixin {
       message = Content.text(stuffed);
     } else {
       final parts = <Part>[];
+      final bucket = FirebaseStorage.instance.bucket;
       for (final mediumFile in mediaFiles) {
         debugPrint('medium: ${mediumFile.xFile.path} (${mediumFile.mimeType})');
         if (!mediumFile.mimeTypeIsUnknown()) {
-          parts.add(DataPart(mediumFile.mimeType, await mediumFile.content()));
+          final fileName = mediumFile.xFile.path.split('/').last;
+          final uploadTask = await FirebaseStorage.instance
+              .ref(fileName)
+              .putFile(mediumFile.file);
+          final fileUri = 'gs://$bucket/${uploadTask.ref.fullPath}';
+          debugPrint('Storage URI: $fileUri');
+          parts.add(FileData(mediumFile.mimeType, fileUri));
         }
       }
 
