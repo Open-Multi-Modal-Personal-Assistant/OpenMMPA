@@ -86,10 +86,9 @@ def tts(req: https_fn.Request) -> https_fn.Response:
     synth_blob = bucket.blob(file_name)
     synth_blob.upload_from_string(response.audio_content, content_type='audio/ogg')
     synth_file_name = synth_blob.public_url.split('/')[-1].split('?')[0]
-    synth_result = dict(synth_file_name=synth_file_name)
 
     return https_fn.Response(
-        json.dumps(dict(data=synth_result)),
+        json.dumps(dict(data=[synth_file_name])),
         status=200,
         content_type='application/json',
     )

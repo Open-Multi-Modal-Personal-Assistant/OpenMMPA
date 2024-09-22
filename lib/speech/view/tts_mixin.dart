@@ -55,17 +55,17 @@ mixin TtsMixin {
       state.setState(StateBase.ttsStateLabel);
       final synthResponse = await FirebaseFunctions.instance
           .httpsCallable(ttsFunctionName)
-          .call<Map<String, String>>({
+          .call<dynamic>({
         'language_code': locale,
         'text': responseText,
       });
 
-      if (synthResponse.data.isNotEmpty &&
-          synthResponse.data.containsKey('synth_file_name')) {
+      final synthFileResponse = synthResponse.data as List<Object?>;
+      if (synthFileResponse.isNotEmpty && synthFileResponse[0] != null) {
         state.setState(StateBase.playingStateLabel);
-        final synthFileName = synthResponse.data['synth_file_name'];
+        final synthFileName = synthFileResponse[0]! as String;
         log('Synth file name: $synthFileName');
-        if (synthFileName != null && synthFileName.isNotEmpty) {
+        if (synthFileName.isNotEmpty) {
           final synthBytes =
               await FirebaseStorage.instance.ref(synthFileName).getData();
           if (synthBytes != null && synthBytes.isNotEmpty) {
