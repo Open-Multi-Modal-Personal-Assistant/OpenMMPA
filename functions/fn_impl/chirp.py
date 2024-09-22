@@ -84,6 +84,7 @@ def chirp(req: https_fn.Request) -> https_fn.Response:
 
     request_json = req.get_json(silent=True)
     request_args = req.args
+    request_form = req.form
 
     transcripts = []
     project_id = 'open-mmpa'
@@ -93,6 +94,8 @@ def chirp(req: https_fn.Request) -> https_fn.Response:
         recording_file_name = request_json['recording_file_name']
     elif request_args and 'recording_file_name' in request_args:
         recording_file_name = request_args['recording_file_name']
+    elif request_form and 'recording_file_name' in request_form:
+        recording_file_name = request_form['recording_file_name']
     else:
         recording_file_name = None
 
