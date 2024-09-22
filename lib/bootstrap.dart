@@ -26,6 +26,8 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
         log(details.exceptionAsString(), stackTrace: details.stack);
       };
 
+      unawaited(FirebaseMixin.initFirebase());
+
       // Add cross-flavor configuration here
       final preferences = PreferencesService();
       GetIt.I.registerSingleton(preferences);
@@ -39,7 +41,6 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
       GetIt.I.registerLazySingleton(PersonalizationState.new);
       GetIt.I.registerLazySingleton(InteractionState.new);
 
-      unawaited(FirebaseMixin.initFirebase());
       final database = DatabaseService();
       GetIt.I.registerSingleton(database);
       unawaited(database.init());

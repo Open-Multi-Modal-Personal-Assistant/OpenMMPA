@@ -33,7 +33,7 @@ void main() {
     testWidgets('navigates to interaction when the uni modal button is tapped',
         (tester) async {
       await tester.pumpApp(const MainPage());
-      await tester.tap(find.byKey(const Key(MainPage.uniModalKey)));
+      await tester.tap(find.byKey(const Key(MainPageState.uniModalKey)));
       await tester.pumpAndSettleEx();
 
       expect(find.byType(InteractionPage), findsOneWidget);
@@ -43,7 +43,7 @@ void main() {
         'navigates to camera page when the multi modal button is tapped',
         (tester) async {
       await tester.pumpApp(const MainPage());
-      await tester.tap(find.byKey(const Key(MainPage.multiModalKey)));
+      await tester.tap(find.byKey(const Key(MainPageState.multiModalKey)));
       await tester.pumpAndSettleEx();
 
       expect(find.byType(CameraPage), findsOneWidget);
@@ -52,7 +52,7 @@ void main() {
     testWidgets('navigates to interaction when the translate button is tapped',
         (tester) async {
       await tester.pumpApp(const MainPage());
-      await tester.tap(find.byKey(const Key(MainPage.translateKey)));
+      await tester.tap(find.byKey(const Key(MainPageState.translateKey)));
       await tester.pumpAndSettleEx();
 
       expect(find.byType(InteractionPage), findsOneWidget);
@@ -61,7 +61,7 @@ void main() {
     testWidgets('navigates to p13n page when the p13n button is tapped',
         (tester) async {
       await tester.pumpApp(const MainPage());
-      await tester.tap(find.byKey(const Key(MainPage.personalizationKey)));
+      await tester.tap(find.byKey(const Key(MainPageState.personalizationKey)));
       await tester.pumpAndSettleEx();
 
       expect(find.byType(PersonalizationPage), findsOneWidget);
@@ -70,7 +70,7 @@ void main() {
     testWidgets('navigates to preferences when the pref button is tapped',
         (tester) async {
       await tester.pumpApp(const MainPage());
-      await tester.tap(find.byKey(const Key(MainPage.settingsKey)));
+      await tester.tap(find.byKey(const Key(MainPageState.settingsKey)));
       await tester.pumpAndSettleEx();
 
       expect(find.byType(PreferencesPage), findsOneWidget);

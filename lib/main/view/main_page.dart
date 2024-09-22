@@ -1,5 +1,7 @@
-import 'dart:math';
+import 'dart:developer';
+import 'dart:math' as math;
 
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:inspector_gadget/camera/view/camera_page.dart';
@@ -10,8 +12,15 @@ import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/preferences/view/preferences_page.dart';
 import 'package:tuple/tuple.dart';
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
   const MainPage({super.key});
+
+  @override
+  State<MainPage> createState() => MainPageState();
+}
+
+class MainPageState extends State<MainPage> {
+  final appCheck = FirebaseAppCheck.instance;
 
   static const String uniModalKey = 'UniModal';
   static const String multiModalKey = 'MultiModal';
@@ -19,6 +28,16 @@ class MainPage extends StatelessWidget {
   static const String personalizationKey = 'Personalization';
   static const String settingsKey = 'Settings';
   static const String helpKey = 'Help';
+
+  @override
+  void initState() {
+    appCheck.onTokenChange.listen(setEventToken);
+    super.initState();
+  }
+
+  void setEventToken(String? token) {
+    log('Token received from tokenChanges() API: $token');
+  }
 
   void navigateWithMode(BuildContext context, InteractionMode interactionMode) {
     Navigator.push(
@@ -42,10 +61,10 @@ class MainPage extends StatelessWidget {
     const appBarHeight = 56;
     if (horizontal) {
       columnSizes.add(1.fr);
-      iconSize = min(size.width / 3.5, (size.height - appBarHeight) / 2.5);
+      iconSize = math.min(size.width / 3.5, (size.height - appBarHeight) / 2.5);
     } else {
       rowSizes.add(1.fr);
-      iconSize = min(size.width / 2.5, (size.height - appBarHeight) / 3.5);
+      iconSize = math.min(size.width / 2.5, (size.height - appBarHeight) / 3.5);
     }
 
     return Scaffold(
