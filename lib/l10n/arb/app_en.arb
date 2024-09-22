@@ -231,5 +231,9 @@
     "cameraResolutionVeryHighLabel": "Very High (1080p)",
     "@cameraResolutionVeryHighLabel": {
         "description": "Text shown in the preferences settings Very High Camera Resolution selection"
+    },
+    "preferencesMeasureHeartRateLabel": "Measure Heart Rate?",
+    "@preferencesMeasureHeartRateLabel": {
+        "description": "Text shown in the preferences settings for Measure Heart Rate?"
     }
 }

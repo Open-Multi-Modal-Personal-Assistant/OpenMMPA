@@ -79,6 +79,8 @@ class PreferencesService with ChangeNotifier {
   static const String cameraResolutionMedium = 'medium';
   static const String cameraResolutionHigh = 'high';
   static const String cameraResolutionVeryHigh = 'veryHigh';
+  static const String measureHeartRateTag = 'measure_heart_rate';
+  static const bool measureHeartRateDefault = false;
 
   final String prefix = 'ommpa'; // Inspector Gadget
 
@@ -108,6 +110,7 @@ class PreferencesService with ChangeNotifier {
         harmCategoryDangerousContentTag: harmCategorySexuallyExplicitDefault,
         classicGoogleTranslateTag: classicGoogleTranslateDefault,
         cameraResolutionTag: cameraResolutionDefault,
+        measureHeartRateTag: measureHeartRateDefault,
       },
     );
 
@@ -187,6 +190,9 @@ class PreferencesService with ChangeNotifier {
   double get historyRagThreshold =>
       (prefService?.get<int>(historyRagThresholdTag) ?? ragThresholdDefault) /
       100.0;
+
+  bool get measureHeartRate =>
+      prefService?.get<bool>(measureHeartRateTag) ?? measureHeartRateDefault;
 
   static bool getUnitSystemDefault() {
     final localeName = Platform.localeName;

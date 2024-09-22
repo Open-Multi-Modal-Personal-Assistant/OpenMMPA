@@ -166,28 +166,44 @@ class AiService with FirebaseMixin, ToolsMixin {
 
     final nearestP13ns =
         await database.getNearestPersonalization(userEmbedding);
+    final p13Stuffing = StringBuffer();
     if (nearestP13ns.isNotEmpty) {
       log('P13n ANN Peers ${nearestP13ns.map((p) => p.score)}');
       final annThreshold = preferences.personalizationRagThreshold;
-      final p13Stuffing = StringBuffer();
       for (final personalization
           in nearestP13ns.where((p) => p.score < annThreshold)) {
         p13Stuffing.writeln(
           '<personalFact>${personalization.object.content}</personalFact>',
         );
       }
+    }
 
-      if (p13Stuffing.isNotEmpty) {
-        stuffedPrompt.writeln(
-          p13nStuffingTemplate.replaceAll(
-            p13nRagStuffingVariable,
-            p13Stuffing.toString(),
-          ),
-        );
-      }
+    final gpsLocation = await GetIt.I.get<LocationService>().obtain();
+    p13Stuffing
+      ..write(
+        "<personalFact>User's current immediate location: ",
+      )
+      ..write(
+        '{"lat": ${gpsLocation.latitude}, ',
+      )
+      ..writeln(
+        '"lon": ${gpsLocation.longitude}}</personalFact>',
+      );
+
+    if (preferences.measureHeartRate) {
+      final heartRate = GetIt.I.get<HeartRateService>().heartRate;
+      p13Stuffing.writeln(
+        "<personalFact>User's current heart rate: $heartRate</personalFact>",
+      );
     }
 
     stuffedPrompt
+      ..writeln(
+        p13nStuffingTemplate.replaceAll(
+          p13nRagStuffingVariable,
+          p13Stuffing.toString(),
+        ),
+      )
       ..write(
         requestInstructionTemplate.replaceAll(
           requestInstructionVariable,
@@ -229,12 +245,8 @@ class AiService with FirebaseMixin, ToolsMixin {
         debugPrint('Function call ${functionCall.name}, '
             'params: ${functionCall.args}');
         try {
-          final gpsLocation = await GetIt.I.get<LocationService>().obtain();
-          final heartRate = GetIt.I.get<HeartRateService>().heartRate;
           final response = await dispatchFunctionCall(
             functionCall,
-            gpsLocation,
-            heartRate,
             preferences,
           );
           debugPrint('Function call result ${response?.response}');

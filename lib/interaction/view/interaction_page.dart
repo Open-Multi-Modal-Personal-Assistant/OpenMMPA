@@ -65,7 +65,9 @@ class InteractionPageState extends State<InteractionPage>
     GetIt.I.get<InteractionState>().setState(StateBase.waitingStateLabel);
     database = GetIt.I.get<DatabaseService>();
     preferences = GetIt.I.get<PreferencesService>();
-    GetIt.I.get<HeartRateService>().listenToHeartRate();
+    if (preferences.measureHeartRate) {
+      GetIt.I.get<HeartRateService>().listenToHeartRate();
+    }
 
     deferredActionQueue.add(DeferredAction(ActionKind.initialize));
   }

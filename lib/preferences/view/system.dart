@@ -18,6 +18,10 @@ class SystemPreferencesPage extends StatelessWidget {
 
     final systemPreferences = <Widget>[
       PrefCheckbox(
+        title: Text(l10n.preferencesMeasureHeartRateLabel),
+        pref: PreferencesService.measureHeartRateTag,
+      ),
+      PrefCheckbox(
         title: Text(l10n.preferencesUnitSystemLabel),
         subtitle: Text(l10n.preferencesUnitSystemDescription),
         pref: PreferencesService.unitSystemTag,

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dart_helper_utils/dart_helper_utils.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:fl_location/fl_location.dart';
 import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/ai/tools/function_tool.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
@@ -51,8 +50,6 @@ class WebSearchTool implements FunctionTool {
   @override
   Future<FunctionResponse> dispatchFunctionCall(
     FunctionCall call,
-    Location? location,
-    int hr,
     PreferencesService preferences,
   ) async {
     final result = switch (call.name) {

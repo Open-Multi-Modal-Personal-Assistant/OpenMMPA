@@ -1,10 +1,8 @@
 import 'package:dart_helper_utils/dart_helper_utils.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:fl_location/fl_location.dart';
-// import 'package:inspector_gadget/ai/tools/alpha_vantage_tool.dart';
+import 'package:inspector_gadget/ai/tools/alpha_vantage_tool.dart';
 import 'package:inspector_gadget/ai/tools/exchange_tool.dart';
 import 'package:inspector_gadget/ai/tools/function_tool.dart';
-import 'package:inspector_gadget/ai/tools/local_tool.dart';
 import 'package:inspector_gadget/ai/tools/sun_time_tool.dart';
 import 'package:inspector_gadget/ai/tools/weather_tool.dart';
 import 'package:inspector_gadget/ai/tools/web_research_tool.dart';
@@ -23,7 +21,6 @@ mixin ToolsMixin {
     }
 
     functionTools.addAll([
-      LocalTool(),
       WeatherTool(),
       SunTimeTool(),
       // WebSearchTool(),
@@ -31,9 +28,9 @@ mixin ToolsMixin {
       ExchangeTool(),
     ]);
 
-    // if (!(preferences?.alphaVantageAccessKey.isNullOrWhiteSpace ?? false)) {
-    //   functionTools.add(AlphaVantageTool());
-    // }
+    if (!preferences.alphaVantageAccessKey.isNullOrWhiteSpace) {
+      functionTools.add(AlphaVantageTool());
+    }
 
     return functionTools;
   }
@@ -67,16 +64,12 @@ mixin ToolsMixin {
 
   Future<FunctionResponse?> dispatchFunctionCall(
     FunctionCall call,
-    Location? location,
-    int hr,
     PreferencesService preferences,
   ) async {
     for (final functionTool in functionTools) {
       if (functionTool.canDispatchFunctionCall(call)) {
         final futureResponse = functionTool.dispatchFunctionCall(
           call,
-          location,
-          hr,
           preferences,
         );
 

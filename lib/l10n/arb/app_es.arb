@@ -231,5 +231,9 @@
     "cameraResolutionVeryHighLabel": "Muy alta (1080p)",
     "@cameraResolutionVeryHighLabel": {
         "description": "Texto que se muestra en la configuración de preferencias Selección de resolución de cámara muy alta"
+    },
+    "preferencesMeasureHeartRateLabel": "¿Medir la frecuencia cardíaca?",
+    "@preferencesMeasureHeartRateLabel": {
+        "description": "Texto que se muestra en la configuración de preferencias para ¿Medir la frecuencia cardíaca?"
     }
 }
