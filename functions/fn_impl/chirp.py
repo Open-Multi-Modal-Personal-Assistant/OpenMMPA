@@ -2,9 +2,9 @@ from firebase_functions import https_fn
 from firebase_admin import initialize_app, storage
 import firebase_admin
 import google.cloud.logging
+import json
 import logging
 
-from flask import jsonify
 from google.api_core.client_options import ClientOptions
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
@@ -71,14 +71,6 @@ def chirp(req: https_fn.Request) -> https_fn.Response:
 
         return ('', 204, headers)
 
-    # Set CORS headers for the main request
-    headers = {
-        'Content-Type':'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-    }
-    # END CORS
-
     if not firebase_admin._apps:
         initialize_app()
 
@@ -90,8 +82,8 @@ def chirp(req: https_fn.Request) -> https_fn.Response:
     project_id = 'open-mmpa'
     region = 'us-central1'
 
-    if request_json and 'recording_file_name' in request_json:
-        recording_file_name = request_json['recording_file_name']
+    if request_json and 'data' in request_json and 'recording_file_name' in request_json['data']:
+        recording_file_name = request_json['data']['recording_file_name']
     elif request_args and 'recording_file_name' in request_args:
         recording_file_name = request_args['recording_file_name']
     elif request_form and 'recording_file_name' in request_form:
@@ -113,4 +105,8 @@ def chirp(req: https_fn.Request) -> https_fn.Response:
         logging.exception(e)
         return transcripts, 500
 
-    return (jsonify(dict(transcripts=transcripts)), 200, headers)
+    return https_fn.Response(
+        json.dumps(dict(data=transcripts)),
+        status=200,
+        content_type='application/json',
+    )

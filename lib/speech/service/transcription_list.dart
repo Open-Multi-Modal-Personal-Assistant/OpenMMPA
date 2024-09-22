@@ -14,17 +14,14 @@ class Transcription {
 class Transcriptions {
   Transcriptions();
 
-  Transcriptions.fromJson(Map<String, Object?> jsonObject) {
+  Transcriptions.fromJson(List<Object?> transcriptList) {
     transcriptions.clear();
-    if (jsonObject.containsKey('transcripts') &&
-        jsonObject['transcripts'] != null) {
-      final json = jsonObject['transcripts']! as List<dynamic>;
-      final stringList = json.map((e) => e as String).toList(growable: false);
-      for (var i = 0; i < stringList.length; i += 2) {
-        final transcript = stringList[i].trim();
-        final language = i + 1 < stringList.length ? stringList[i + 1] : '';
-        transcriptions.add(Transcription(transcript, language.trim()));
-      }
+    final stringList =
+        transcriptList.nonNulls.map((e) => e as String).toList(growable: false);
+    for (var i = 0; i < stringList.length; i += 2) {
+      final transcript = stringList[i].trim();
+      final language = i + 1 < stringList.length ? stringList[i + 1] : '';
+      transcriptions.add(Transcription(transcript, language.trim()));
     }
   }
 

@@ -162,8 +162,8 @@ mixin SttMixin {
       final transcriptionResponse = await FirebaseFunctions.instance
           .httpsCallable(chirpFunctionName)
           .call<dynamic>({'recording_file_name': recordingFileName});
-      final transcriptJson = transcriptionResponse.data as Map<String, dynamic>;
-      final transcripts = Transcriptions.fromJson(transcriptJson);
+      final transcriptList = transcriptionResponse.data as List<Object?>;
+      final transcripts = Transcriptions.fromJson(transcriptList);
       addToDeferredQueueFunction?.call(
         DeferredAction(
           ActionKind.speechTranscripted,
