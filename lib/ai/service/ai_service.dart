@@ -230,10 +230,12 @@ class AiService with FirebaseMixin, ToolsMixin {
           try {
             // Check if already uploaded
             await fileRef.getDownloadURL();
-          } on FirebaseException {
+          } catch (e) {
             // Not uploaded yet
+            debugPrint('Not uploaded yet? $e');
             await fileRef.putFile(mediumFile.file);
           }
+
           final fileUri = 'gs://$bucket/${fileRef.fullPath}';
           debugPrint('Storage URI: $fileUri');
           parts.add(FileData(mediumFile.mimeType, fileUri));
