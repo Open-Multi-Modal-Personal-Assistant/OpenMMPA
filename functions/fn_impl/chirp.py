@@ -100,7 +100,7 @@ def chirp(req: https_fn.Request) -> https_fn.Response:
         recording_file_name = None
 
     if not recording_file_name:
-        return transcripts
+        return transcripts, 400
 
     try:
         bucket = storage.bucket(f'{project_id}.appspot.com')
@@ -111,6 +111,6 @@ def chirp(req: https_fn.Request) -> https_fn.Response:
         client = google.cloud.logging.Client()
         client.setup_logging()
         logging.exception(e)
-        return transcripts
+        return transcripts, 500
 
     return (jsonify(dict(transcripts=transcripts)), 200, headers)
