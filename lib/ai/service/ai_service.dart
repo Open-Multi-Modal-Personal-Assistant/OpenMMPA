@@ -260,7 +260,6 @@ class AiService with FirebaseMixin, ToolsMixin {
     }
 
     List<FunctionCall> functionCalls;
-    var content = Content.text('');
     while ((functionCalls = response.functionCalls.toList()).isNotEmpty) {
       final responses = <FunctionResponse>[];
       for (final functionCall in functionCalls) {
@@ -281,11 +280,10 @@ class AiService with FirebaseMixin, ToolsMixin {
         }
       }
 
-      content = response.candidates.first.content;
-      content.parts.addAll(responses);
+      message.parts.addAll(responses);
       // TODO(MrCsabaToth): Store in history?
       try {
-        response = await chat.sendMessage(content);
+        response = await chat.sendMessage(message);
       } catch (e) {
         log('Exception during function iteration chat.sendMessage: $e');
         return null;
