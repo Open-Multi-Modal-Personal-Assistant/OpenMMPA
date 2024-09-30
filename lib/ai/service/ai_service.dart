@@ -40,7 +40,7 @@ class AiService with FirebaseMixin, ToolsMixin {
     final preferences = GetIt.I.get<PreferencesService>();
     final modelType = preferences.fastLlmMode ? 'flash' : 'pro';
     return FirebaseVertexAI.instance.generativeModel(
-      model: 'gemini-1.5-$modelType',
+      model: 'gemini-1.5-$modelType-002',
       safetySettings: [
         SafetySetting(
           HarmCategory.harassment,
@@ -232,12 +232,10 @@ class AiService with FirebaseMixin, ToolsMixin {
             await fileRef.getDownloadURL();
           } catch (e) {
             // Not uploaded yet
-            debugPrint('Not uploaded yet? $e');
             await fileRef.putFile(mediumFile.file);
           }
 
           final fileUri = 'gs://$bucket/${fileRef.fullPath}';
-          debugPrint('Storage URI: $fileUri');
           parts.add(FileData(mediumFile.mimeType, fileUri));
         }
       }
