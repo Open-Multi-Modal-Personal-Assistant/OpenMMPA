@@ -93,7 +93,8 @@ def embed(req: https_fn.Request) -> https_fn.Response:
     task = "RETRIEVAL_DOCUMENT"
     multi_lingual_embedding_model = TextEmbeddingModel.from_pretrained("text-embedding-004")
     inputs = [TextEmbeddingInput(text, task)]
-    text_embeddings = multi_lingual_embedding_model.get_embeddings(inputs, **{})
+    kwargs = dict(output_dimensionality=768)
+    text_embeddings = multi_lingual_embedding_model.get_embeddings(inputs, **kwargs)
     embeddings.extend(text_embeddings)
 
     embedding_values = [embedding.values for embedding in embeddings]
