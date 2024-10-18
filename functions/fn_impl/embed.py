@@ -90,20 +90,21 @@ def embed(req: https_fn.Request) -> https_fn.Response:
         dimension=dimension,
     ) if image or video else []
 
-    # Multi lingual text embedding
-    # The task type for embedding. Check the available tasks in the model's documentation.
-    task = "RETRIEVAL_DOCUMENT"
-    multi_lingual_embedding_model = TextEmbeddingModel.from_pretrained("text-embedding-004")
-    inputs = [TextEmbeddingInput(text, task)]
-    kwargs = dict(output_dimensionality=768)
-    try:
-        text_embeddings = multi_lingual_embedding_model.get_embeddings(inputs, **kwargs)
-        embeddings.extend(text_embeddings)
-    except Exception as e:
-        client = google.cloud.logging.Client()
-        client.setup_logging()
-        logging.exception(e)
-        return embeddings, 500
+    if text:
+        # Multi-lingual text embedding
+        # The task type for embedding. Check the available tasks in the model's documentation.
+        task = "RETRIEVAL_DOCUMENT"
+        multi_lingual_embedding_model = TextEmbeddingModel.from_pretrained("text-embedding-004")
+        inputs = [TextEmbeddingInput(text, task)]
+        kwargs = dict(output_dimensionality=768)
+        try:
+            text_embeddings = multi_lingual_embedding_model.get_embeddings(inputs, **kwargs)
+            embeddings.extend(text_embeddings)
+        except Exception as e:
+            client = google.cloud.logging.Client()
+            client.setup_logging()
+            logging.exception(e)
+            return embeddings, 500
 
     embedding_values = [embedding.values for embedding in embeddings]
 
