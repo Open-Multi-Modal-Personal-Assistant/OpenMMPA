@@ -84,7 +84,7 @@ def embed(req: https_fn.Request) -> https_fn.Response:
         kwargs = dict(output_dimensionality=768)
         try:
             text_embeddings = multi_lingual_embedding_model.get_embeddings(inputs, **kwargs)
-            embeddings.append([embedding.values for embedding in text_embeddings])
+            embeddings.extend([embedding.values for embedding in text_embeddings])
         except Exception as e:
             client = google.cloud.logging.Client()
             client.setup_logging()
