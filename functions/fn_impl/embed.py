@@ -1,4 +1,4 @@
-from firebase_functions import https_fn
+from firebase_functions import https_fn , options, storage_fn
 from firebase_admin import initialize_app, storage
 import firebase_admin
 import json
@@ -12,6 +12,7 @@ from vertexai.vision_models import VideoSegmentConfig
 
 
 @https_fn.on_request()
+@storage_fn.on_object_finalized(timeout_sec=300, memory=options.MemoryOption.MB_512)
 def embed(req: https_fn.Request) -> https_fn.Response:
     """Synthesizes speech from the input string of text or ssml.
     Returns:
