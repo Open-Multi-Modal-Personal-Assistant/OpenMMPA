@@ -1,7 +1,7 @@
 firebase_functions~=0.4.2
 google-api-core~=2.21.0
+google-cloud-aiplatform~=1.70.0
 google-cloud-discoveryengine~=0.12.3
 google-cloud-logging~=3.11.3
 google-cloud-speech~=2.27.0
 google-cloud-texttospeech~=2.18.0
-vertexai~=1.70.0
