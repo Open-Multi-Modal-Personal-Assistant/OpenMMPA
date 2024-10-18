@@ -1,4 +1,4 @@
-from firebase_functions import https_fn
+from firebase_functions import https_fn, options
 from firebase_admin import initialize_app, storage
 import firebase_admin
 import google.cloud.logging
@@ -48,7 +48,7 @@ def transcribe_chirp_auto_detect_language(
 
     return transcripts
 
-@https_fn.on_request()
+@https_fn.on_request(timeout_sec=300, memory=options.MemoryOption.MB_512)
 def chirp(req: https_fn.Request) -> https_fn.Response:
     """Chirp audio to text.
     Args:

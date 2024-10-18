@@ -1,4 +1,4 @@
-from firebase_functions import https_fn
+from firebase_functions import https_fn, options
 from firebase_admin import initialize_app, storage
 import datetime
 import firebase_admin
@@ -7,7 +7,7 @@ import os
 
 from google.cloud import texttospeech
 
-@https_fn.on_request()
+@https_fn.on_request(timeout_sec=300, memory=options.MemoryOption.MB_512)
 def tts(req: https_fn.Request) -> https_fn.Response:
     """Synthesizes speech from the input string of text or ssml.
     Returns:

@@ -1,11 +1,11 @@
-from firebase_functions import https_fn
-from firebase_admin import initialize_app, storage
+from firebase_functions import https_fn, options
+from firebase_admin import initialize_app
 import firebase_admin
 import json
 
 from google.cloud import discoveryengine_v1beta as discoveryengine
 
-@https_fn.on_request()
+@https_fn.on_request(timeout_sec=300, memory=options.MemoryOption.MB_512)
 def rerank(req: https_fn.Request) -> https_fn.Response:
     """Synthesizes speech from the input string of text or ssml.
     Returns:
