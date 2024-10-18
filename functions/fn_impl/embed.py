@@ -1,7 +1,9 @@
 from firebase_functions import https_fn , options, storage_fn
 from firebase_admin import initialize_app, storage
 import firebase_admin
+import google.cloud.logging
 import json
+import logging
 import vertexai
 
 from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
@@ -94,8 +96,14 @@ def embed(req: https_fn.Request) -> https_fn.Response:
     multi_lingual_embedding_model = TextEmbeddingModel.from_pretrained("text-embedding-004")
     inputs = [TextEmbeddingInput(text, task)]
     kwargs = dict(output_dimensionality=768)
-    text_embeddings = multi_lingual_embedding_model.get_embeddings(inputs, **kwargs)
-    embeddings.extend(text_embeddings)
+    try:
+        text_embeddings = multi_lingual_embedding_model.get_embeddings(inputs, **kwargs)
+        embeddings.extend(text_embeddings)
+    except Exception as e:
+        client = google.cloud.logging.Client()
+        client.setup_logging()
+        logging.exception(e)
+        return embeddings, 500
 
     embedding_values = [embedding.values for embedding in embeddings]
 
