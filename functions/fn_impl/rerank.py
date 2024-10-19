@@ -101,9 +101,15 @@ def rerank(req: https_fn.Request) -> https_fn.Response:
     )
 
     response = client.rank(request=request)
+    rerankings = []
+    for item in response.records:
+        rerankings.append(dict(
+            id=item.id,
+            score=item.score,
+        ))
 
     return https_fn.Response(
-        json.dumps(dict(data=response)),
+        json.dumps(dict(data=rerankings)),
         status=200,
         content_type='application/json',
     )
