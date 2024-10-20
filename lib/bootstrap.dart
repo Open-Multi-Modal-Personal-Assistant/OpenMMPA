@@ -16,6 +16,7 @@ import 'package:inspector_gadget/location/service/location.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:inspector_gadget/speech/service/stt.dart';
 import 'package:inspector_gadget/speech/service/tts.dart';
+import 'package:media_kit/media_kit.dart';
 
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   await runZonedGuarded<Future<void>>(
@@ -47,6 +48,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
       final sttService = SttService();
       GetIt.I.registerSingleton(sttService);
       unawaited(sttService.init());
+      MediaKit.ensureInitialized();
       final ttsService = TtsService();
       GetIt.I.registerSingleton(ttsService);
       unawaited(ttsService.init());
