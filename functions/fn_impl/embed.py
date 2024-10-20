@@ -108,9 +108,9 @@ def embed(req: https_fn.Request) -> https_fn.Response:
             )
 
             if multi_modal_embeddings:
-                embeddings.image = multi_modal_embeddings.image_embedding
+                embeddings['image'] = multi_modal_embeddings.image_embedding
                 if video and multi_modal_embeddings.video_embeddings:
-                    embeddings.video.extend(
+                    embeddings['video'].extend(
                         [embedding.embedding for embedding in multi_modal_embeddings.video_embeddings]
                     )
         except Exception as e:
