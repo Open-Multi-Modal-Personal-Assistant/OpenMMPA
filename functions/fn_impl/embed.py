@@ -74,17 +74,17 @@ def embed(req: https_fn.Request) -> https_fn.Response:
     region = 'us-central1'
     vertexai.init(project=project_id, location=region)
 
-    embeddings = []
-    if text:
+    embeddings = dict(text=[], image=None, video=[])
+    if text and not image_path and not video_path:
         # Multi-lingual text embedding
         # The task type for embedding. Check the available tasks in the model's documentation.
-        task = "RETRIEVAL_DOCUMENT"
-        multi_lingual_embedding_model = TextEmbeddingModel.from_pretrained("text-embedding-004")
+        task = 'RETRIEVAL_DOCUMENT'
+        multi_lingual_embedding_model = TextEmbeddingModel.from_pretrained('text-embedding-004')
         inputs = [TextEmbeddingInput(text, task)]
         kwargs = dict(output_dimensionality=768)
         try:
             text_embeddings = multi_lingual_embedding_model.get_embeddings(inputs, **kwargs)
-            embeddings.extend([embedding.values for embedding in text_embeddings])
+            embeddings['text'].extend([embedding.values for embedding in text_embeddings])
         except Exception as e:
             client = google.cloud.logging.Client()
             client.setup_logging()
@@ -92,7 +92,7 @@ def embed(req: https_fn.Request) -> https_fn.Response:
             return embeddings, 500
 
     if image_path or video_path:
-        multi_modal_embedding_model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
+        multi_modal_embedding_model = MultiModalEmbeddingModel.from_pretrained('multimodalembedding')
 
         image = VMImage.load_from_file(image_path) if image_path else None
         video = VMVideo.load_from_file(video_path) if video_path else None
@@ -108,10 +108,11 @@ def embed(req: https_fn.Request) -> https_fn.Response:
             )
 
             if multi_modal_embeddings:
-                embeddings.append(multi_modal_embeddings.image_embedding if image else [])
+                embeddings.image = multi_modal_embeddings.image_embedding
                 if video and multi_modal_embeddings.video_embeddings:
-                    for video_embedding in multi_modal_embeddings.video_embeddings:
-                        embeddings.append(video_embedding.embedding)
+                    embeddings.video.extend(
+                        [embedding.embedding for embedding in multi_modal_embeddings.video_embeddings]
+                    )
         except Exception as e:
             client = google.cloud.logging.Client()
             client.setup_logging()
