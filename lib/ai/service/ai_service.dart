@@ -419,7 +419,9 @@ class AiService with FirebaseMixin, ToolsMixin {
     final content = Content.text(stuffedPrompt);
     final response = await model.generateContent([content]);
 
-    return response.text ?? '';
+    return response.text != null && response.text!.isNotEmpty
+        ? response.strippedText()
+        : '';
   }
 
   Future<GenerateContentResponse?> translate(
