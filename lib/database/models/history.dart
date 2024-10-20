@@ -11,6 +11,9 @@ class History {
     this.locale, [
     this.rewrite = '',
     this.embedding,
+    this.mediumPath = '',
+    this.mimeType = '',
+    this.mediumEmbedding,
   ]) {
     dateTime = DateTime.now();
   }
@@ -18,10 +21,10 @@ class History {
   @Id()
   int id = 0;
 
-  // "system", "user", "model", mime type (for media), or function name
+  // 'system', 'user', 'model', mime type (for media), or function name
   String role;
-  // "text_chat", "image_chat", "translate", "image_gen", "image_edit",
-  // "shazam", "sound_gen"
+  // 'text_chat', 'media_chat', 'translate', 'image_gen', 'image_edit',
+  // 'shazam', 'sound_gen', 'attachment', 'function_call'
   String mode;
   String content;
   String locale;
@@ -30,6 +33,13 @@ class History {
   @HnswIndex(dimensions: embeddingDimensionality)
   @Property(type: PropertyType.floatVector)
   List<double>? embedding;
+
+  String mediumPath = '';
+  String mimeType = '';
+
+  @HnswIndex(dimensions: embeddingDimensionality)
+  @Property(type: PropertyType.floatVector)
+  List<double>? mediumEmbedding;
 
   @Property(type: PropertyType.date) // Store as int in milliseconds
   late DateTime dateTime;

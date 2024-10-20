@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:dart_helper_utils/dart_helper_utils.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/foundation.dart';
@@ -11,6 +13,7 @@ import 'package:inspector_gadget/ai/prompts/request_instruction.dart';
 import 'package:inspector_gadget/ai/prompts/resolver_few_shot.dart';
 import 'package:inspector_gadget/ai/prompts/system_instruction.dart';
 import 'package:inspector_gadget/ai/prompts/translate_instruction.dart';
+import 'package:inspector_gadget/ai/service/embedding_list.dart';
 import 'package:inspector_gadget/ai/service/firebase_mixin.dart';
 import 'package:inspector_gadget/ai/service/generated_content_response.dart';
 import 'package:inspector_gadget/ai/tools/tools_mixin.dart';
@@ -88,7 +91,7 @@ class AiService with FirebaseMixin, ToolsMixin {
       return -1;
     }
 
-    final modelEmbedding = await obtainEmbedding(response);
+    final modelEmbedding = await obtainEmbedding(prompt: response);
     return database.addUpdateHistory(
       History(
         'model',
@@ -96,7 +99,7 @@ class AiService with FirebaseMixin, ToolsMixin {
         response,
         locale,
         '',
-        modelEmbedding,
+        modelEmbedding.textEmbedding,
       ),
     );
   }
@@ -129,53 +132,58 @@ class AiService with FirebaseMixin, ToolsMixin {
     final database = GetIt.I.get<DatabaseService>();
     final history = await persistedHistoryString(database, 100);
     final resolved = await resolvePromptToStandAlone(prompt, history);
-    final userEmbedding = await obtainEmbedding(resolved);
-    database.addUpdateHistory(
-      History(
-        'user',
-        interactionMode.toString(),
-        prompt,
-        PreferencesService.inputLocaleDefault,
-        resolved,
-        userEmbedding,
-      ),
+    final userEmbedding = await obtainEmbedding(prompt: resolved);
+    final historyEntry = History(
+      'user',
+      interactionMode.toString(),
+      prompt,
+      PreferencesService.inputLocaleDefault,
+      resolved,
+      userEmbedding.textEmbedding,
     );
+    database.addUpdateHistory(historyEntry);
+
     final stuffedPrompt = StringBuffer();
-    final nearestHistory =
-        await database.getNearestHistory(userEmbedding, watermark);
-    if (nearestHistory.isNotEmpty) {
-      log('History ANN Peers ${nearestHistory.map((p) => p.score)}');
-      final annThreshold = preferences.historyRagThreshold;
-      final historyStuffing = StringBuffer();
-      for (final history
-          in nearestHistory.where((h) => h.score < annThreshold)) {
-        historyStuffing.writeln('<history>${history.object.role}: '
-            '${history.object.content}</history>');
-      }
-
-      if (historyStuffing.isNotEmpty) {
-        // TODO(MrCsabaToth): extend the history (let's say 2 interaction
-        // before and after) around the picked ones
-        stuffedPrompt.writeln(
-          historyRagStuffingTemplate.replaceAll(
-            historyRagStuffingVariable,
-            historyStuffing.toString(),
-          ),
-        );
-      }
-    }
-
-    final nearestP13ns =
-        await database.getNearestPersonalization(userEmbedding);
     final p13Stuffing = StringBuffer();
-    if (nearestP13ns.isNotEmpty) {
-      log('P13n ANN Peers ${nearestP13ns.map((p) => p.score)}');
-      final annThreshold = preferences.personalizationRagThreshold;
-      for (final personalization
-          in nearestP13ns.where((p) => p.score < annThreshold)) {
-        p13Stuffing.writeln(
-          '<personalFact>${personalization.object.content}</personalFact>',
-        );
+    if (userEmbedding.textEmbedding.isNotEmpty) {
+      final nearestHistory = await database.getNearestHistory(
+        userEmbedding.textEmbedding,
+        watermark,
+      );
+      // TODO(MrCsabaToth): rerank
+      if (nearestHistory.isNotEmpty) {
+        log('History ANN Peers ${nearestHistory.map((p) => p.score)}');
+        final annThreshold = preferences.historyRagThreshold;
+        final historyStuffing = StringBuffer();
+        for (final history
+            in nearestHistory.where((h) => h.score < annThreshold)) {
+          historyStuffing.writeln('<history>${history.object.role}: '
+              '${history.object.content}</history>');
+        }
+
+        if (historyStuffing.isNotEmpty) {
+          // TODO(MrCsabaToth): Small-to-Big Retrieval #58
+          stuffedPrompt.writeln(
+            historyRagStuffingTemplate.replaceAll(
+              historyRagStuffingVariable,
+              historyStuffing.toString(),
+            ),
+          );
+        }
+      }
+
+      final nearestP13ns =
+          await database.getNearestPersonalization(userEmbedding.textEmbedding);
+      // TODO(MrCsabaToth): rerank
+      if (nearestP13ns.isNotEmpty) {
+        log('P13n ANN Peers ${nearestP13ns.map((p) => p.score)}');
+        final annThreshold = preferences.personalizationRagThreshold;
+        for (final personalization
+            in nearestP13ns.where((p) => p.score < annThreshold)) {
+          p13Stuffing.writeln(
+            '<personalFact>${personalization.object.content}</personalFact>',
+          );
+        }
       }
     }
 
@@ -218,7 +226,6 @@ class AiService with FirebaseMixin, ToolsMixin {
 
     final stuffed = stuffedPrompt.toString();
     debugPrint('stuffed: $stuffed');
-    // TODO(MrCsabaToth): +prompt for media transcription + store in history
     var message = Content.text('');
     if (mediaFiles.isEmpty) {
       message = Content.text(stuffed);
@@ -240,6 +247,70 @@ class AiService with FirebaseMixin, ToolsMixin {
 
           final fileUri = 'gs://$bucket/${fileRef.fullPath}';
           parts.add(FileData(mediumFile.mimeType, fileUri));
+
+          // Media embedding
+          if ([MFileType.image, MFileType.video]
+              .contains(mediumFile.fileType)) {
+            final imagePath =
+                mediumFile.fileType == MFileType.image ? fileUri : '';
+            final videoPath =
+                mediumFile.fileType == MFileType.video ? fileUri : '';
+            final mediaEmbedding = await obtainEmbedding(
+              prompt: resolved,
+              imagePath: imagePath,
+              videoPath: videoPath,
+            );
+            if (mediumFile.fileType == MFileType.image) {
+              final imageEmbedding = mediaEmbedding.imageEmbedding;
+              if (imageEmbedding.isNotEmpty) {
+                if (!historyEntry.mediumEmbedding.isNotEmptyOrNull) {
+                  historyEntry
+                    ..mediumEmbedding = imageEmbedding
+                    ..mimeType = mediumFile.mimeType;
+                  database.addUpdateHistory(historyEntry);
+                } else {
+                  database.addUpdateHistory(
+                    History(
+                      'user',
+                      'attachment',
+                      '',
+                      '',
+                      '',
+                      null,
+                      fileUri,
+                      mediumFile.mimeType,
+                      imageEmbedding,
+                    ),
+                  );
+                }
+              }
+            } else if (mediumFile.fileType == MFileType.video) {
+              for (final videoEmbedding in mediaEmbedding.videoEmbeddings) {
+                if (videoEmbedding.isNotEmpty) {
+                  if (!historyEntry.mediumEmbedding.isNotEmptyOrNull) {
+                    historyEntry
+                      ..mediumEmbedding = videoEmbedding
+                      ..mimeType = mediumFile.mimeType;
+                    database.addUpdateHistory(historyEntry);
+                  } else {
+                    database.addUpdateHistory(
+                      History(
+                        'user',
+                        'attachment',
+                        '',
+                        '',
+                        '',
+                        null,
+                        fileUri,
+                        mediumFile.mimeType,
+                        videoEmbedding,
+                      ),
+                    );
+                  }
+                }
+              }
+            }
+          }
         }
       }
 
@@ -273,6 +344,14 @@ class AiService with FirebaseMixin, ToolsMixin {
           debugPrint('Function call result ${response?.response}');
           if (response?.response != null) {
             responses.add(response!);
+            database.addUpdateHistory(
+              History(
+                'user',
+                'function_call',
+                response.toString(),
+                '',
+              ),
+            );
           }
         } catch (e) {
           log('Exception during transcription: $e');
@@ -281,7 +360,7 @@ class AiService with FirebaseMixin, ToolsMixin {
       }
 
       message.parts.addAll(responses);
-      // TODO(MrCsabaToth): Store in history?
+
       try {
         response = await chat.sendMessage(message);
       } catch (e) {
@@ -302,29 +381,19 @@ class AiService with FirebaseMixin, ToolsMixin {
     return response;
   }
 
-  List<double> dimensionalityReduction(List<double> vector) {
-    // Reduction by addition of values
-    final foldedVector =
-        vector.take(embeddingDimensionality).toList(growable: false);
-    if (vector.length > embeddingDimensionality) {
-      for (var i = 0, j = embeddingDimensionality;
-          j < vector.length;
-          i++, j++) {
-        foldedVector[i % embeddingDimensionality] += vector[j];
-      }
-    }
-
-    return foldedVector;
-  }
-
-  Future<List<double>> obtainEmbedding(String prompt) async {
-    final model = FirebaseVertexAI.instance.generativeModel(
-      model: 'text-embedding-004', // 'text-multilingual-embedding-002',
+  Future<Embeddings> obtainEmbedding({
+    String prompt = '',
+    String imagePath = '',
+    String videoPath = '',
+  }) async {
+    final embeddingResponse = await FirebaseFunctions.instance
+        .httpsCallable(embeddingFunctionName)
+        .call<dynamic>(
+      {'text': prompt, 'image_path': imagePath, 'video_path': videoPath},
     );
-    final content = Content.text(prompt);
-    final embeddingResult = await model.embedContent(content);
-
-    return dimensionalityReduction(embeddingResult.embedding.values);
+    final embeddingMap = embeddingResponse.data as Map<String, Object?>;
+    final embeddings = Embeddings.fromJson(embeddingMap);
+    return embeddings;
   }
 
   String nativeHistoryToString(Iterable<Content> history) {
@@ -359,7 +428,7 @@ class AiService with FirebaseMixin, ToolsMixin {
     String targetLocale,
   ) async {
     final database = GetIt.I.get<DatabaseService>();
-    final userEmbedding = await obtainEmbedding(transcript);
+    final userEmbedding = await obtainEmbedding(prompt: transcript);
     database.addUpdateHistory(
       History(
         'user',
@@ -367,7 +436,7 @@ class AiService with FirebaseMixin, ToolsMixin {
         transcript,
         sourceLocale,
         '',
-        userEmbedding,
+        userEmbedding.textEmbedding,
       ),
     );
 

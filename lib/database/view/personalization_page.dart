@@ -80,14 +80,17 @@ class PersonalizationPageState extends State<PersonalizationPage>
     if (recorded.isNotEmpty) {
       personalizationViewState.setState(StateBase.llmStateLabel);
       final aiService = GetIt.I.get<AiService>();
-      final embedding = await aiService.obtainEmbedding(recorded);
-      final personalization = Personalization(recorded, localeId)
-        ..embedding = embedding;
-      database.addUpdatePersonalization(personalization);
+      final embedding = await aiService.obtainEmbedding(prompt: recorded);
+      final recordEmbedding = embedding.textEmbedding;
+      if (recordEmbedding.isNotEmpty) {
+        final personalization = Personalization(recorded, localeId)
+          ..embedding = recordEmbedding;
+        database.addUpdatePersonalization(personalization);
 
-      setState(() {
-        _editCount++;
-      });
+        setState(() {
+          _editCount++;
+        });
+      }
     }
 
     personalizationViewState.setState(StateBase.browsingStateLabel);

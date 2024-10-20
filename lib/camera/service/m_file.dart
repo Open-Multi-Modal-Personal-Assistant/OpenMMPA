@@ -13,15 +13,19 @@ enum MFileType {
   other,
 }
 
+MFileType fileTypeByMimeType(String mimeType) {
+  return switch (mimeType.split('/')[0]) {
+    'image' => MFileType.image,
+    'video' => MFileType.video,
+    'audio' => MFileType.audio,
+    _ => mimeType.endsWith('/pdf') ? MFileType.pdf : MFileType.other,
+  };
+}
+
 /// An XFile together with a MIME type
 class MFile {
   MFile(this.xFile, this.mimeType) {
-    fileType = switch (mimeType.split('/')[0]) {
-      'image' => MFileType.image,
-      'video' => MFileType.video,
-      'audio' => MFileType.audio,
-      _ => mimeType.endsWith('/pdf') ? MFileType.pdf : MFileType.other,
-    };
+    fileType = fileTypeByMimeType(mimeType);
   }
 
   final XFile xFile;
