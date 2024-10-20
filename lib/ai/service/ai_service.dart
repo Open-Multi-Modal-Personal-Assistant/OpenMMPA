@@ -187,7 +187,7 @@ class AiService with FirebaseMixin, ToolsMixin {
       }
     }
 
-    p13Stuffing.write('<personalFact>Current date and time: '
+    p13Stuffing.writeln('<personalFact>Current date and time: '
         '${DateTime.now().toIso8601String()}</personalFact>');
 
     final gpsLocation = await GetIt.I.get<LocationService>().obtain();
