@@ -24,24 +24,20 @@ class WebResearchTool implements FunctionTool {
       FunctionDeclaration(
         'fetchWebResearch',
         'fetch accurate and factual search results quickly and efficiently',
-        Schema(
-          SchemaType.object,
-          properties: {
-            'query': Schema.string(
-              description: 'The search query or question which need to be '
-                  'researched',
-            ),
-          },
-          requiredProperties: ['query'],
-        ),
+        parameters: {
+          'query': Schema.string(
+            description: 'The search query or question which need to be '
+                'researched',
+          ),
+        },
       ),
     ];
   }
 
   @override
   Tool getTool(PreferencesService preferences) {
-    return Tool(
-      functionDeclarations: getFunctionDeclarations(preferences),
+    return Tool.functionDeclarations(
+      getFunctionDeclarations(preferences),
     );
   }
 
@@ -59,7 +55,7 @@ class WebResearchTool implements FunctionTool {
       'fetchWebResearch' => {
           'query': await _webResearch(call.args, preferences.tavilyApiKey),
         },
-      _ => null
+      _ => <String, String>{}
     };
 
     return FunctionResponse(call.name, result);

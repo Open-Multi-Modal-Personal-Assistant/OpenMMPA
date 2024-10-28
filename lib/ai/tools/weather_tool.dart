@@ -18,26 +18,22 @@ class WeatherTool implements FunctionTool {
       FunctionDeclaration(
         'fetchWeatherForecast',
         'Returns the weather in a given location.',
-        Schema(
-          SchemaType.object,
-          properties: {
-            'latitude': Schema.number(
-              description: 'Latitude of the weather observation and forecast',
-            ),
-            'longitude': Schema.number(
-              description: 'Longitude of the weather observation and forecast',
-            ),
-          },
-          requiredProperties: ['latitude', 'longitude'],
-        ),
+        parameters: {
+          'latitude': Schema.number(
+            description: 'Latitude of the weather observation and forecast',
+          ),
+          'longitude': Schema.number(
+            description: 'Longitude of the weather observation and forecast',
+          ),
+        },
       ),
     ];
   }
 
   @override
   Tool getTool(PreferencesService preferences) {
-    return Tool(
-      functionDeclarations: getFunctionDeclarations(preferences),
+    return Tool.functionDeclarations(
+      getFunctionDeclarations(preferences),
     );
   }
 
@@ -59,7 +55,7 @@ class WeatherTool implements FunctionTool {
             isMetric,
           ),
         },
-      _ => null
+      _ => <String, String>{}
     };
 
     return FunctionResponse(call.name, result);

@@ -21,52 +21,45 @@ class ExchangeTool implements FunctionTool {
       FunctionDeclaration(
         'fetchCurrencyExchangeRate',
         'Fetch the exchange rate between two currencies.',
-        Schema(
-          SchemaType.object,
-          properties: {
-            'currencyDate': Schema.string(
-              description: 'A date or the value "latest" '
-                  'if a time period is not specified',
-            ),
-            'currencyFrom': Schema.string(
-              description: 'The currency to convert from in ISO 4217 format',
-            ),
-            'currencyTo': Schema.string(
-              description: 'The currency to convert to in ISO 4217 format',
-            ),
-            'amountFrom': Schema.number(
-              description: 'The amount which needs to be converted, '
-                  'defaults to 1.0',
-            ),
-          },
-          requiredProperties: ['currencyFrom', 'currencyTo'],
-        ),
+        parameters: {
+          'currencyDate': Schema.string(
+            description: 'A date or the value "latest" '
+                'if a time period is not specified',
+          ),
+          'currencyFrom': Schema.string(
+            description: 'The currency to convert from in ISO 4217 format',
+          ),
+          'currencyTo': Schema.string(
+            description: 'The currency to convert to in ISO 4217 format',
+          ),
+          'amountFrom': Schema.number(
+            description: 'The amount which needs to be converted, '
+                'defaults to 1.0',
+          ),
+        },
+        optionalParameters: ['currencyDate', 'amountFrom'],
       ),
       FunctionDeclaration(
         'fetchCryptoExchangeRate',
         'Fetch the immediate exchange rate between two crypto currencies '
             'or a crypto currency and a money currency.',
-        Schema(
-          SchemaType.object,
-          properties: {
-            'cryptoFromTicker': Schema.string(
-              description: 'The crypto currency ticker symbol to convert from',
-            ),
-            'currencyToTicker': Schema.string(
-              description: 'The money currency to convert to in ISO 4217 '
-                  'format or crypto currency ticker symbol',
-            ),
-          },
-          requiredProperties: ['cryptoFromTicker', 'currencyToTicker'],
-        ),
+        parameters: {
+          'cryptoFromTicker': Schema.string(
+            description: 'The crypto currency ticker symbol to convert from',
+          ),
+          'currencyToTicker': Schema.string(
+            description: 'The money currency to convert to in ISO 4217 '
+                'format or crypto currency ticker symbol',
+          ),
+        },
       ),
     ];
   }
 
   @override
   Tool getTool(PreferencesService preferences) {
-    return Tool(
-      functionDeclarations: getFunctionDeclarations(preferences),
+    return Tool.functionDeclarations(
+      getFunctionDeclarations(preferences),
     );
   }
 
@@ -92,7 +85,7 @@ class ExchangeTool implements FunctionTool {
             CurrencyRequest.fromJson(call.args),
           ),
         },
-      _ => null
+      _ => <String, String>{}
     };
 
     return FunctionResponse(call.name, result);

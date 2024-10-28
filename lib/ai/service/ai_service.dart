@@ -63,7 +63,7 @@ class AiService with FirebaseMixin, ToolsMixin {
         ),
       ],
       systemInstruction: Content.text(systemInstruction),
-      tools: withTools ? [getFunctionDeclarations(preferences)] : null,
+      tools: withTools ? getToolDeclarations(preferences) : null,
     );
   }
 

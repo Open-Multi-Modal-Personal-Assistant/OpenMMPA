@@ -180,7 +180,7 @@ class PreferencesService with ChangeNotifier {
         harmBlockThresholdMedium => HarmBlockThreshold.medium,
         harmBlockThresholdHigh => HarmBlockThreshold.high,
         harmBlockThresholdNone => HarmBlockThreshold.none,
-        _ => HarmBlockThreshold.unspecified,
+        _ => HarmBlockThreshold.none,
       };
 
   double get personalizationRagThreshold =>

@@ -57,8 +57,8 @@ mixin ToolsMixin {
       }
     }
 
-    return Tool(
-      functionDeclarations: functionDeclarations,
+    return Tool.functionDeclarations(
+      functionDeclarations,
     );
   }
 
@@ -80,6 +80,6 @@ mixin ToolsMixin {
       }
     }
 
-    return FunctionResponse(call.name, null);
+    return FunctionResponse(call.name, {});
   }
 }

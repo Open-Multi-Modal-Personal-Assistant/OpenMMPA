@@ -27,50 +27,36 @@ class AlphaVantageTool implements FunctionTool {
       FunctionDeclaration(
         'fetchStockPrice',
         'Fetch the current stock price of a given company in JSON string',
-        Schema(
-          SchemaType.object,
-          properties: {
-            'ticker': Schema.string(
-              description: 'Stock ticker symbol for a company',
-            ),
-          },
-          requiredProperties: ['ticker'],
-        ),
+        parameters: {
+          'ticker': Schema.string(
+            description: 'Stock ticker symbol for a company',
+          ),
+        },
       ),
       FunctionDeclaration(
         'fetchCompanyOverview',
         'Fetch company details and other financial data in JSON string',
-        Schema(
-          SchemaType.object,
-          properties: {
-            'ticker': Schema.string(
-              description: 'Stock ticker symbol for a company',
-            ),
-          },
-          requiredProperties: ['ticker'],
-        ),
+        parameters: {
+          'ticker': Schema.string(
+            description: 'Stock ticker symbol for a company',
+          ),
+        },
       ),
       FunctionDeclaration(
         'fetchCompanyNews',
         'Fetch the latest news headlines for a company as JSON string',
-        Schema(
-          SchemaType.object,
-          properties: {
-            'ticker': Schema.string(
-              description: 'Stock ticker symbol for a company',
-            ),
-          },
-          requiredProperties: ['ticker'],
-        ),
+        parameters: {
+          'ticker': Schema.string(
+            description: 'Stock ticker symbol for a company',
+          ),
+        },
       ),
       FunctionDeclaration(
         'fetchNewsWithSentiment',
         'Fetch live and historical market news and sentiment data',
-        Schema(
-          SchemaType.object,
-          properties: {
-            'newsTopic': Schema.string(
-              description: '''
+        parameters: {
+          'newsTopic': Schema.string(
+            description: '''
 News topic to learn about. Supported topics
 include blockchain, earnings, ipo,
 mergers_and_acquisitions, financial_markets,
@@ -78,10 +64,8 @@ economy_fiscal, economy_monetary, economy_macro,
 energy_transportation, finance, life_sciences,
 manufacturing, real_estate, retail_wholesale,
 and technology''',
-            ),
-          },
-          requiredProperties: ['newsTopic'],
-        ),
+          ),
+        },
       ),
     ];
   }
@@ -93,7 +77,7 @@ and technology''',
       functions = getFunctionDeclarations(preferences);
     }
 
-    return Tool(functionDeclarations: functions);
+    return Tool.functionDeclarations(functions);
   }
 
   @override
@@ -125,7 +109,7 @@ and technology''',
       'fetchNewsWithSentiment' => {
           'newsWithSentiment': _getNewsWithSentiment(call.args),
         },
-      _ => null
+      _ => <String, String>{}
     };
 
     return FunctionResponse(call.name, result);

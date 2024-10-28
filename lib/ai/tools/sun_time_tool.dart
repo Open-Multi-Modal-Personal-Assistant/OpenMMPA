@@ -19,48 +19,42 @@ class SunTimeTool implements FunctionTool {
       FunctionDeclaration(
         'fetchSunrise',
         'Returns the sunrise time for a given GPS location and date.',
-        Schema(
-          SchemaType.object,
-          properties: {
-            'latitude': Schema.number(
-              description: 'Latitude of the sunrise observer',
-            ),
-            'longitude': Schema.number(
-              description: 'Longitude of the sunrise observer',
-            ),
-            'date': Schema.string(
-              description: 'Date of the sunrise observation',
-            ),
-          },
-          requiredProperties: ['latitude', 'longitude'],
-        ),
+        parameters: {
+          'latitude': Schema.number(
+            description: 'Latitude of the sunrise observer',
+          ),
+          'longitude': Schema.number(
+            description: 'Longitude of the sunrise observer',
+          ),
+          'date': Schema.string(
+            description: 'Date of the sunrise observation',
+          ),
+        },
+        optionalParameters: ['date'],
       ),
       FunctionDeclaration(
         'fetchSunset',
         'Returns the sunset time for a given GPS location and date.',
-        Schema(
-          SchemaType.object,
-          properties: {
-            'latitude': Schema.number(
-              description: 'Latitude of the sunset observer',
-            ),
-            'longitude': Schema.number(
-              description: 'Longitude of the sunset observer',
-            ),
-            'date': Schema.string(
-              description: 'Date of the sunset observation',
-            ),
-          },
-          requiredProperties: ['latitude', 'longitude'],
-        ),
+        parameters: {
+          'latitude': Schema.number(
+            description: 'Latitude of the sunset observer',
+          ),
+          'longitude': Schema.number(
+            description: 'Longitude of the sunset observer',
+          ),
+          'date': Schema.string(
+            description: 'Date of the sunset observation',
+          ),
+        },
+        optionalParameters: ['date'],
       ),
     ];
   }
 
   @override
   Tool getTool(PreferencesService preferences) {
-    return Tool(
-      functionDeclarations: getFunctionDeclarations(preferences),
+    return Tool.functionDeclarations(
+      getFunctionDeclarations(preferences),
     );
   }
 
@@ -81,7 +75,7 @@ class SunTimeTool implements FunctionTool {
       'fetchSunset' => {
           'sunset': _fetchSunset(GeoRequest.fromJson(call.args)),
         },
-      _ => null
+      _ => <String, String>{}
     };
 
     return FunctionResponse(call.name, result);

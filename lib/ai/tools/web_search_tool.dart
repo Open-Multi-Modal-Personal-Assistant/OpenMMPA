@@ -21,24 +21,20 @@ class WebSearchTool implements FunctionTool {
         'webSearch',
         'Search the web and wikipedia for facts about any topic or '
             'gather munition to answer any questions',
-        Schema(
-          SchemaType.object,
-          properties: {
-            'query': Schema.string(
-              description: 'The search query or question which need '
-                  'to be researched or answered',
-            ),
-          },
-          requiredProperties: ['query'],
-        ),
+        parameters: {
+          'query': Schema.string(
+            description: 'The search query or question which need '
+                'to be researched or answered',
+          ),
+        },
       ),
     ];
   }
 
   @override
   Tool getTool(PreferencesService preferences) {
-    return Tool(
-      functionDeclarations: getFunctionDeclarations(preferences),
+    return Tool.functionDeclarations(
+      getFunctionDeclarations(preferences),
     );
   }
 
@@ -56,7 +52,7 @@ class WebSearchTool implements FunctionTool {
       'webSearch' => {
           'query': await _webSearch(call.args),
         },
-      _ => null
+      _ => <String, String>{}
     };
 
     return FunctionResponse(call.name, result);
