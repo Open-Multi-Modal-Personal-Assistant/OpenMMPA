@@ -24,7 +24,7 @@ user: Where is the capital of that and how many its soldiers fallen?
 <example>
 <interaction>
 user: When was the second world war?
-model: September 1, 1939 – September 2, 1945
+model: September 1, 1939 - September 2, 1945
 user: Who was the main attacker country?
 model: Germany was the main attacker country in World War II.
 user: Who was the leader of that?
