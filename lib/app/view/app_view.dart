@@ -28,12 +28,10 @@ class AppView extends StatelessWidget with WatchItMixin {
         debugShowCheckedModeBanner: false,
         theme: FlexThemeData.light(
           scheme: FlexScheme.indigoM3,
-          useMaterial3: true,
           swapLegacyOnMaterial3: true,
         ),
         darkTheme: FlexThemeData.dark(
           scheme: FlexScheme.indigoM3,
-          useMaterial3: true,
           swapLegacyOnMaterial3: true,
         ),
         themeMode: themeMode,
