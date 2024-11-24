@@ -21,7 +21,7 @@ mixin ToolsMixin {
     }
 
     functionTools.addAll([
-      WeatherTool(),
+      SevenTimerWeatherTool(),
       SunTimeTool(),
       // WebSearchTool(),
       WebResearchTool(),

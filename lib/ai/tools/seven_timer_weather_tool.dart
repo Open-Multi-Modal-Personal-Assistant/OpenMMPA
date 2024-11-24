@@ -4,7 +4,7 @@ import 'package:inspector_gadget/ai/tools/function_tool.dart';
 import 'package:inspector_gadget/ai/tools/geo_request.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
 
-class WeatherTool implements FunctionTool {
+class SevenTimerWeatherTool implements FunctionTool {
   @override
   bool isAvailable(PreferencesService preferences) {
     return true;
