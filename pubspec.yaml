@@ -11,13 +11,13 @@ dependency_overrides:
   mime: ^2.0.0
 
 dependencies:
-  adaptive_dialog: ^2.2.1+2
+  adaptive_dialog: ^2.3.0
   assorted_layout_widgets: ^10.0.4
   camera: ^0.11.0+2
   cloud_functions: ^5.1.5
   collection: ^1.19.0
   country_flags: ^3.0.0
-  dart_helper_utils: ^3.1.1
+  dart_helper_utils: ^3.2.0
   daylight: ^3.1.0
   file_picker: ^8.1.4
   firebase_app_check: ^0.3.1+6
