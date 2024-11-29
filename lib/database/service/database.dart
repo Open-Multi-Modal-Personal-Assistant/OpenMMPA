@@ -55,7 +55,7 @@ class DatabaseService with StateLoggingMixin {
     int bigLimit = 20,
     int littleLimit = 5,
   ]) async {
-    if (objectBox == null) {
+    if (objectBox == null || embedding.isEmpty) {
       return [];
     }
 
@@ -66,6 +66,7 @@ class DatabaseService with StateLoggingMixin {
         )
         .build()
       ..limit = littleLimit;
+
     // TODO(MrCsabaToth): Weaviate style auto-cut and also slash too low scores
     return query.findWithScores();
   }
@@ -118,7 +119,7 @@ class DatabaseService with StateLoggingMixin {
     int bigLimit = 20,
     int littleLimit = 5,
   ]) async {
-    if (objectBox == null) {
+    if (objectBox == null || embedding.isEmpty) {
       return [];
     }
 
@@ -131,6 +132,7 @@ class DatabaseService with StateLoggingMixin {
         )
         .build()
       ..limit = littleLimit;
+
     // TODO(MrCsabaToth): Weaviate style auto-cut and also slash too low scores
     return query.findWithScores();
   }
