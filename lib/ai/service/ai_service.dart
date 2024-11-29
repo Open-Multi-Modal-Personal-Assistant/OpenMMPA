@@ -65,6 +65,7 @@ class AiService with FirebaseMixin, ToolsMixin {
       systemInstruction: Content.text(systemInstruction),
       tools: withTools ? getToolDeclarations(preferences) : null,
     );
+    // [getFunctionDeclarations(preferences)]
   }
 
   ChatSession? getChatSession(
