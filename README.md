@@ -2,12 +2,14 @@
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 [![License: MIT][license_badge]][license_link]
 
-# Your Generative AI Companion: Open Multi-Modal Personal Assistant
+# Open Multi-Modal Personal Assistant, a Generative AI Companion application
 
 ## Unleash the Power of Generative AI on Your Devices
 
-Forget clunky AI pins!
-Your smartphone or smartwatch already has the potential to be your personal AI powerhouse.
+You don't necessarily need an AI pin:
+1. Your smartphone or smartwatch already has the potential to be your personal AI powerhouse.
+2. AI pins so far turned out to run Android apks on Android operating systems.
+
 This open-source project harnesses the full might of generative AI, multi-modal capabilities,
 and RAG (Retrieval Augmented Generation) to turn your existing devices into intelligent companions.
 
@@ -33,7 +35,6 @@ and RAG (Retrieval Augmented Generation) to turn your existing devices into inte
 ### On the Horizon:
 * Web search via DuckDuckGo Assist
 * Business insights with Alpha Vantage (API key required)
-* Song lyric lookup
 
 ### Future Possibilities:
 * Expand your AI's toolkit with SerpAPI integration
@@ -55,11 +56,8 @@ Contribute to this open-source project and shape the future of AI on your terms!
 Notes:
 1. A demo video of the app: https://www.youtube.com/watch?v=kCtHH6XG5as
 2. This project was submitted to the [Gemini API Developer Competition](https://ai.google.dev/competition).
-3. Please find the related cloud functions - which comprise the backend - in the
-[Open Multi-Modal Personal Assistant](https://github.com/Open-Multi-Modal-Personal-Assistant) organization.
-Once the judging is over this repository will eventually be renamed and transferred there as well.
-4. The repository state at the time of the submission was the last commit on August 12th before I recorded the demo:
-https://github.com/CsabaConsulting/InspectorGadgetApp/tree/b7de11fa3d9122fd96b85e7c708802b371bb15c9
+3. The cloud functions needed for the backend are in the functions subfolder of the repository(after).
+   (after transitioning from AI Studio (ex MakerSuite) Gemini API to Firebase Vertex AI driven Gemini)
 5. After the [Made By Google '24](https://store.google.com/intl/en/ideas/articles/made-by-google-recap/)
 someone may compare Open MMPA to Gemini Live, however we must notice that:
    - Open MMPA targets embedded form factors
