@@ -14,7 +14,7 @@ dependencies:
   adaptive_dialog: ^2.3.0
   assorted_layout_widgets: ^10.0.4
   camera: ^0.11.0+2
-  cloud_functions: ^5.1.5
+  cloud_functions: ^5.2.0
   collection: ^1.19.0
   country_flags: ^3.0.0
   dart_helper_utils: ^3.2.0
