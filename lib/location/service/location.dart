@@ -40,7 +40,9 @@ class LocationService with ChangeNotifier {
       // Ask the user for location permission.
       locationPermission = await FlLocation.requestLocationPermission();
       if (locationPermission == LocationPermission.denied ||
-          locationPermission == LocationPermission.deniedForever) return false;
+          locationPermission == LocationPermission.deniedForever) {
+        return false;
+      }
     }
 
     // Location services has been enabled and permission have been granted.
