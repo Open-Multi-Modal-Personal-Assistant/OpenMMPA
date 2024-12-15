@@ -20,7 +20,10 @@ dependencies:
   country_flags: ^3.1.0
   dart_helper_utils: ^3.3.0
   daylight: ^3.1.0
-  file_picker: ^8.1.5
+  file_picker:
+    git:
+      url: https://github.com/abdelaziz-mahdy/flutter_file_picker
+      ref: fix-flutter-3.27-compile-error
   firebase_app_check: ^0.3.1+7
   firebase_auth: ^5.3.4
   firebase_core: ^3.8.1
