@@ -43,7 +43,7 @@ class AiService with FirebaseMixin, ToolsMixin {
     final preferences = GetIt.I.get<PreferencesService>();
     final modelType = preferences.fastLlmMode ? 'flash' : 'pro';
     return FirebaseVertexAI.instance.generativeModel(
-      model: 'gemini-1.5-$modelType',
+      model: 'gemini-2.0-$modelType-exp',
       safetySettings: [
         SafetySetting(
           HarmCategory.harassment,
