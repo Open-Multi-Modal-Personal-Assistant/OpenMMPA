@@ -60,9 +60,25 @@
     "@preferencesOutputLocaleSubLabel": {
         "description": "Texto que se muestra en el subtítulo de configuración de preferencias para la configuración regional de salida"
     },
-    "interactionAppBarTitle": "Presione para detener la grabación:",
-    "@interactionAppBarTitle": {
+    "interactionAppBarTitleStart": "Presione para iniciar la grabación:",
+    "@interactionAppBarTitleStart": {
+        "description": "Texto que se muestra en la barra de aplicaciones de la página de interacción antes de una sesión"
+    },
+    "interactionAppBarTitleStop": "Presione para detener la grabación:",
+    "@interactionAppBarTitleStop": {
         "description": "Texto que se muestra en la AppBar de la página de expresión"
+    },
+    "interactionAppBarTitleProcessing": "Tratamiento...",
+    "@interactionAppBarTitleProcessing": {
+        "description": "Texto que se muestra en la barra de aplicaciones de la página de interacción durante el procesamiento"
+    },
+    "interactionAppBarTitleResult": "Resultado:",
+    "@interactionAppBarTitleResult": {
+        "description": "Texto que se muestra en la barra de aplicaciones de la página de interacción después del procesamiento"
+    },
+    "interactionAppBarTitleError": "Error",
+    "@interactionAppBarTitleError": {
+        "description": "Texto que se muestra en la barra de aplicaciones de la página de interacción en caso de error"
     },
     "legendDialogTitle": "Leyenda",
     "@legendDialogTitle": {

@@ -60,9 +60,25 @@
     "@preferencesOutputLocaleSubLabel": {
         "description": "Text shown in the preferences settings subtitle for Output Locale"
     },
-    "interactionAppBarTitle": "Press to stop recording:",
-    "@interactionAppBarTitle": {
-        "description": "Text shown in the AppBar of the Interaction Page"
+    "interactionAppBarTitleStart": "Press to start recording:",
+    "@interactionAppBarTitleStart": {
+        "description": "Text shown in the AppBar of the Interaction Page before a session"
+    },
+    "interactionAppBarTitleStop": "Press to stop recording:",
+    "@interactionAppBarTitleStop": {
+        "description": "Text shown in the AppBar of the Interaction Page during recording"
+    },
+    "interactionAppBarTitleProcessing": "Processing...",
+    "@interactionAppBarTitleProcessing": {
+        "description": "Text shown in the AppBar of the Interaction Page during processing"
+    },
+    "interactionAppBarTitleResult": "Result:",
+    "@interactionAppBarTitleResult": {
+        "description": "Text shown in the AppBar of the Interaction Page after processing"
+    },
+    "interactionAppBarTitleError": "Error",
+    "@interactionAppBarTitleError": {
+        "description": "Text shown in the AppBar of the Interaction Page in case of error"
     },
     "legendDialogTitle": "Legend",
     "@legendDialogTitle": {

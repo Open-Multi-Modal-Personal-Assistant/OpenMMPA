@@ -28,4 +28,13 @@ class InteractionState extends StateBase {
 
     waitingState.enter();
   }
+
+  String responseText = '';
+
+  String setResponseText(String text) {
+    responseText = text;
+    notifyListeners();
+
+    return text;
+  }
 }

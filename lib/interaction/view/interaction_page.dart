@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:dart_helper_utils/dart_helper_utils.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
@@ -21,6 +22,7 @@ import 'package:inspector_gadget/speech/service/stt.dart';
 import 'package:inspector_gadget/speech/service/tts.dart';
 import 'package:inspector_gadget/speech/view/stt_mixin.dart';
 import 'package:inspector_gadget/speech/view/tts_mixin.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 import 'package:watch_it/watch_it.dart';
 
 enum InteractionMode {
@@ -214,9 +216,25 @@ class InteractionPageState extends State<InteractionPage>
 
     final interactionState = GetIt.I.get<InteractionState>();
     final stateIndex = watchPropertyValue((InteractionState s) => s.stateIndex);
+    final responseText =
+        watchPropertyValue((InteractionState s) => s.responseText);
+
+    final smallHeadline = Theme.of(context).textTheme.headlineSmall;
+    final title = switch (stateIndex) {
+      0 => Text(l10n.interactionAppBarTitleStart),
+      1 => Text(l10n.interactionAppBarTitleStop),
+      4 => JumpingText(l10n.interactionAppBarTitleResult, style: smallHeadline),
+      5 => JumpingText(l10n.interactionAppBarTitleResult, style: smallHeadline),
+      6 => Text(l10n.interactionAppBarTitleResult),
+      7 => Text(l10n.interactionAppBarTitleError),
+      _ => JumpingText(
+          l10n.interactionAppBarTitleProcessing,
+          style: smallHeadline,
+        ),
+    };
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.interactionAppBarTitle)),
+      appBar: AppBar(title: title),
       body: Center(
         child: IndexedStack(
           index: stateIndex,
@@ -264,20 +282,38 @@ class InteractionPageState extends State<InteractionPage>
             ),
             // 5: Playback phase
             GestureDetector(
-              child: AnimateStyles.pulse(
-                _animationController,
-                outlinedIcon(context, Icons.speaker, 200),
-              ),
+              child: responseText.isNotEmptyOrNull
+                  ? Text(
+                      responseText,
+                      style: smallHeadline,
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      overflow: TextOverflow.clip,
+                      maxLines: 100,
+                    )
+                  : AnimateStyles.pulse(
+                      _animationController,
+                      outlinedIcon(context, Icons.speaker, 200),
+                    ),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
             // 6: Done phase
             GestureDetector(
-              child: AnimateStyles.bounce(
-                _animationController,
-                outlinedIcon(context, Icons.check, 200),
-              ),
+              child: responseText.isNotEmptyOrNull
+                  ? Text(
+                      responseText,
+                      style: smallHeadline,
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      overflow: TextOverflow.clip,
+                      maxLines: 100,
+                    )
+                  : AnimateStyles.bounce(
+                      _animationController,
+                      outlinedIcon(context, Icons.check, 200),
+                    ),
               onTap: () {
                 deferredActionQueue.add(DeferredAction(ActionKind.initialize));
                 interactionState.setState(StateBase.waitingStateLabel);

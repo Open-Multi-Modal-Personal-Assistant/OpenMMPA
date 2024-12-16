@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:inspector_gadget/common/base_state.dart';
 import 'package:inspector_gadget/common/constants.dart';
+import 'package:inspector_gadget/interaction/service/interaction_state.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:inspector_gadget/speech/service/tts.dart';
 import 'package:media_kit/media_kit.dart';
@@ -23,6 +24,10 @@ mixin TtsMixin {
     bool areSpeechServicesNative =
         PreferencesService.areSpeechServicesNativeDefault,
   }) async {
+    if (state is InteractionState) {
+      state.setResponseText(content);
+    }
+
     if (areSpeechServicesNative) {
       state.setState(StateBase.playingStateLabel);
       final ttsService = GetIt.I.get<TtsService>();
