@@ -4,7 +4,7 @@ version: 1.0.2+1
 publish_to: none
 
 environment:
-  sdk: ^3.5.6
+  sdk: ^3.6.0
 
 dependency_overrides:
   collection: ^1.19.1  # Flutter SDK (flutter_test pinned it)
@@ -12,7 +12,7 @@ dependency_overrides:
   path: ^1.9.1  # Flutter SDK (flutter_test pinned it)
 
 dependencies:
-  adaptive_dialog: ^2.3.0
+  adaptive_dialog: ^2.4.0
   assorted_layout_widgets: ^10.0.4
   camera: ^0.11.0+2
   cloud_functions: ^5.2.0
@@ -23,7 +23,7 @@ dependencies:
   file_picker: ^8.1.6
   firebase_app_check: ^0.3.1+7
   firebase_auth: ^5.3.4
-  firebase_core: ^3.8.1
+  firebase_core: ^3.9.0
   firebase_storage: ^12.3.7
   firebase_ui_storage: ^2.1.0
   firebase_vertexai: ^1.0.4
@@ -39,7 +39,7 @@ dependencies:
   flutter_tts: ^4.2.0
   gap: ^3.0.1
   get_it: ^8.0.3
-  heart_rate_flutter: ^0.0.2
+  heart_rate_flutter: ^0.0.3
   http: ^1.2.2
   intl: ^0.19.0
   listview_utils_plus: ^0.0.3
@@ -64,7 +64,7 @@ dependencies:
   watch_it: ^1.6.1
 
 dev_dependencies:
-  build_runner: ^2.4.12
+  build_runner: ^2.4.14
   flutter_test:
     sdk: flutter
   mocktail: ^1.0.3
