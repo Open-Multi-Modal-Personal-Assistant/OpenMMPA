@@ -13,20 +13,20 @@ dependency_overrides:
 
 dependencies:
   adaptive_dialog: ^2.4.0
-  assorted_layout_widgets: ^10.1.2
+  assorted_layout_widgets: ^10.4.4
   camera: ^0.11.0+2
-  cloud_functions: ^5.2.0
+  cloud_functions: ^5.3.0
   collection: ^1.19.0
   country_flags: ^3.2.0
   dart_helper_utils: ^3.3.0
   daylight: ^3.1.0
   file_picker: ^8.1.7
-  firebase_app_check: ^0.3.1+7
-  firebase_auth: ^5.3.4
-  firebase_core: ^3.9.0
-  firebase_storage: ^12.3.7
+  firebase_app_check: ^0.3.2
+  firebase_auth: ^5.4.0
+  firebase_core: ^3.10.0
+  firebase_storage: ^12.4.0
   firebase_ui_storage: ^2.1.0
-  firebase_vertexai: ^1.0.4
+  firebase_vertexai: ^1.1.0
   fl_location: ^5.0.0
   flex_color_scheme: ^8.1.0
   flutter:
@@ -61,7 +61,7 @@ dependencies:
   translator: ^1.0.3+1
   tuple: ^2.0.2
   video_player: ^2.9.2
-  watch_it: ^1.6.1
+  watch_it: ^1.6.2
 
 dev_dependencies:
   build_runner: ^2.4.14
