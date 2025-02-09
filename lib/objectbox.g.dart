@@ -61,7 +61,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(3, 3521938029246052796),
       name: 'History',
-      lastPropertyId: const obx_int.IdUid(8, 6927842716111529683),
+      lastPropertyId: const obx_int.IdUid(11, 6279439692405218478),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -107,7 +107,26 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(8, 6927842716111529683),
             name: 'mode',
             type: 9,
-            flags: 0)
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(9, 9210597753006648340),
+            name: 'mediumPath',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(10, 6110639191401611252),
+            name: 'mimeType',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(11, 6279439692405218478),
+            name: 'mediumEmbedding',
+            type: 28,
+            flags: 8,
+            indexId: const obx_int.IdUid(3, 8915092944958030884),
+            hnswParams: obx_int.ModelHnswParams(
+              dimensions: 256,
+            ))
       ],
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
@@ -149,7 +168,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
       lastEntityId: const obx_int.IdUid(3, 3521938029246052796),
-      lastIndexId: const obx_int.IdUid(2, 132003794771134220),
+      lastIndexId: const obx_int.IdUid(3, 8915092944958030884),
       lastRelationId: const obx_int.IdUid(0, 0),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [8586970589488660919],
@@ -223,7 +242,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
               ? null
               : fbb.writeListFloat32(object.embedding!);
           final modeOffset = fbb.writeString(object.mode);
-          fbb.startTable(9);
+          final mediumPathOffset = fbb.writeString(object.mediumPath);
+          final mimeTypeOffset = fbb.writeString(object.mimeType);
+          final mediumEmbeddingOffset = object.mediumEmbedding == null
+              ? null
+              : fbb.writeListFloat32(object.mediumEmbedding!);
+          fbb.startTable(12);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, roleOffset);
           fbb.addOffset(2, contentOffset);
@@ -232,6 +256,9 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addOffset(5, embeddingOffset);
           fbb.addInt64(6, object.dateTime.millisecondsSinceEpoch);
           fbb.addOffset(7, modeOffset);
+          fbb.addOffset(8, mediumPathOffset);
+          fbb.addOffset(9, mimeTypeOffset);
+          fbb.addOffset(10, mediumEmbeddingOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -251,8 +278,23 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final embeddingParam =
               const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
                   .vTableGetNullable(buffer, rootOffset, 14);
-          final object = History(roleParam, modeParam, contentParam,
-              localeParam, rewriteParam, embeddingParam)
+          final mediumPathParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 20, '');
+          final mimeTypeParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 22, '');
+          final mediumEmbeddingParam =
+              const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
+                  .vTableGetNullable(buffer, rootOffset, 24);
+          final object = History(
+              roleParam,
+              modeParam,
+              contentParam,
+              localeParam,
+              rewriteParam,
+              embeddingParam,
+              mediumPathParam,
+              mimeTypeParam,
+              mediumEmbeddingParam)
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
             ..dateTime = DateTime.fromMillisecondsSinceEpoch(
                 const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0));
@@ -320,4 +362,16 @@ class History_ {
   /// See [History.mode].
   static final mode =
       obx.QueryStringProperty<History>(_entities[1].properties[7]);
+
+  /// See [History.mediumPath].
+  static final mediumPath =
+      obx.QueryStringProperty<History>(_entities[1].properties[8]);
+
+  /// See [History.mimeType].
+  static final mimeType =
+      obx.QueryStringProperty<History>(_entities[1].properties[9]);
+
+  /// See [History.mediumEmbedding].
+  static final mediumEmbedding =
+      obx.QueryHnswProperty<History>(_entities[1].properties[10]);
 }

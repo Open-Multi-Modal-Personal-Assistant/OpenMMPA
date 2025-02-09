@@ -41,7 +41,7 @@
     },
     {
       "id": "3:3521938029246052796",
-      "lastPropertyId": "8:6927842716111529683",
+      "lastPropertyId": "11:6279439692405218478",
       "name": "History",
       "properties": [
         {
@@ -86,13 +86,30 @@
           "id": "8:6927842716111529683",
           "name": "mode",
           "type": 9
+        },
+        {
+          "id": "9:9210597753006648340",
+          "name": "mediumPath",
+          "type": 9
+        },
+        {
+          "id": "10:6110639191401611252",
+          "name": "mimeType",
+          "type": 9
+        },
+        {
+          "id": "11:6279439692405218478",
+          "name": "mediumEmbedding",
+          "type": 28,
+          "flags": 8,
+          "indexId": "3:8915092944958030884"
         }
       ],
       "relations": []
     }
   ],
   "lastEntityId": "3:3521938029246052796",
-  "lastIndexId": "2:132003794771134220",
+  "lastIndexId": "3:8915092944958030884",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
