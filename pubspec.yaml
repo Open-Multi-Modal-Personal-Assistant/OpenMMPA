@@ -23,7 +23,7 @@ dependencies:
   daylight: ^3.1.0
   file_picker: ^8.3.5
   firebase_app_check: ^0.3.2+1
-  firebase_auth: ^5.4.1
+  firebase_auth: ^5.4.2
   firebase_core: ^3.11.0
   firebase_storage: ^12.4.2
   firebase_ui_storage: ^2.1.1
