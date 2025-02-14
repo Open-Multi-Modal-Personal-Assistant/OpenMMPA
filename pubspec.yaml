@@ -48,7 +48,7 @@ dependencies:
   media_kit_libs_audio: ^1.0.5
   mime: ^2.0.0
   number_selector: ^1.0.7
-  objectbox: ^4.0.3
+  objectbox: ^4.1.0
   objectbox_flutter_libs: ^4.0.3
   path: ^1.9.1
   path_provider: ^2.1.5
