@@ -26,9 +26,7 @@ class SunTimeTool implements FunctionTool {
           'longitude': Schema.number(
             description: 'Longitude of the sunrise observer',
           ),
-          'date': Schema.string(
-            description: 'Date of the sunrise observation',
-          ),
+          'date': Schema.string(description: 'Date of the sunrise observation'),
         },
         optionalParameters: ['date'],
       ),
@@ -42,9 +40,7 @@ class SunTimeTool implements FunctionTool {
           'longitude': Schema.number(
             description: 'Longitude of the sunset observer',
           ),
-          'date': Schema.string(
-            description: 'Date of the sunset observation',
-          ),
+          'date': Schema.string(description: 'Date of the sunset observation'),
         },
         optionalParameters: ['date'],
       ),
@@ -53,9 +49,7 @@ class SunTimeTool implements FunctionTool {
 
   @override
   Tool getTool(PreferencesService preferences) {
-    return Tool.functionDeclarations(
-      getFunctionDeclarations(preferences),
-    );
+    return Tool.functionDeclarations(getFunctionDeclarations(preferences));
   }
 
   @override
@@ -70,12 +64,10 @@ class SunTimeTool implements FunctionTool {
   ) async {
     final result = switch (call.name) {
       'fetchSunrise' => {
-          'sunrise': _fetchSunrise(GeoRequest.fromJson(call.args)),
-        },
-      'fetchSunset' => {
-          'sunset': _fetchSunset(GeoRequest.fromJson(call.args)),
-        },
-      _ => <String, String>{}
+        'sunrise': _fetchSunrise(GeoRequest.fromJson(call.args)),
+      },
+      'fetchSunset' => {'sunset': _fetchSunset(GeoRequest.fromJson(call.args))},
+      _ => <String, String>{},
     };
 
     return FunctionResponse(call.name, result);
@@ -87,8 +79,10 @@ class SunTimeTool implements FunctionTool {
       return 'N/A';
     }
 
-    final location =
-        DaylightLocation(geoRequest.latitude, geoRequest.longitude);
+    final location = DaylightLocation(
+      geoRequest.latitude,
+      geoRequest.longitude,
+    );
     final daylightCalculator = DaylightCalculator(location);
     final dailyResults = daylightCalculator.calculateForDay(geoRequest.date);
     final sunTime = sunrise ? dailyResults.sunrise : dailyResults.sunset;

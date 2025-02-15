@@ -39,13 +39,7 @@ mixin TtsMixin {
 
       state.setState(afterStateLabel);
     } else {
-      await ttsPhase(
-        context,
-        content,
-        locale,
-        state,
-        afterStateLabel,
-      );
+      await ttsPhase(context, content, locale, state, afterStateLabel);
     }
   }
 
@@ -60,10 +54,7 @@ mixin TtsMixin {
       state.setState(StateBase.ttsStateLabel);
       final synthResponse = await FirebaseFunctions.instance
           .httpsCallable(ttsFunctionName)
-          .call<dynamic>({
-        'language_code': locale,
-        'text': responseText,
-      });
+          .call<dynamic>({'language_code': locale, 'text': responseText});
 
       final synthFileResponse = synthResponse.data as List<Object?>;
       if (synthFileResponse.isNotEmpty && synthFileResponse[0] != null) {

@@ -131,8 +131,9 @@ class PersonalizationPageState extends State<PersonalizationPage>
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     inputLocaleId = preferences.inputLocale;
-    final stateIndex =
-        watchPropertyValue((PersonalizationState s) => s.stateIndex);
+    final stateIndex = watchPropertyValue(
+      (PersonalizationState s) => s.stateIndex,
+    );
     final personalizationViewState = GetIt.I.get<PersonalizationState>();
 
     _processDeferredActionQueue(context);
@@ -147,16 +148,16 @@ class PersonalizationPageState extends State<PersonalizationPage>
           CustomListView(
             key: Key('CLV$_editCount'),
             paginationMode: PaginationMode.page,
-            loadingBuilder: (BuildContext context) =>
-                const Center(child: CircularProgressIndicator()),
+            loadingBuilder:
+                (BuildContext context) =>
+                    const Center(child: CircularProgressIndicator()),
             adapter: ListAdapter(
               fetchItems: (int page, int limit) async {
-                final data =
-                    await database.personalizationPaged(page * limit, limit);
-                return ListItems(
-                  data,
-                  reachedToEnd: data.length < limit,
+                final data = await database.personalizationPaged(
+                  page * limit,
+                  limit,
                 );
+                return ListItems(data, reachedToEnd: data.length < limit);
               },
             ),
             errorBuilder: (context, error, state) {
@@ -170,9 +171,7 @@ class PersonalizationPageState extends State<PersonalizationPage>
                 ],
               );
             },
-            empty: const Center(
-              child: Icon(Icons.do_disturb),
-            ),
+            empty: const Center(child: Icon(Icons.do_disturb)),
             itemBuilder: (context, _, item) {
               final p13n = item as Personalization;
               return ListTile(

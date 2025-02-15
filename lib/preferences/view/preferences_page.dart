@@ -35,9 +35,7 @@ class PreferencesPage extends StatelessWidget {
         onTap: () async {
           await Navigator.push(
             context,
-            MaterialPageRoute<void>(
-              builder: (context) => const HistoryPage(),
-            ),
+            MaterialPageRoute<void>(builder: (context) => const HistoryPage()),
           );
         },
         leading: const Icon(Icons.manage_history),
@@ -75,9 +73,7 @@ class PreferencesPage extends StatelessWidget {
           onTap: () async {
             await Navigator.push(
               context,
-              MaterialPageRoute<void>(
-                builder: screenConfig.item3,
-              ),
+              MaterialPageRoute<void>(builder: screenConfig.item3),
             );
           },
           leading: Icon(screenConfig.item1),

@@ -1,4 +1,5 @@
-const translateTaskInstruction = 'Your current task is language translation. '
+const translateTaskInstruction =
+    'Your current task is language translation. '
     'You will be given the input to be translated and '
     'the target language locale. '
     "Stay on point and don't add any explanation or extra. Examples:";

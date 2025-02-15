@@ -43,8 +43,8 @@ class MainPageState extends State<MainPage> {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (context) =>
-            InteractionPage(interactionMode, mediaFiles: const []),
+        builder:
+            (context) => InteractionPage(interactionMode, mediaFiles: const []),
       ),
     );
   }
@@ -78,84 +78,84 @@ class MainPageState extends State<MainPage> {
               child: IconButton.filledTonal(
                 key: const Key(uniModalKey),
                 icon: Icon(Icons.chat, size: iconSize),
-                onPressed: () => navigateWithMode(
-                  context,
-                  InteractionMode.textChat,
-                ),
+                onPressed:
+                    () => navigateWithMode(context, InteractionMode.textChat),
               ),
             ),
             Center(
               child: IconButton.filledTonal(
                 key: const Key(multiModalKey),
                 icon: Icon(Icons.video_chat, size: iconSize),
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (context) => const CameraPage(),
-                  ),
-                ),
+                onPressed:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (context) => const CameraPage(),
+                      ),
+                    ),
               ),
             ),
             Center(
               child: IconButton.filledTonal(
                 key: const Key(translateKey),
                 icon: Icon(Icons.translate, size: iconSize),
-                onPressed: () => navigateWithMode(
-                  context,
-                  InteractionMode.translate,
-                ),
+                onPressed:
+                    () => navigateWithMode(context, InteractionMode.translate),
               ),
             ),
             Center(
               child: IconButton.filledTonal(
                 key: const Key(personalizationKey),
                 icon: Icon(Icons.person_add, size: iconSize),
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (context) => const PersonalizationPage(),
-                  ),
-                ),
+                onPressed:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (context) => const PersonalizationPage(),
+                      ),
+                    ),
               ),
             ),
             Center(
               child: IconButton.filledTonal(
                 key: const Key(settingsKey),
                 icon: Icon(Icons.settings, size: iconSize),
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (context) => const PreferencesPage(),
-                  ),
-                ),
+                onPressed:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (context) => const PreferencesPage(),
+                      ),
+                    ),
               ),
             ),
             Center(
               child: IconButton.filledTonal(
                 key: const Key(helpKey),
                 icon: Icon(Icons.help, size: iconSize),
-                onPressed: () async => legendDialog(context, [
-                  Tuple2<IconData, String>(
-                    Icons.chat,
-                    l10n.uniModalButtonDescription,
-                  ),
-                  Tuple2<IconData, String>(
-                    Icons.video_chat,
-                    l10n.multiModalButtonDescription,
-                  ),
-                  Tuple2<IconData, String>(
-                    Icons.translate,
-                    l10n.translateButtonDescription,
-                  ),
-                  Tuple2<IconData, String>(
-                    Icons.person_add,
-                    l10n.personalizationButtonDescription,
-                  ),
-                  Tuple2<IconData, String>(
-                    Icons.settings,
-                    l10n.preferencesButtonDescription,
-                  ),
-                ]),
+                onPressed:
+                    () async => legendDialog(context, [
+                      Tuple2<IconData, String>(
+                        Icons.chat,
+                        l10n.uniModalButtonDescription,
+                      ),
+                      Tuple2<IconData, String>(
+                        Icons.video_chat,
+                        l10n.multiModalButtonDescription,
+                      ),
+                      Tuple2<IconData, String>(
+                        Icons.translate,
+                        l10n.translateButtonDescription,
+                      ),
+                      Tuple2<IconData, String>(
+                        Icons.person_add,
+                        l10n.personalizationButtonDescription,
+                      ),
+                      Tuple2<IconData, String>(
+                        Icons.settings,
+                        l10n.preferencesButtonDescription,
+                      ),
+                    ]),
               ),
             ),
           ],

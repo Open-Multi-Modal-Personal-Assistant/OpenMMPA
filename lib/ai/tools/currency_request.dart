@@ -41,7 +41,8 @@ class CurrencyRequest {
   double amountFrom = 1;
 
   @override
-  String toString() => {
+  String toString() =>
+      {
         'currencyDate': currencyDate.format('yyyy-MM-dd'),
         'currencyFrom': currencyFrom,
         'currencyTo': currencyTo,

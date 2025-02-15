@@ -23,7 +23,8 @@ class WebSearchTool implements FunctionTool {
             'gather munition to answer any questions',
         parameters: {
           'query': Schema.string(
-            description: 'The search query or question which need '
+            description:
+                'The search query or question which need '
                 'to be researched or answered',
           ),
         },
@@ -33,9 +34,7 @@ class WebSearchTool implements FunctionTool {
 
   @override
   Tool getTool(PreferencesService preferences) {
-    return Tool.functionDeclarations(
-      getFunctionDeclarations(preferences),
-    );
+    return Tool.functionDeclarations(getFunctionDeclarations(preferences));
   }
 
   @override
@@ -49,10 +48,8 @@ class WebSearchTool implements FunctionTool {
     PreferencesService preferences,
   ) async {
     final result = switch (call.name) {
-      'webSearch' => {
-          'query': await _webSearch(call.args),
-        },
-      _ => <String, String>{}
+      'webSearch' => {'query': await _webSearch(call.args)},
+      _ => <String, String>{},
     };
 
     return FunctionResponse(call.name, result);

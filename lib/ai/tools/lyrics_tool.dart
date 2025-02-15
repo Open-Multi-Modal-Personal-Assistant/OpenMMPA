@@ -21,12 +21,8 @@ class LyricsTool implements FunctionTool {
         'fetchLyrics',
         'Fetch the lyrics of a song by a given artist and title',
         parameters: {
-          'artist': Schema.string(
-            description: 'The artist of the song',
-          ),
-          'title': Schema.string(
-            description: 'The title of the song',
-          ),
+          'artist': Schema.string(description: 'The artist of the song'),
+          'title': Schema.string(description: 'The title of the song'),
         },
       ),
     ];
@@ -34,9 +30,7 @@ class LyricsTool implements FunctionTool {
 
   @override
   Tool getTool(PreferencesService preferences) {
-    return Tool.functionDeclarations(
-      getFunctionDeclarations(preferences),
-    );
+    return Tool.functionDeclarations(getFunctionDeclarations(preferences));
   }
 
   @override
@@ -50,10 +44,8 @@ class LyricsTool implements FunctionTool {
     PreferencesService preferences,
   ) async {
     final result = switch (call.name) {
-      'fetchLyrics' => {
-          'query': await _lyricsLookup(call.args),
-        },
-      _ => <String, String>{}
+      'fetchLyrics' => {'query': await _lyricsLookup(call.args)},
+      _ => <String, String>{},
     };
 
     return FunctionResponse(call.name, result);

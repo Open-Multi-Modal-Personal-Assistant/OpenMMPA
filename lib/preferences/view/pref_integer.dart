@@ -51,20 +51,21 @@ class PrefIntegerState extends State<PrefInteger> {
       subtitle: widget.subtitle,
       onChange: widget.onChange,
       disabled: widget.disabled,
-      builder: (context, value, onChange) => NumberSelector(
-        current: value ?? 0,
-        min: widget.min,
-        max: widget.max,
-        contentPadding: 1,
-        verticalDividerPadding: 1,
-        showSuffix: false,
-        showMinMax: false,
-        borderColor: borderColor,
-        dividerColor: borderColor,
-        backgroundColor: backgroundColor,
-        iconColor: iconColor,
-        onUpdate: onChange,
-      ),
+      builder:
+          (context, value, onChange) => NumberSelector(
+            current: value ?? 0,
+            min: widget.min,
+            max: widget.max,
+            contentPadding: 1,
+            verticalDividerPadding: 1,
+            showSuffix: false,
+            showMinMax: false,
+            borderColor: borderColor,
+            dividerColor: borderColor,
+            backgroundColor: backgroundColor,
+            iconColor: iconColor,
+            onUpdate: onChange,
+          ),
     );
   }
 }

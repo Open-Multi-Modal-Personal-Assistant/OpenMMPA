@@ -52,14 +52,13 @@ mixin ToolsMixin {
     final functionDeclarations = <FunctionDeclaration>[];
     for (final funcTool in funcTools) {
       if (funcTool.isAvailable(preferences)) {
-        functionDeclarations
-            .addAll(funcTool.getFunctionDeclarations(preferences));
+        functionDeclarations.addAll(
+          funcTool.getFunctionDeclarations(preferences),
+        );
       }
     }
 
-    return Tool.functionDeclarations(
-      functionDeclarations,
-    );
+    return Tool.functionDeclarations(functionDeclarations);
   }
 
   Future<FunctionResponse?> dispatchFunctionCall(

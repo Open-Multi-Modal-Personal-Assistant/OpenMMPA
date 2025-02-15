@@ -21,115 +21,127 @@ export 'package:objectbox/objectbox.dart'; // so that callers only have to impor
 
 final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
-      id: const obx_int.IdUid(2, 6236804813636724014),
-      name: 'Personalization',
-      lastPropertyId: const obx_int.IdUid(6, 7649402395927810343),
-      flags: 0,
-      properties: <obx_int.ModelProperty>[
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(1, 6990250158996654365),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(2, 6639064276122569451),
-            name: 'content',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(3, 7782807386713244949),
-            name: 'locale',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(5, 3582530931125619442),
-            name: 'embedding',
-            type: 28,
-            flags: 8,
-            indexId: const obx_int.IdUid(1, 1226222394629305260),
-            hnswParams: obx_int.ModelHnswParams(
-              dimensions: 256,
-            )),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(6, 7649402395927810343),
-            name: 'dateTime',
-            type: 10,
-            flags: 0)
-      ],
-      relations: <obx_int.ModelRelation>[],
-      backlinks: <obx_int.ModelBacklink>[]),
+    id: const obx_int.IdUid(2, 6236804813636724014),
+    name: 'Personalization',
+    lastPropertyId: const obx_int.IdUid(6, 7649402395927810343),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 6990250158996654365),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 6639064276122569451),
+        name: 'content',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 7782807386713244949),
+        name: 'locale',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 3582530931125619442),
+        name: 'embedding',
+        type: 28,
+        flags: 8,
+        indexId: const obx_int.IdUid(1, 1226222394629305260),
+        hnswParams: obx_int.ModelHnswParams(dimensions: 256),
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 7649402395927810343),
+        name: 'dateTime',
+        type: 10,
+        flags: 0,
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
   obx_int.ModelEntity(
-      id: const obx_int.IdUid(3, 3521938029246052796),
-      name: 'History',
-      lastPropertyId: const obx_int.IdUid(11, 6279439692405218478),
-      flags: 0,
-      properties: <obx_int.ModelProperty>[
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(1, 3869710122714326240),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(2, 2650983873135194597),
-            name: 'role',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(3, 1005234020137026542),
-            name: 'content',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(4, 8350053468584735545),
-            name: 'locale',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(5, 1080156772411940760),
-            name: 'rewrite',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(6, 534659201086106595),
-            name: 'embedding',
-            type: 28,
-            flags: 8,
-            indexId: const obx_int.IdUid(2, 132003794771134220),
-            hnswParams: obx_int.ModelHnswParams(
-              dimensions: 256,
-            )),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(7, 5287262397676395151),
-            name: 'dateTime',
-            type: 10,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(8, 6927842716111529683),
-            name: 'mode',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(9, 9210597753006648340),
-            name: 'mediumPath',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(10, 6110639191401611252),
-            name: 'mimeType',
-            type: 9,
-            flags: 0),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(11, 6279439692405218478),
-            name: 'mediumEmbedding',
-            type: 28,
-            flags: 8,
-            indexId: const obx_int.IdUid(3, 8915092944958030884),
-            hnswParams: obx_int.ModelHnswParams(
-              dimensions: 256,
-            ))
-      ],
-      relations: <obx_int.ModelRelation>[],
-      backlinks: <obx_int.ModelBacklink>[])
+    id: const obx_int.IdUid(3, 3521938029246052796),
+    name: 'History',
+    lastPropertyId: const obx_int.IdUid(11, 6279439692405218478),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 3869710122714326240),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 2650983873135194597),
+        name: 'role',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 1005234020137026542),
+        name: 'content',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 8350053468584735545),
+        name: 'locale',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 1080156772411940760),
+        name: 'rewrite',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 534659201086106595),
+        name: 'embedding',
+        type: 28,
+        flags: 8,
+        indexId: const obx_int.IdUid(2, 132003794771134220),
+        hnswParams: obx_int.ModelHnswParams(dimensions: 256),
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 5287262397676395151),
+        name: 'dateTime',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(8, 6927842716111529683),
+        name: 'mode',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(9, 9210597753006648340),
+        name: 'mediumPath',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(10, 6110639191401611252),
+        name: 'mimeType',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(11, 6279439692405218478),
+        name: 'mediumEmbedding',
+        type: 28,
+        flags: 8,
+        indexId: const obx_int.IdUid(3, 8915092944958030884),
+        hnswParams: obx_int.ModelHnswParams(dimensions: 256),
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
 ];
 
 /// Shortcut for [obx.Store.new] that passes [getObjectBoxModel] and for Flutter
@@ -143,164 +155,190 @@ final _entities = <obx_int.ModelEntity>[
 /// For Flutter apps, also calls `loadObjectBoxLibraryAndroidCompat()` from
 /// the ObjectBox Flutter library to fix loading the native ObjectBox library
 /// on Android 6 and older.
-Future<obx.Store> openStore(
-    {String? directory,
-    int? maxDBSizeInKB,
-    int? maxDataSizeInKB,
-    int? fileMode,
-    int? maxReaders,
-    bool queriesCaseSensitiveDefault = true,
-    String? macosApplicationGroup}) async {
+Future<obx.Store> openStore({
+  String? directory,
+  int? maxDBSizeInKB,
+  int? maxDataSizeInKB,
+  int? fileMode,
+  int? maxReaders,
+  bool queriesCaseSensitiveDefault = true,
+  String? macosApplicationGroup,
+}) async {
   await loadObjectBoxLibraryAndroidCompat();
-  return obx.Store(getObjectBoxModel(),
-      directory: directory ?? (await defaultStoreDirectory()).path,
-      maxDBSizeInKB: maxDBSizeInKB,
-      maxDataSizeInKB: maxDataSizeInKB,
-      fileMode: fileMode,
-      maxReaders: maxReaders,
-      queriesCaseSensitiveDefault: queriesCaseSensitiveDefault,
-      macosApplicationGroup: macosApplicationGroup);
+  return obx.Store(
+    getObjectBoxModel(),
+    directory: directory ?? (await defaultStoreDirectory()).path,
+    maxDBSizeInKB: maxDBSizeInKB,
+    maxDataSizeInKB: maxDataSizeInKB,
+    fileMode: fileMode,
+    maxReaders: maxReaders,
+    queriesCaseSensitiveDefault: queriesCaseSensitiveDefault,
+    macosApplicationGroup: macosApplicationGroup,
+  );
 }
 
 /// Returns the ObjectBox model definition for this project for use with
 /// [obx.Store.new].
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
-      entities: _entities,
-      lastEntityId: const obx_int.IdUid(3, 3521938029246052796),
-      lastIndexId: const obx_int.IdUid(3, 8915092944958030884),
-      lastRelationId: const obx_int.IdUid(0, 0),
-      lastSequenceId: const obx_int.IdUid(0, 0),
-      retiredEntityUids: const [8586970589488660919],
-      retiredIndexUids: const [],
-      retiredPropertyUids: const [
-        1979746823395902785,
-        2843848840155226913,
-        2583425604381564157,
-        5493038355674505693
-      ],
-      retiredRelationUids: const [],
-      modelVersion: 5,
-      modelVersionParserMinimum: 5,
-      version: 1);
+    entities: _entities,
+    lastEntityId: const obx_int.IdUid(3, 3521938029246052796),
+    lastIndexId: const obx_int.IdUid(3, 8915092944958030884),
+    lastRelationId: const obx_int.IdUid(0, 0),
+    lastSequenceId: const obx_int.IdUid(0, 0),
+    retiredEntityUids: const [8586970589488660919],
+    retiredIndexUids: const [],
+    retiredPropertyUids: const [
+      1979746823395902785,
+      2843848840155226913,
+      2583425604381564157,
+      5493038355674505693,
+    ],
+    retiredRelationUids: const [],
+    modelVersion: 5,
+    modelVersionParserMinimum: 5,
+    version: 1,
+  );
 
   final bindings = <Type, obx_int.EntityDefinition>{
     Personalization: obx_int.EntityDefinition<Personalization>(
-        model: _entities[0],
-        toOneRelations: (Personalization object) => [],
-        toManyRelations: (Personalization object) => {},
-        getId: (Personalization object) => object.id,
-        setId: (Personalization object, int id) {
-          object.id = id;
-        },
-        objectToFB: (Personalization object, fb.Builder fbb) {
-          final contentOffset = fbb.writeString(object.content);
-          final localeOffset = fbb.writeString(object.locale);
-          final embeddingOffset = object.embedding == null
-              ? null
-              : fbb.writeListFloat32(object.embedding!);
-          fbb.startTable(7);
-          fbb.addInt64(0, object.id);
-          fbb.addOffset(1, contentOffset);
-          fbb.addOffset(2, localeOffset);
-          fbb.addOffset(4, embeddingOffset);
-          fbb.addInt64(5, object.dateTime.millisecondsSinceEpoch);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (obx.Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final contentParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 6, '');
-          final localeParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 8, '');
-          final object = Personalization(contentParam, localeParam)
-            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
-            ..embedding =
-                const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
-                    .vTableGetNullable(buffer, rootOffset, 12)
-            ..dateTime = DateTime.fromMillisecondsSinceEpoch(
-                const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0));
+      model: _entities[0],
+      toOneRelations: (Personalization object) => [],
+      toManyRelations: (Personalization object) => {},
+      getId: (Personalization object) => object.id,
+      setId: (Personalization object, int id) {
+        object.id = id;
+      },
+      objectToFB: (Personalization object, fb.Builder fbb) {
+        final contentOffset = fbb.writeString(object.content);
+        final localeOffset = fbb.writeString(object.locale);
+        final embeddingOffset =
+            object.embedding == null
+                ? null
+                : fbb.writeListFloat32(object.embedding!);
+        fbb.startTable(7);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, contentOffset);
+        fbb.addOffset(2, localeOffset);
+        fbb.addOffset(4, embeddingOffset);
+        fbb.addInt64(5, object.dateTime.millisecondsSinceEpoch);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final contentParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final localeParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 8, '');
+        final object =
+            Personalization(contentParam, localeParam)
+              ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
+              ..embedding = const fb.ListReader<double>(
+                fb.Float32Reader(),
+                lazy: false,
+              ).vTableGetNullable(buffer, rootOffset, 12)
+              ..dateTime = DateTime.fromMillisecondsSinceEpoch(
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0),
+              );
 
-          return object;
-        }),
+        return object;
+      },
+    ),
     History: obx_int.EntityDefinition<History>(
-        model: _entities[1],
-        toOneRelations: (History object) => [],
-        toManyRelations: (History object) => {},
-        getId: (History object) => object.id,
-        setId: (History object, int id) {
-          object.id = id;
-        },
-        objectToFB: (History object, fb.Builder fbb) {
-          final roleOffset = fbb.writeString(object.role);
-          final contentOffset = fbb.writeString(object.content);
-          final localeOffset = fbb.writeString(object.locale);
-          final rewriteOffset = fbb.writeString(object.rewrite);
-          final embeddingOffset = object.embedding == null
-              ? null
-              : fbb.writeListFloat32(object.embedding!);
-          final modeOffset = fbb.writeString(object.mode);
-          final mediumPathOffset = fbb.writeString(object.mediumPath);
-          final mimeTypeOffset = fbb.writeString(object.mimeType);
-          final mediumEmbeddingOffset = object.mediumEmbedding == null
-              ? null
-              : fbb.writeListFloat32(object.mediumEmbedding!);
-          fbb.startTable(12);
-          fbb.addInt64(0, object.id);
-          fbb.addOffset(1, roleOffset);
-          fbb.addOffset(2, contentOffset);
-          fbb.addOffset(3, localeOffset);
-          fbb.addOffset(4, rewriteOffset);
-          fbb.addOffset(5, embeddingOffset);
-          fbb.addInt64(6, object.dateTime.millisecondsSinceEpoch);
-          fbb.addOffset(7, modeOffset);
-          fbb.addOffset(8, mediumPathOffset);
-          fbb.addOffset(9, mimeTypeOffset);
-          fbb.addOffset(10, mediumEmbeddingOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (obx.Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final roleParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 6, '');
-          final modeParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 18, '');
-          final contentParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 8, '');
-          final localeParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 10, '');
-          final rewriteParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 12, '');
-          final embeddingParam =
-              const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
-                  .vTableGetNullable(buffer, rootOffset, 14);
-          final mediumPathParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 20, '');
-          final mimeTypeParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 22, '');
-          final mediumEmbeddingParam =
-              const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
-                  .vTableGetNullable(buffer, rootOffset, 24);
-          final object = History(
-              roleParam,
-              modeParam,
-              contentParam,
-              localeParam,
-              rewriteParam,
-              embeddingParam,
-              mediumPathParam,
-              mimeTypeParam,
-              mediumEmbeddingParam)
-            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
-            ..dateTime = DateTime.fromMillisecondsSinceEpoch(
-                const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0));
+      model: _entities[1],
+      toOneRelations: (History object) => [],
+      toManyRelations: (History object) => {},
+      getId: (History object) => object.id,
+      setId: (History object, int id) {
+        object.id = id;
+      },
+      objectToFB: (History object, fb.Builder fbb) {
+        final roleOffset = fbb.writeString(object.role);
+        final contentOffset = fbb.writeString(object.content);
+        final localeOffset = fbb.writeString(object.locale);
+        final rewriteOffset = fbb.writeString(object.rewrite);
+        final embeddingOffset =
+            object.embedding == null
+                ? null
+                : fbb.writeListFloat32(object.embedding!);
+        final modeOffset = fbb.writeString(object.mode);
+        final mediumPathOffset = fbb.writeString(object.mediumPath);
+        final mimeTypeOffset = fbb.writeString(object.mimeType);
+        final mediumEmbeddingOffset =
+            object.mediumEmbedding == null
+                ? null
+                : fbb.writeListFloat32(object.mediumEmbedding!);
+        fbb.startTable(12);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, roleOffset);
+        fbb.addOffset(2, contentOffset);
+        fbb.addOffset(3, localeOffset);
+        fbb.addOffset(4, rewriteOffset);
+        fbb.addOffset(5, embeddingOffset);
+        fbb.addInt64(6, object.dateTime.millisecondsSinceEpoch);
+        fbb.addOffset(7, modeOffset);
+        fbb.addOffset(8, mediumPathOffset);
+        fbb.addOffset(9, mimeTypeOffset);
+        fbb.addOffset(10, mediumEmbeddingOffset);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final roleParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final modeParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 18, '');
+        final contentParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 8, '');
+        final localeParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 10, '');
+        final rewriteParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 12, '');
+        final embeddingParam = const fb.ListReader<double>(
+          fb.Float32Reader(),
+          lazy: false,
+        ).vTableGetNullable(buffer, rootOffset, 14);
+        final mediumPathParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 20, '');
+        final mimeTypeParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 22, '');
+        final mediumEmbeddingParam = const fb.ListReader<double>(
+          fb.Float32Reader(),
+          lazy: false,
+        ).vTableGetNullable(buffer, rootOffset, 24);
+        final object =
+            History(
+                roleParam,
+                modeParam,
+                contentParam,
+                localeParam,
+                rewriteParam,
+                embeddingParam,
+                mediumPathParam,
+                mimeTypeParam,
+                mediumEmbeddingParam,
+              )
+              ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
+              ..dateTime = DateTime.fromMillisecondsSinceEpoch(
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0),
+              );
 
-          return object;
-        })
+        return object;
+      },
+    ),
   };
 
   return obx_int.ModelDefinition(model, bindings);
@@ -309,69 +347,85 @@ obx_int.ModelDefinition getObjectBoxModel() {
 /// [Personalization] entity fields to define ObjectBox queries.
 class Personalization_ {
   /// See [Personalization.id].
-  static final id =
-      obx.QueryIntegerProperty<Personalization>(_entities[0].properties[0]);
+  static final id = obx.QueryIntegerProperty<Personalization>(
+    _entities[0].properties[0],
+  );
 
   /// See [Personalization.content].
-  static final content =
-      obx.QueryStringProperty<Personalization>(_entities[0].properties[1]);
+  static final content = obx.QueryStringProperty<Personalization>(
+    _entities[0].properties[1],
+  );
 
   /// See [Personalization.locale].
-  static final locale =
-      obx.QueryStringProperty<Personalization>(_entities[0].properties[2]);
+  static final locale = obx.QueryStringProperty<Personalization>(
+    _entities[0].properties[2],
+  );
 
   /// See [Personalization.embedding].
-  static final embedding =
-      obx.QueryHnswProperty<Personalization>(_entities[0].properties[3]);
+  static final embedding = obx.QueryHnswProperty<Personalization>(
+    _entities[0].properties[3],
+  );
 
   /// See [Personalization.dateTime].
-  static final dateTime =
-      obx.QueryDateProperty<Personalization>(_entities[0].properties[4]);
+  static final dateTime = obx.QueryDateProperty<Personalization>(
+    _entities[0].properties[4],
+  );
 }
 
 /// [History] entity fields to define ObjectBox queries.
 class History_ {
   /// See [History.id].
-  static final id =
-      obx.QueryIntegerProperty<History>(_entities[1].properties[0]);
+  static final id = obx.QueryIntegerProperty<History>(
+    _entities[1].properties[0],
+  );
 
   /// See [History.role].
-  static final role =
-      obx.QueryStringProperty<History>(_entities[1].properties[1]);
+  static final role = obx.QueryStringProperty<History>(
+    _entities[1].properties[1],
+  );
 
   /// See [History.content].
-  static final content =
-      obx.QueryStringProperty<History>(_entities[1].properties[2]);
+  static final content = obx.QueryStringProperty<History>(
+    _entities[1].properties[2],
+  );
 
   /// See [History.locale].
-  static final locale =
-      obx.QueryStringProperty<History>(_entities[1].properties[3]);
+  static final locale = obx.QueryStringProperty<History>(
+    _entities[1].properties[3],
+  );
 
   /// See [History.rewrite].
-  static final rewrite =
-      obx.QueryStringProperty<History>(_entities[1].properties[4]);
+  static final rewrite = obx.QueryStringProperty<History>(
+    _entities[1].properties[4],
+  );
 
   /// See [History.embedding].
-  static final embedding =
-      obx.QueryHnswProperty<History>(_entities[1].properties[5]);
+  static final embedding = obx.QueryHnswProperty<History>(
+    _entities[1].properties[5],
+  );
 
   /// See [History.dateTime].
-  static final dateTime =
-      obx.QueryDateProperty<History>(_entities[1].properties[6]);
+  static final dateTime = obx.QueryDateProperty<History>(
+    _entities[1].properties[6],
+  );
 
   /// See [History.mode].
-  static final mode =
-      obx.QueryStringProperty<History>(_entities[1].properties[7]);
+  static final mode = obx.QueryStringProperty<History>(
+    _entities[1].properties[7],
+  );
 
   /// See [History.mediumPath].
-  static final mediumPath =
-      obx.QueryStringProperty<History>(_entities[1].properties[8]);
+  static final mediumPath = obx.QueryStringProperty<History>(
+    _entities[1].properties[8],
+  );
 
   /// See [History.mimeType].
-  static final mimeType =
-      obx.QueryStringProperty<History>(_entities[1].properties[9]);
+  static final mimeType = obx.QueryStringProperty<History>(
+    _entities[1].properties[9],
+  );
 
   /// See [History.mediumEmbedding].
-  static final mediumEmbedding =
-      obx.QueryHnswProperty<History>(_entities[1].properties[10]);
+  static final mediumEmbedding = obx.QueryHnswProperty<History>(
+    _entities[1].properties[10],
+  );
 }

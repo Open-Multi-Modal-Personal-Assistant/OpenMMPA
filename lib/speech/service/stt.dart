@@ -53,9 +53,7 @@ class SttService with StateLoggingMixin {
   }
 
   void errorListener(SpeechRecognitionError error) {
-    logEvent(
-      'Received error status: $error, listening: ${speech.isListening}',
-    );
+    logEvent('Received error status: $error, listening: ${speech.isListening}');
   }
 
   void statusListener(String status) {

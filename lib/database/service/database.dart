@@ -31,12 +31,13 @@ class DatabaseService with StateLoggingMixin {
     }
 
     final box = objectBox!.store.box<Personalization>();
-    final query = box
-        .query(Personalization_.id.notNull())
-        .order(Personalization_.id)
-        .build()
-      ..offset = offset
-      ..limit = limit;
+    final query =
+        box
+            .query(Personalization_.id.notNull())
+            .order(Personalization_.id)
+            .build()
+          ..offset = offset
+          ..limit = limit;
     final personalization = query.find();
     query.close();
     return personalization;
@@ -60,12 +61,16 @@ class DatabaseService with StateLoggingMixin {
     }
 
     final box = objectBox!.store.box<Personalization>();
-    final query = box
-        .query(
-          Personalization_.embedding.nearestNeighborsF32(embedding, bigLimit),
-        )
-        .build()
-      ..limit = littleLimit;
+    final query =
+        box
+            .query(
+              Personalization_.embedding.nearestNeighborsF32(
+                embedding,
+                bigLimit,
+              ),
+            )
+            .build()
+          ..limit = littleLimit;
 
     // TODO(MrCsabaToth): Weaviate style auto-cut and also slash too low scores
     return query.findWithScores();
@@ -77,12 +82,13 @@ class DatabaseService with StateLoggingMixin {
     }
 
     final box = objectBox!.store.box<History>();
-    final query = box
-        .query(History_.id.notNull())
-        .order(History_.id, flags: Order.descending)
-        .build()
-      ..offset = offset
-      ..limit = limit;
+    final query =
+        box
+            .query(History_.id.notNull())
+            .order(History_.id, flags: Order.descending)
+            .build()
+          ..offset = offset
+          ..limit = limit;
     final history = query.find();
     query.close();
     return history;
@@ -98,11 +104,12 @@ class DatabaseService with StateLoggingMixin {
     }
 
     final box = objectBox!.store.box<History>();
-    final query = box
-        .query(History_.dateTime.lessThanDate(watermark))
-        .order(History_.id, flags: Order.descending)
-        .build()
-      ..limit = limit;
+    final query =
+        box
+            .query(History_.dateTime.lessThanDate(watermark))
+            .order(History_.id, flags: Order.descending)
+            .build()
+          ..limit = limit;
     final history = query.find();
     query.close();
     return history;
@@ -124,14 +131,17 @@ class DatabaseService with StateLoggingMixin {
     }
 
     final box = objectBox!.store.box<History>();
-    final query = box
-        .query(
-          History_.dateTime
-              .lessThanDate(watermark)
-              .and(History_.embedding.nearestNeighborsF32(embedding, bigLimit)),
-        )
-        .build()
-      ..limit = littleLimit;
+    final query =
+        box
+            .query(
+              History_.dateTime
+                  .lessThanDate(watermark)
+                  .and(
+                    History_.embedding.nearestNeighborsF32(embedding, bigLimit),
+                  ),
+            )
+            .build()
+          ..limit = littleLimit;
 
     // TODO(MrCsabaToth): Weaviate style auto-cut and also slash too low scores
     return query.findWithScores();

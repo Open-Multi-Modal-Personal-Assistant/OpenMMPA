@@ -97,19 +97,15 @@ and technology''',
   ) async {
     alphaVantageAccessKey = preferences.alphaVantageAccessKey;
     final result = switch (call.name) {
-      'fetchStockPrice' => {
-          'stockPrice': _getStockPrice(call.args),
-        },
+      'fetchStockPrice' => {'stockPrice': _getStockPrice(call.args)},
       'fetchCompanyOverview' => {
-          'companyOverview': _getCompanyOverview(call.args),
-        },
-      'fetchCompanyNews' => {
-          'companyNews': _getCompanyNews(call.args),
-        },
+        'companyOverview': _getCompanyOverview(call.args),
+      },
+      'fetchCompanyNews' => {'companyNews': _getCompanyNews(call.args)},
       'fetchNewsWithSentiment' => {
-          'newsWithSentiment': _getNewsWithSentiment(call.args),
-        },
-      _ => <String, String>{}
+        'newsWithSentiment': _getNewsWithSentiment(call.args),
+      },
+      _ => <String, String>{},
     };
 
     return FunctionResponse(call.name, result);

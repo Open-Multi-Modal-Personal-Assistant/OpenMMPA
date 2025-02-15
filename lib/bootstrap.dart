@@ -58,10 +58,11 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
 
       runApp(await builder());
     },
-    (error, stack) => error is Exception
-        ? log(error.toString(), stackTrace: stack)
-        : (error is Error
-            ? log(error.toString(), stackTrace: error.stackTrace)
-            : log(error.toString())),
+    (error, stack) =>
+        error is Exception
+            ? log(error.toString(), stackTrace: stack)
+            : (error is Error
+                ? log(error.toString(), stackTrace: error.stackTrace)
+                : log(error.toString())),
   );
 }

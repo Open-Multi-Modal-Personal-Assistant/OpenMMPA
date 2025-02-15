@@ -24,10 +24,7 @@ void main() {
         find.widgetWithText(PrefButton, 'Personalization'),
         findsOneWidget,
       );
-      expect(
-        find.widgetWithText(PrefButton, 'Chat History'),
-        findsOneWidget,
-      );
+      expect(find.widgetWithText(PrefButton, 'Chat History'), findsOneWidget);
     });
   });
 }

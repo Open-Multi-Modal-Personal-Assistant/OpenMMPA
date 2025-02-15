@@ -25,11 +25,7 @@ import 'package:inspector_gadget/speech/view/tts_mixin.dart';
 import 'package:progress_indicators/progress_indicators.dart';
 import 'package:watch_it/watch_it.dart';
 
-enum InteractionMode {
-  textChat,
-  translate,
-  imageChat,
-}
+enum InteractionMode { textChat, translate, imageChat }
 
 class InteractionPage extends WatchingStatefulWidget {
   const InteractionPage(
@@ -87,8 +83,8 @@ class InteractionPageState extends State<InteractionPage>
     String prompt,
     String locale,
   ) async {
-    final interactionState = GetIt.I.get<InteractionState>()
-      ..setState(StateBase.llmStateLabel);
+    final interactionState =
+        GetIt.I.get<InteractionState>()..setState(StateBase.llmStateLabel);
 
     GenerateContentResponse? response;
     var targetLocale = '';
@@ -163,7 +159,8 @@ class InteractionPageState extends State<InteractionPage>
         switch (deferredAction.actionKind) {
           case ActionKind.initialize:
             final sttService = GetIt.I.get<SttService>();
-            areSpeechServicesNative = preferences.areSpeechServicesNative &&
+            areSpeechServicesNative =
+                preferences.areSpeechServicesNative &&
                 sttService.hasSpeech &&
                 widget.interactionMode != InteractionMode.translate;
 
@@ -186,11 +183,7 @@ class InteractionPageState extends State<InteractionPage>
             }
 
           case ActionKind.speechTranscripted:
-            await llmPhase(
-              context,
-              deferredAction.text,
-              deferredAction.locale,
-            );
+            await llmPhase(context, deferredAction.text, deferredAction.locale);
         }
       }
     }
@@ -216,8 +209,9 @@ class InteractionPageState extends State<InteractionPage>
 
     final interactionState = GetIt.I.get<InteractionState>();
     final stateIndex = watchPropertyValue((InteractionState s) => s.stateIndex);
-    final responseText =
-        watchPropertyValue((InteractionState s) => s.responseText);
+    final responseText = watchPropertyValue(
+      (InteractionState s) => s.responseText,
+    );
 
     final smallHeadline = Theme.of(context).textTheme.headlineSmall;
     final title = switch (stateIndex) {
@@ -228,9 +222,9 @@ class InteractionPageState extends State<InteractionPage>
       6 => Text(l10n.interactionAppBarTitleResult),
       7 => Text(l10n.interactionAppBarTitleError),
       _ => JumpingText(
-          l10n.interactionAppBarTitleProcessing,
-          style: smallHeadline,
-        ),
+        l10n.interactionAppBarTitleProcessing,
+        style: smallHeadline,
+      ),
     };
 
     return Scaffold(
@@ -282,38 +276,40 @@ class InteractionPageState extends State<InteractionPage>
             ),
             // 5: Playback phase
             GestureDetector(
-              child: responseText.isNotEmptyOrNull
-                  ? Text(
-                      responseText,
-                      style: smallHeadline,
-                      textAlign: TextAlign.center,
-                      softWrap: true,
-                      overflow: TextOverflow.clip,
-                      maxLines: 100,
-                    )
-                  : AnimateStyles.pulse(
-                      _animationController,
-                      outlinedIcon(context, Icons.speaker, 200),
-                    ),
+              child:
+                  responseText.isNotEmptyOrNull
+                      ? Text(
+                        responseText,
+                        style: smallHeadline,
+                        textAlign: TextAlign.center,
+                        softWrap: true,
+                        overflow: TextOverflow.clip,
+                        maxLines: 100,
+                      )
+                      : AnimateStyles.pulse(
+                        _animationController,
+                        outlinedIcon(context, Icons.speaker, 200),
+                      ),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
             // 6: Done phase
             GestureDetector(
-              child: responseText.isNotEmptyOrNull
-                  ? Text(
-                      responseText,
-                      style: smallHeadline,
-                      textAlign: TextAlign.center,
-                      softWrap: true,
-                      overflow: TextOverflow.clip,
-                      maxLines: 100,
-                    )
-                  : AnimateStyles.bounce(
-                      _animationController,
-                      outlinedIcon(context, Icons.check, 200),
-                    ),
+              child:
+                  responseText.isNotEmptyOrNull
+                      ? Text(
+                        responseText,
+                        style: smallHeadline,
+                        textAlign: TextAlign.center,
+                        softWrap: true,
+                        overflow: TextOverflow.clip,
+                        maxLines: 100,
+                      )
+                      : AnimateStyles.bounce(
+                        _animationController,
+                        outlinedIcon(context, Icons.check, 200),
+                      ),
               onTap: () {
                 deferredActionQueue.add(DeferredAction(ActionKind.initialize));
                 interactionState.setState(StateBase.waitingStateLabel);

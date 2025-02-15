@@ -52,12 +52,15 @@ MockPreferencesService setUpServices() {
     when(() => mockPreferences.llmDebugMode).thenReturn(true);
     when(() => mockPreferences.areSpeechServicesNative).thenReturn(true);
     when(() => mockPreferences.areNativeSpeechServicesLocal).thenReturn(false);
-    when(() => mockPreferences.inputLocale)
-        .thenReturn(PreferencesService.inputLocaleDefault);
-    when(() => mockPreferences.outputLocale)
-        .thenReturn(PreferencesService.outputLocaleDefault);
-    when(() => mockPreferences.appLocale)
-        .thenReturn(PreferencesService.appLocaleDefault);
+    when(
+      () => mockPreferences.inputLocale,
+    ).thenReturn(PreferencesService.inputLocaleDefault);
+    when(
+      () => mockPreferences.outputLocale,
+    ).thenReturn(PreferencesService.outputLocaleDefault);
+    when(
+      () => mockPreferences.appLocale,
+    ).thenReturn(PreferencesService.appLocaleDefault);
     final mockPrefService = MockPrefService();
     when(() => mockPreferences.prefService).thenReturn(mockPrefService);
     GetIt.I.registerSingleton<PreferencesService>(mockPreferences);
@@ -71,14 +74,18 @@ MockPreferencesService setUpServices() {
     when(() => initialState.name).thenReturn(StateBase.waitingStateLabel);
     final InteractionState interactionState = MockInteractionState();
     when(() => interactionState.current).thenReturn(initialState);
-    when(() => interactionState.setState(StateBase.waitingStateLabel))
-        .thenReturn(StateBase.waitingStateLabel);
-    when(() => interactionState.setState(StateBase.recordingStateLabel))
-        .thenReturn(StateBase.recordingStateLabel);
-    when(() => interactionState.setState(StateBase.llmStateLabel))
-        .thenReturn(StateBase.llmStateLabel);
-    when(() => interactionState.setState(StateBase.errorStateLabel))
-        .thenReturn(StateBase.errorStateLabel);
+    when(
+      () => interactionState.setState(StateBase.waitingStateLabel),
+    ).thenReturn(StateBase.waitingStateLabel);
+    when(
+      () => interactionState.setState(StateBase.recordingStateLabel),
+    ).thenReturn(StateBase.recordingStateLabel);
+    when(
+      () => interactionState.setState(StateBase.llmStateLabel),
+    ).thenReturn(StateBase.llmStateLabel);
+    when(
+      () => interactionState.setState(StateBase.errorStateLabel),
+    ).thenReturn(StateBase.errorStateLabel);
     when(() => interactionState.stateIndex).thenReturn(0);
     when(interactionState.errorState).thenReturn(StateBase.errorStateLabel);
     GetIt.I.registerSingleton<InteractionState>(interactionState);
@@ -99,42 +106,34 @@ MockPreferencesService setUpServices() {
   if (!GetIt.I.isRegistered<TtsService>()) {
     final TtsService ttsService = MockTtsService();
     when(() => ttsService.languages).thenReturn([]);
-    when(() => ttsService.matchLanguage(PreferencesService.inputLocaleDefault))
-        .thenReturn(PreferencesService.outputLocaleDefault);
+    when(
+      () => ttsService.matchLanguage(PreferencesService.inputLocaleDefault),
+    ).thenReturn(PreferencesService.outputLocaleDefault);
     GetIt.I.registerSingleton<TtsService>(ttsService);
   }
 
   if (!GetIt.I.isRegistered<AiService>()) {
     final AiService aiService = MockAiService();
-    final mockResponse = GenerateContentResponse(
-      [
-        Candidate(
-          Content.text(''),
-          [
-            SafetyRating(
-              HarmCategory.harassment,
-              HarmProbability.negligible,
-            ),
-            SafetyRating(
-              HarmCategory.hateSpeech,
-              HarmProbability.negligible,
-            ),
-            SafetyRating(
-              HarmCategory.sexuallyExplicit,
-              HarmProbability.negligible,
-            ),
-            SafetyRating(
-              HarmCategory.dangerousContent,
-              HarmProbability.negligible,
-            ),
-          ],
-          CitationMetadata([]),
-          FinishReason.stop,
-          '',
-        ),
-      ],
-      null,
-    );
+    final mockResponse = GenerateContentResponse([
+      Candidate(
+        Content.text(''),
+        [
+          SafetyRating(HarmCategory.harassment, HarmProbability.negligible),
+          SafetyRating(HarmCategory.hateSpeech, HarmProbability.negligible),
+          SafetyRating(
+            HarmCategory.sexuallyExplicit,
+            HarmProbability.negligible,
+          ),
+          SafetyRating(
+            HarmCategory.dangerousContent,
+            HarmProbability.negligible,
+          ),
+        ],
+        CitationMetadata([]),
+        FinishReason.stop,
+        '',
+      ),
+    ], null);
     when(
       () => aiService.chatStep(
         InteractionPage.llmTestPrompt,
@@ -192,8 +191,9 @@ MockPreferencesService setUpServices() {
     when(() => initialState.name).thenReturn(CaptureState.previewStateLabel);
     final CaptureState captureState = MockCaptureState();
     when(() => captureState.current).thenReturn(initialState);
-    when(() => captureState.setState(CaptureState.previewStateLabel))
-        .thenReturn(CaptureState.previewStateLabel);
+    when(
+      () => captureState.setState(CaptureState.previewStateLabel),
+    ).thenReturn(CaptureState.previewStateLabel);
     when(() => captureState.stateIndex).thenReturn(0);
     GetIt.I.registerSingleton<CaptureState>(captureState);
   }

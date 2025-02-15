@@ -5,13 +5,7 @@ import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:mime/mime.dart';
 
-enum MFileType {
-  image,
-  video,
-  audio,
-  pdf,
-  other,
-}
+enum MFileType { image, video, audio, pdf, other }
 
 MFileType fileTypeByMimeType(String mimeType) {
   return switch (mimeType.split('/')[0]) {

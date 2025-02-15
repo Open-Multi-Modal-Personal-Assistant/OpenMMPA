@@ -1,7 +1,4 @@
-enum ActionKind {
-  initialize,
-  speechTranscripted,
-}
+enum ActionKind { initialize, speechTranscripted }
 
 class DeferredAction {
   DeferredAction(

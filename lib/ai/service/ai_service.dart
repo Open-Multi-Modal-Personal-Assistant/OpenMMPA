@@ -36,10 +36,7 @@ class AiService with FirebaseMixin, ToolsMixin {
   late DateTime watermark;
   ChatSession? chatSession;
 
-  GenerativeModel getModel(
-    String systemInstruction, {
-    bool withTools = true,
-  }) {
+  GenerativeModel getModel(String systemInstruction, {bool withTools = true}) {
     final preferences = GetIt.I.get<PreferencesService>();
     final modelType = preferences.fastLlmMode ? 'flash' : 'pro';
     return FirebaseVertexAI.instance.generativeModel(
@@ -157,10 +154,13 @@ class AiService with FirebaseMixin, ToolsMixin {
         log('History ANN Peers ${nearestHistory.map((p) => p.score)}');
         final annThreshold = preferences.historyRagThreshold;
         final historyStuffing = StringBuffer();
-        for (final history
-            in nearestHistory.where((h) => h.score < annThreshold)) {
-          historyStuffing.writeln('<history>${history.object.role}: '
-              '${history.object.content}</history>');
+        for (final history in nearestHistory.where(
+          (h) => h.score < annThreshold,
+        )) {
+          historyStuffing.writeln(
+            '<history>${history.object.role}: '
+            '${history.object.content}</history>',
+          );
         }
 
         if (historyStuffing.isNotEmpty) {
@@ -174,14 +174,16 @@ class AiService with FirebaseMixin, ToolsMixin {
         }
       }
 
-      final nearestP13ns =
-          await database.getNearestPersonalization(userEmbedding.textEmbedding);
+      final nearestP13ns = await database.getNearestPersonalization(
+        userEmbedding.textEmbedding,
+      );
       // TODO(MrCsabaToth): rerank
       if (nearestP13ns.isNotEmpty) {
         log('P13n ANN Peers ${nearestP13ns.map((p) => p.score)}');
         final annThreshold = preferences.personalizationRagThreshold;
-        for (final personalization
-            in nearestP13ns.where((p) => p.score < annThreshold)) {
+        for (final personalization in nearestP13ns.where(
+          (p) => p.score < annThreshold,
+        )) {
           p13Stuffing.writeln(
             '<personalFact>${personalization.object.content}</personalFact>',
           );
@@ -189,20 +191,16 @@ class AiService with FirebaseMixin, ToolsMixin {
       }
     }
 
-    p13Stuffing.writeln('<personalFact>Current date and time: '
-        '${DateTime.now().toIso8601String()}</personalFact>');
+    p13Stuffing.writeln(
+      '<personalFact>Current date and time: '
+      '${DateTime.now().toIso8601String()}</personalFact>',
+    );
 
     final gpsLocation = await GetIt.I.get<LocationService>().obtain();
     p13Stuffing
-      ..write(
-        "<personalFact>User's current immediate location: ",
-      )
-      ..write(
-        '{"lat": ${gpsLocation.latitude}, ',
-      )
-      ..writeln(
-        '"lon": ${gpsLocation.longitude}}</personalFact>',
-      );
+      ..write("<personalFact>User's current immediate location: ")
+      ..write('{"lat": ${gpsLocation.latitude}, ')
+      ..writeln('"lon": ${gpsLocation.longitude}}</personalFact>');
 
     if (preferences.measureHeartRate) {
       final heartRate = GetIt.I.get<HeartRateService>().heartRate;
@@ -251,8 +249,10 @@ class AiService with FirebaseMixin, ToolsMixin {
           parts.add(FileData(mediumFile.mimeType, fileUri));
 
           // Media embedding
-          if ([MFileType.image, MFileType.video]
-              .contains(mediumFile.fileType)) {
+          if ([
+            MFileType.image,
+            MFileType.video,
+          ].contains(mediumFile.fileType)) {
             final imagePath =
                 mediumFile.fileType == MFileType.image ? fileUri : '';
             final videoPath =
@@ -336,8 +336,10 @@ class AiService with FirebaseMixin, ToolsMixin {
     while ((functionCalls = response.functionCalls.toList()).isNotEmpty) {
       final responses = <FunctionResponse>[];
       for (final functionCall in functionCalls) {
-        debugPrint('Function call ${functionCall.name}, '
-            'params: ${functionCall.args}');
+        debugPrint(
+          'Function call ${functionCall.name}, '
+          'params: ${functionCall.args}',
+        );
         try {
           final response = await dispatchFunctionCall(
             functionCall,
@@ -347,12 +349,7 @@ class AiService with FirebaseMixin, ToolsMixin {
           if (response?.response != null) {
             responses.add(response!);
             database.addUpdateHistory(
-              History(
-                'user',
-                'function_call',
-                response.toString(),
-                '',
-              ),
+              History('user', 'function_call', response.toString(), ''),
             );
           }
         } catch (e) {
@@ -390,9 +387,11 @@ class AiService with FirebaseMixin, ToolsMixin {
   }) async {
     final embeddingResponse = await FirebaseFunctions.instance
         .httpsCallable(embeddingFunctionName)
-        .call<dynamic>(
-      {'text': prompt, 'image_path': imagePath, 'video_path': videoPath},
-    );
+        .call<dynamic>({
+          'text': prompt,
+          'image_path': imagePath,
+          'video_path': videoPath,
+        });
     final embeddingMap = embeddingResponse.data as Map<String, Object?>;
     final embeddings = Embeddings.fromJson(embeddingMap);
     return embeddings;
@@ -447,43 +446,36 @@ class AiService with FirebaseMixin, ToolsMixin {
     final preferences = GetIt.I.get<PreferencesService>();
     if (preferences.classicGoogleTranslate) {
       final translator = GoogleTranslator();
-      final translation =
-          await translator.translate(transcript, to: targetLocale.left(2));
+      final translation = await translator.translate(
+        transcript,
+        to: targetLocale.left(2),
+      );
       await persistModelResponse(
         database,
         InteractionMode.translate,
         translation.text,
         targetLocale,
       );
-      return GenerateContentResponse(
-        [
-          Candidate(
-            Content.text(translation.text),
-            [
-              SafetyRating(
-                HarmCategory.harassment,
-                HarmProbability.negligible,
-              ),
-              SafetyRating(
-                HarmCategory.hateSpeech,
-                HarmProbability.negligible,
-              ),
-              SafetyRating(
-                HarmCategory.sexuallyExplicit,
-                HarmProbability.negligible,
-              ),
-              SafetyRating(
-                HarmCategory.dangerousContent,
-                HarmProbability.negligible,
-              ),
-            ],
-            CitationMetadata([]),
-            FinishReason.stop,
-            '',
-          ),
-        ],
-        null,
-      );
+      return GenerateContentResponse([
+        Candidate(
+          Content.text(translation.text),
+          [
+            SafetyRating(HarmCategory.harassment, HarmProbability.negligible),
+            SafetyRating(HarmCategory.hateSpeech, HarmProbability.negligible),
+            SafetyRating(
+              HarmCategory.sexuallyExplicit,
+              HarmProbability.negligible,
+            ),
+            SafetyRating(
+              HarmCategory.dangerousContent,
+              HarmProbability.negligible,
+            ),
+          ],
+          CitationMetadata([]),
+          FinishReason.stop,
+          '',
+        ),
+      ], null);
     }
 
     final chat = getChatSession(systemInstructionTemplate, withTools: false);

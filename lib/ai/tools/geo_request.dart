@@ -33,7 +33,8 @@ class GeoRequest {
   DateTime date = DateTime.now();
 
   @override
-  String toString() => {
+  String toString() =>
+      {
         'latitude': latitude,
         'longitude': longitude,
         'date': date.toIso8601String(),

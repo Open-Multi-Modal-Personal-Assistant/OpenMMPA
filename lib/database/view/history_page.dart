@@ -104,8 +104,9 @@ class HistoryPageState extends State<HistoryPage>
           CustomListView(
             key: Key('CLV$_editCount'),
             paginationMode: PaginationMode.page,
-            loadingBuilder: (BuildContext context) =>
-                const Center(child: CircularProgressIndicator()),
+            loadingBuilder:
+                (BuildContext context) =>
+                    const Center(child: CircularProgressIndicator()),
             adapter: ListAdapter(
               fetchItems: (int page, int limit) async {
                 final data = await database.historyPaged(page * limit, limit);
@@ -123,9 +124,7 @@ class HistoryPageState extends State<HistoryPage>
                 ],
               );
             },
-            empty: const Center(
-              child: Icon(Icons.do_disturb),
-            ),
+            empty: const Center(child: Icon(Icons.do_disturb)),
             itemBuilder: (context, _, item) {
               final history = item as History;
               return ListTile(
@@ -169,9 +168,10 @@ class HistoryPageState extends State<HistoryPage>
               _animationController,
               const Icon(Icons.warning, size: 220),
             ),
-            onTap: () => GetIt.I
-                .get<HistoryState>()
-                .setState(StateBase.browsingStateLabel),
+            onTap:
+                () => GetIt.I.get<HistoryState>().setState(
+                  StateBase.browsingStateLabel,
+                ),
           ),
         ],
       ),

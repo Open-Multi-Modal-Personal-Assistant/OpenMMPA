@@ -30,36 +30,42 @@ void main() {
       expect(find.widgetWithIcon(IconButton, Icons.help), findsOneWidget);
     });
 
-    testWidgets('navigates to interaction when the uni modal button is tapped',
-        (tester) async {
-      await tester.pumpApp(const MainPage());
-      await tester.tap(find.byKey(const Key(MainPageState.uniModalKey)));
-      await tester.pumpAndSettleEx();
+    testWidgets(
+      'navigates to interaction when the uni modal button is tapped',
+      (tester) async {
+        await tester.pumpApp(const MainPage());
+        await tester.tap(find.byKey(const Key(MainPageState.uniModalKey)));
+        await tester.pumpAndSettleEx();
 
-      expect(find.byType(InteractionPage), findsOneWidget);
-    });
+        expect(find.byType(InteractionPage), findsOneWidget);
+      },
+    );
 
     testWidgets(
-        'navigates to camera page when the multi modal button is tapped',
-        (tester) async {
-      await tester.pumpApp(const MainPage());
-      await tester.tap(find.byKey(const Key(MainPageState.multiModalKey)));
-      await tester.pumpAndSettleEx();
+      'navigates to camera page when the multi modal button is tapped',
+      (tester) async {
+        await tester.pumpApp(const MainPage());
+        await tester.tap(find.byKey(const Key(MainPageState.multiModalKey)));
+        await tester.pumpAndSettleEx();
 
-      expect(find.byType(CameraPage), findsOneWidget);
-    });
+        expect(find.byType(CameraPage), findsOneWidget);
+      },
+    );
 
-    testWidgets('navigates to interaction when the translate button is tapped',
-        (tester) async {
-      await tester.pumpApp(const MainPage());
-      await tester.tap(find.byKey(const Key(MainPageState.translateKey)));
-      await tester.pumpAndSettleEx();
+    testWidgets(
+      'navigates to interaction when the translate button is tapped',
+      (tester) async {
+        await tester.pumpApp(const MainPage());
+        await tester.tap(find.byKey(const Key(MainPageState.translateKey)));
+        await tester.pumpAndSettleEx();
 
-      expect(find.byType(InteractionPage), findsOneWidget);
-    });
+        expect(find.byType(InteractionPage), findsOneWidget);
+      },
+    );
 
-    testWidgets('navigates to p13n page when the p13n button is tapped',
-        (tester) async {
+    testWidgets('navigates to p13n page when the p13n button is tapped', (
+      tester,
+    ) async {
       await tester.pumpApp(const MainPage());
       await tester.tap(find.byKey(const Key(MainPageState.personalizationKey)));
       await tester.pumpAndSettleEx();
@@ -67,8 +73,9 @@ void main() {
       expect(find.byType(PersonalizationPage), findsOneWidget);
     });
 
-    testWidgets('navigates to preferences when the pref button is tapped',
-        (tester) async {
+    testWidgets('navigates to preferences when the pref button is tapped', (
+      tester,
+    ) async {
       await tester.pumpApp(const MainPage());
       await tester.tap(find.byKey(const Key(MainPageState.settingsKey)));
       await tester.pumpAndSettleEx();

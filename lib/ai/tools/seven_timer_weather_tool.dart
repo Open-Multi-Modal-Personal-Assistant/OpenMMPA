@@ -32,9 +32,7 @@ class SevenTimerWeatherTool implements FunctionTool {
 
   @override
   Tool getTool(PreferencesService preferences) {
-    return Tool.functionDeclarations(
-      getFunctionDeclarations(preferences),
-    );
+    return Tool.functionDeclarations(getFunctionDeclarations(preferences));
   }
 
   @override
@@ -50,12 +48,12 @@ class SevenTimerWeatherTool implements FunctionTool {
     final isMetric = preferences.unitSystem;
     final result = switch (call.name) {
       'fetchWeatherForecast' => {
-          'query': await _fetchWeatherForecast(
-            GeoRequest.fromJson(call.args),
-            isMetric,
-          ),
-        },
-      _ => <String, String>{}
+        'query': await _fetchWeatherForecast(
+          GeoRequest.fromJson(call.args),
+          isMetric,
+        ),
+      },
+      _ => <String, String>{},
     };
 
     return FunctionResponse(call.name, result);

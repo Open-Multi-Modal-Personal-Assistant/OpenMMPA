@@ -30,8 +30,9 @@ class TtsService with StateLoggingMixin {
     if (Platform.isAndroid) {
       engine = await tts.getDefaultEngine as String;
       logEvent('Default TTS Engine: $engine');
-      voice = (await tts.getDefaultVoice as Map<Object?, Object?>)
-          .map((key, value) => MapEntry(key! as String, value! as String));
+      voice = (await tts.getDefaultVoice as Map<Object?, Object?>).map(
+        (key, value) => MapEntry(key! as String, value! as String),
+      );
       logEvent('Default TTS Voice: $voice');
       languages = (await tts.getLanguages as List<Object?>)
           .map((o) => o! as String)

@@ -24,16 +24,12 @@ class ApiKeysPreferencesPageState extends State<ApiKeysPreferencesPage> {
       PrefText(
         label: l10n.preferencesAlphaVantageAccessKeyLabel,
         pref: PreferencesService.alphaVantageAccessKeyTag,
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'\w')),
-        ],
+        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'\w'))],
       ),
       PrefText(
         label: l10n.preferencesTavilyApiKeyLabel,
         pref: PreferencesService.tavilyApiKeyTag,
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'[\w-]+')),
-        ],
+        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\w-]+'))],
       ),
       PrefButton(
         onTap: () async {
@@ -47,10 +43,7 @@ class ApiKeysPreferencesPageState extends State<ApiKeysPreferencesPage> {
               if (!csvLine.isNullOrWhiteSpace) {
                 final keyValues = csvLine.split(',');
                 if (keyValues.length >= 2) {
-                  preferencesMap.putIfAbsent(
-                    keyValues[0],
-                    () => keyValues[1],
-                  );
+                  preferencesMap.putIfAbsent(keyValues[0], () => keyValues[1]);
                 }
               }
             }

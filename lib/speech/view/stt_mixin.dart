@@ -27,10 +27,8 @@ mixin SttMixin {
 
   /* BEGIN Audio Recorder utilities */
   Future<bool> isEncoderSupported(AudioEncoder encoder) async {
-    final isSupported = await _audioRecorder?.isEncoderSupported(
-          encoder,
-        ) ??
-        false;
+    final isSupported =
+        await _audioRecorder?.isEncoderSupported(encoder) ?? false;
 
     if (!isSupported) {
       debugPrint('${encoder.name} is not supported on this platform.');
@@ -81,9 +79,10 @@ mixin SttMixin {
 
       if (await _audioRecorder?.hasPermission() ?? false) {
         // Chirp needs RIFF header, not raw PCM 16bit
-        final encoder = forSpeech
-            ? AudioEncoder.wav
-            : (Platform.isAndroid ? AudioEncoder.opus : AudioEncoder.aacLc);
+        final encoder =
+            forSpeech
+                ? AudioEncoder.wav
+                : (Platform.isAndroid ? AudioEncoder.opus : AudioEncoder.aacLc);
 
         if (!await isEncoderSupported(encoder)) {
           return;
@@ -134,8 +133,9 @@ mixin SttMixin {
       } else {
         final ctx = context;
         if (ctx.mounted) {
-          ScaffoldMessenger.of(ctx)
-              .showSnackBar(const SnackBar(content: Text('Recording error')));
+          ScaffoldMessenger.of(
+            ctx,
+          ).showSnackBar(const SnackBar(content: Text('Recording error')));
         }
 
         log('Error during stop speech recording, path $recordingFilePath');
@@ -182,8 +182,10 @@ mixin SttMixin {
 
   /* BEGIN Android native STT utilities */
   Future<void> resultListener(SpeechRecognitionResult result) async {
-    debugPrint('Result listener final: ${result.finalResult}, '
-        'words: ${result.recognizedWords}');
+    debugPrint(
+      'Result listener final: ${result.finalResult}, '
+      'words: ${result.recognizedWords}',
+    );
 
     addToDeferredQueueFunction?.call(
       DeferredAction(
@@ -226,12 +228,8 @@ mixin SttMixin {
       final sttService = GetIt.I.get<SttService>();
       await sttService.speech.listen(
         onResult: resultListener,
-        listenFor: const Duration(
-          seconds: PreferencesService.listenForDefault,
-        ),
-        pauseFor: const Duration(
-          seconds: PreferencesService.pauseForDefault,
-        ),
+        listenFor: const Duration(seconds: PreferencesService.listenForDefault),
+        pauseFor: const Duration(seconds: PreferencesService.pauseForDefault),
         localeId: inputLocale,
         onSoundLevelChange: soundLevelListener,
         listenOptions: options,

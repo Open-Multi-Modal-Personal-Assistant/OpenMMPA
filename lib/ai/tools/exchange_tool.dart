@@ -23,7 +23,8 @@ class ExchangeTool implements FunctionTool {
         'Fetch the exchange rate between two currencies.',
         parameters: {
           'currencyDate': Schema.string(
-            description: 'A date or the value "latest" '
+            description:
+                'A date or the value "latest" '
                 'if a time period is not specified',
           ),
           'currencyFrom': Schema.string(
@@ -33,7 +34,8 @@ class ExchangeTool implements FunctionTool {
             description: 'The currency to convert to in ISO 4217 format',
           ),
           'amountFrom': Schema.number(
-            description: 'The amount which needs to be converted, '
+            description:
+                'The amount which needs to be converted, '
                 'defaults to 1.0',
           ),
         },
@@ -48,7 +50,8 @@ class ExchangeTool implements FunctionTool {
             description: 'The crypto currency ticker symbol to convert from',
           ),
           'currencyToTicker': Schema.string(
-            description: 'The money currency to convert to in ISO 4217 '
+            description:
+                'The money currency to convert to in ISO 4217 '
                 'format or crypto currency ticker symbol',
           ),
         },
@@ -58,15 +61,15 @@ class ExchangeTool implements FunctionTool {
 
   @override
   Tool getTool(PreferencesService preferences) {
-    return Tool.functionDeclarations(
-      getFunctionDeclarations(preferences),
-    );
+    return Tool.functionDeclarations(getFunctionDeclarations(preferences));
   }
 
   @override
   bool canDispatchFunctionCall(FunctionCall call) {
-    return ['fetchCurrencyExchangeRate', 'fetchCryptoExchangeRate']
-        .contains(call.name);
+    return [
+      'fetchCurrencyExchangeRate',
+      'fetchCryptoExchangeRate',
+    ].contains(call.name);
   }
 
   @override
@@ -76,16 +79,16 @@ class ExchangeTool implements FunctionTool {
   ) async {
     final result = switch (call.name) {
       'fetchCurrencyExchangeRate' => {
-          'exchangeRate': await _fetchCurrencyExchangeRate(
-            CurrencyRequest.fromJson(call.args),
-          ),
-        },
+        'exchangeRate': await _fetchCurrencyExchangeRate(
+          CurrencyRequest.fromJson(call.args),
+        ),
+      },
       'fetchCryptoExchangeRate' => {
-          'exchangeRate': await _fetchCryptoExchangeRate(
-            CurrencyRequest.fromJson(call.args),
-          ),
-        },
-      _ => <String, String>{}
+        'exchangeRate': await _fetchCryptoExchangeRate(
+          CurrencyRequest.fromJson(call.args),
+        ),
+      },
+      _ => <String, String>{},
     };
 
     return FunctionResponse(call.name, result);
@@ -121,11 +124,14 @@ class ExchangeTool implements FunctionTool {
   ) async {
     const cryptoCompareBaseUrl = 'min-api.cryptocompare.com';
     const cryptoComparePath = '/data/price';
-    final cryptoCompareUrl =
-        Uri.https(cryptoCompareBaseUrl, cryptoComparePath, {
-      'fsym': currencyRequest.currencyFrom,
-      'tsyms': currencyRequest.currencyTo,
-    });
+    final cryptoCompareUrl = Uri.https(
+      cryptoCompareBaseUrl,
+      cryptoComparePath,
+      {
+        'fsym': currencyRequest.currencyFrom,
+        'tsyms': currencyRequest.currencyTo,
+      },
+    );
     final exchangeResult = await http.get(cryptoCompareUrl);
     if (exchangeResult.statusCode == 200) {
       final exchangeJson =

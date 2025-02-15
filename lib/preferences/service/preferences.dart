@@ -148,31 +148,31 @@ class PreferencesService with ChangeNotifier {
   bool get llmDebugMode =>
       prefService?.get<bool>(llmDebugModeTag) ?? llmDebugModeDefault;
   HarmBlockThreshold get harmCategoryHarassment => getHarmBlockThreshold(
-        prefService?.get<String>(harmCategoryHarassmentTag) ??
-            harmCategoryHarassmentDefault,
-      );
+    prefService?.get<String>(harmCategoryHarassmentTag) ??
+        harmCategoryHarassmentDefault,
+  );
   HarmBlockThreshold get harmCategoryHateSpeech => getHarmBlockThreshold(
-        prefService?.get<String>(harmCategoryHateSpeechTag) ??
-            harmCategoryHateSpeechDefault,
-      );
+    prefService?.get<String>(harmCategoryHateSpeechTag) ??
+        harmCategoryHateSpeechDefault,
+  );
   HarmBlockThreshold get harmCategorySexuallyExplicit => getHarmBlockThreshold(
-        prefService?.get<String>(harmCategorySexuallyExplicitTag) ??
-            harmCategorySexuallyExplicitDefault,
-      );
+    prefService?.get<String>(harmCategorySexuallyExplicitTag) ??
+        harmCategorySexuallyExplicitDefault,
+  );
   HarmBlockThreshold get harmCategoryDangerousContent => getHarmBlockThreshold(
-        prefService?.get<String>(harmCategoryDangerousContentTag) ??
-            harmCategoryDangerousContentDefault,
-      );
+    prefService?.get<String>(harmCategoryDangerousContentTag) ??
+        harmCategoryDangerousContentDefault,
+  );
   bool get classicGoogleTranslate =>
       prefService?.get<bool>(classicGoogleTranslateTag) ??
       classicGoogleTranslateDefault;
   String get theme =>
       prefService?.get<String>(themeSelectionTag) ?? themeSelectionDefault;
   ThemeMode get themeMode => switch (theme) {
-        themeSelectionLight => ThemeMode.light,
-        themeSelectionDark => ThemeMode.dark,
-        _ => ThemeMode.system,
-      };
+    themeSelectionLight => ThemeMode.light,
+    themeSelectionDark => ThemeMode.dark,
+    _ => ThemeMode.system,
+  };
 
   HarmBlockThreshold getHarmBlockThreshold(String harmBlockThreshold) =>
       switch (harmBlockThreshold) {
@@ -209,11 +209,11 @@ class PreferencesService with ChangeNotifier {
   String get cameraResolution =>
       prefService?.get<String>(cameraResolutionTag) ?? cameraResolutionDefault;
   ResolutionPreset get cameraResolutionPreset => switch (cameraResolution) {
-        cameraResolutionVeryHigh => ResolutionPreset.veryHigh,
-        cameraResolutionHigh => ResolutionPreset.high,
-        cameraResolutionMedium => ResolutionPreset.medium,
-        _ => ResolutionPreset.low // also low
-      };
+    cameraResolutionVeryHigh => ResolutionPreset.veryHigh,
+    cameraResolutionHigh => ResolutionPreset.high,
+    cameraResolutionMedium => ResolutionPreset.medium,
+    _ => ResolutionPreset.low, // also low
+  };
 
   void emit() {
     notifyListeners();

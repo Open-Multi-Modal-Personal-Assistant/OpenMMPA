@@ -25,10 +25,8 @@ class SpeechServicesPreferencesPage extends StatelessWidget {
     final tts = GetIt.I.get<TtsService>();
     var outputLanguages = tts.languages
         .map(
-          (language) => DropdownMenuItem(
-            value: language,
-            child: Text(language),
-          ),
+          (language) =>
+              DropdownMenuItem(value: language, child: Text(language)),
         )
         .toList(growable: false);
 

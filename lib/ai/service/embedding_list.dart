@@ -8,8 +8,9 @@ class Embeddings {
     if (embeddingMap.containsKey('text') && embeddingMap['text'] != null) {
       final embeddingsList = embeddingMap['text']! as List<dynamic>;
       for (final embeddings in embeddingsList.nonNulls) {
-        final embedding =
-            (embeddings as List<dynamic>).nonNulls.toList(growable: false);
+        final embedding = (embeddings as List<dynamic>).nonNulls.toList(
+          growable: false,
+        );
         if (embedding.isNotEmpty) {
           textEmbeddings.add(dimensionalityReduction(embedding.cast<double>()));
         }
@@ -18,12 +19,12 @@ class Embeddings {
 
     imageEmbeddings.clear();
     if (embeddingMap.containsKey('image') && embeddingMap['image'] != null) {
-      final embedding = (embeddingMap['image']! as List<dynamic>)
-          .nonNulls
+      final embedding = (embeddingMap['image']! as List<dynamic>).nonNulls
           .toList(growable: false);
       if (embedding.isNotEmpty) {
-        imageEmbeddings
-            .addAll(dimensionalityReduction(embedding.cast<double>()));
+        imageEmbeddings.addAll(
+          dimensionalityReduction(embedding.cast<double>()),
+        );
       }
     }
 
@@ -31,11 +32,13 @@ class Embeddings {
     if (embeddingMap.containsKey('video') && embeddingMap['video'] != null) {
       final embeddingsList = embeddingMap['video']! as List<dynamic>;
       for (final embeddings in embeddingsList.nonNulls) {
-        final embedding =
-            (embeddings as List<dynamic>).nonNulls.toList(growable: false);
+        final embedding = (embeddings as List<dynamic>).nonNulls.toList(
+          growable: false,
+        );
         if (embedding.isNotEmpty) {
-          videoEmbeddings
-              .add(dimensionalityReduction(embedding.cast<double>()));
+          videoEmbeddings.add(
+            dimensionalityReduction(embedding.cast<double>()),
+          );
         }
       }
     }
@@ -52,12 +55,15 @@ class Embeddings {
 
   List<double> dimensionalityReduction(List<double> vector) {
     // Reduction by addition of values
-    final foldedVector =
-        vector.take(embeddingDimensionality).toList(growable: false);
+    final foldedVector = vector
+        .take(embeddingDimensionality)
+        .toList(growable: false);
     if (vector.length > embeddingDimensionality) {
-      for (var i = 0, j = embeddingDimensionality;
-          j < vector.length;
-          i++, j++) {
+      for (
+        var i = 0, j = embeddingDimensionality;
+        j < vector.length;
+        i++, j++
+      ) {
         foldedVector[i % embeddingDimensionality] += vector[j];
       }
     }

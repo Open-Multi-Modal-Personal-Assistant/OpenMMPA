@@ -26,7 +26,8 @@ class WebResearchTool implements FunctionTool {
         'fetch accurate and factual search results quickly and efficiently',
         parameters: {
           'query': Schema.string(
-            description: 'The search query or question which need to be '
+            description:
+                'The search query or question which need to be '
                 'researched',
           ),
         },
@@ -36,9 +37,7 @@ class WebResearchTool implements FunctionTool {
 
   @override
   Tool getTool(PreferencesService preferences) {
-    return Tool.functionDeclarations(
-      getFunctionDeclarations(preferences),
-    );
+    return Tool.functionDeclarations(getFunctionDeclarations(preferences));
   }
 
   @override
@@ -53,9 +52,9 @@ class WebResearchTool implements FunctionTool {
   ) async {
     final result = switch (call.name) {
       'fetchWebResearch' => {
-          'query': await _webResearch(call.args, preferences.tavilyApiKey),
-        },
-      _ => <String, String>{}
+        'query': await _webResearch(call.args, preferences.tavilyApiKey),
+      },
+      _ => <String, String>{},
     };
 
     return FunctionResponse(call.name, result);
