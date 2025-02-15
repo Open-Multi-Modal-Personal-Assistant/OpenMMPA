@@ -118,3 +118,4 @@ firebase.json
 lib/firebase_options.dart
 android/app/google-services.json
 functions/venv/
+android/app/.cxx
