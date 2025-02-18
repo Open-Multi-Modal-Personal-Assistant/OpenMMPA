@@ -27,7 +27,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
         log(details.exceptionAsString(), stackTrace: details.stack);
       };
 
-      unawaited(FirebaseMixin.initFirebase());
+      await FirebaseMixin.initFirebase();
 
       // Add cross-flavor configuration here
       final preferences = PreferencesService();
