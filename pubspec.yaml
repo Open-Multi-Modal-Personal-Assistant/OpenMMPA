@@ -7,7 +7,6 @@ environment:
   sdk: ">=3.7.2"
   flutter: ">=3.29.2"
 
-
 dependencies:
   adaptive_dialog: ^2.4.0
   assorted_layout_widgets: ^11.0.0
@@ -15,9 +14,9 @@ dependencies:
   cloud_functions: ^5.3.4
   collection: ^1.19.1
   country_flags: ^3.2.0
-  dart_helper_utils: ^4.1.2
+  dart_helper_utils: ^5.0.0
   daylight: ^3.1.0
-  file_picker: ^9.0.2
+  file_picker: ^9.1.0
   firebase_app_check: ^0.3.2+4
   firebase_auth: ^5.5.1
   firebase_core: ^3.12.1
@@ -58,7 +57,7 @@ dependencies:
   translator: ^1.0.3+1
   tuple: ^2.0.2
   video_player: ^2.9.3
-  watch_it: ^1.6.4
+  watch_it: ^1.6.5
 
 dev_dependencies:
   build_runner: ^2.4.15

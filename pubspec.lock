@@ -306,10 +306,10 @@ packages:
     dependency: "direct main"
     description:
       name: dart_helper_utils
-      sha256: f4ece2b3fe5df45cd55869ba6d3ebd6c22a0dd628e4dd199cff33c80bcb178ea
+      sha256: d434ae4e5841f45d7cd9e46c4968c734e94db5e1744e150cb42195fecb1bd2e6
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.2"
+    version: "5.0.0"
   dart_style:
     dependency: transitive
     description:
@@ -370,10 +370,10 @@ packages:
     dependency: "direct main"
     description:
       name: file_picker
-      sha256: "7423298f08f6fc8cce05792bae329f9a93653fc9c08712831b1a55540127995d"
+      sha256: ee11ce89f8937c39181bc88d57a455972f7545b86150d8f287d0d9cf95bcdf0a
       url: "https://pub.dev"
     source: hosted
-    version: "9.0.2"
+    version: "9.1.0"
   file_selector:
     dependency: transitive
     description:
@@ -1619,10 +1619,10 @@ packages:
     dependency: "direct main"
     description:
       name: watch_it
-      sha256: a69e652ddefacdfc9f288421be02c6b10bbe6678d128a59d48ae267f2b9f0b8c
+      sha256: "44ad14c66c9a4240ac39243c8e09849a85ab6511b7b9217cacde024ed45796e1"
       url: "https://pub.dev"
     source: hosted
-    version: "1.6.4"
+    version: "1.6.5"
   watcher:
     dependency: transitive
     description:
