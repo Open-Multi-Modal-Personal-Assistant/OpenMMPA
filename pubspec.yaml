@@ -24,7 +24,7 @@ dependencies:
   firebase_ui_storage: ^2.1.1
   firebase_vertexai: ^1.4.0
   fl_location: ^5.0.0
-  flex_color_scheme: ^8.1.1
+  flex_color_scheme: ^8.2.0
   flutter:
     sdk: flutter
   flutter_easy_animations: ^0.0.2
