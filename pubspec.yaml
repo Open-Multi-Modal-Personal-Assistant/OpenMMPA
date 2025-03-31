@@ -22,7 +22,7 @@ dependencies:
   firebase_core: ^3.13.0
   firebase_storage: ^12.4.4
   firebase_ui_storage: ^2.1.1
-  firebase_vertexai: ^1.4.0
+  firebase_vertexai: ^1.5.0
   fl_location: ^5.0.0
   flex_color_scheme: ^8.2.0
   flutter:
