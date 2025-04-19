@@ -45,18 +45,22 @@ class AiService with FirebaseMixin, ToolsMixin {
         SafetySetting(
           HarmCategory.harassment,
           preferences.harmCategoryHarassment,
+          null,
         ),
         SafetySetting(
           HarmCategory.hateSpeech,
           preferences.harmCategoryHateSpeech,
+          null,
         ),
         SafetySetting(
           HarmCategory.sexuallyExplicit,
           preferences.harmCategorySexuallyExplicit,
+          null,
         ),
         SafetySetting(
           HarmCategory.dangerousContent,
           preferences.harmCategoryDangerousContent,
+          null,
         ),
       ],
       systemInstruction: Content.text(systemInstruction),
