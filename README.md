@@ -32,6 +32,10 @@ and RAG (Retrieval Augmented Generation) to turn your existing devices into inte
   - Web research through Tavily (API key required)
   - Up-to-date fiat and crypto currency exchange rates
 
+## Technical Architecture and Design
+
+DeepWiki: https://deepwiki.com/Open-Multi-Modal-Personal-Assistant/OpenMMPA
+
 ### On the Horizon:
 * Web search via DuckDuckGo Assist
 * Business insights with Alpha Vantage (API key required)
