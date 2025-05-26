@@ -79,10 +79,9 @@ mixin SttMixin {
 
       if (await _audioRecorder?.hasPermission() ?? false) {
         // Chirp needs RIFF header, not raw PCM 16bit
-        final encoder =
-            forSpeech
-                ? AudioEncoder.wav
-                : (Platform.isAndroid ? AudioEncoder.opus : AudioEncoder.aacLc);
+        final encoder = forSpeech
+            ? AudioEncoder.wav
+            : (Platform.isAndroid ? AudioEncoder.opus : AudioEncoder.aacLc);
 
         if (!await isEncoderSupported(encoder)) {
           return;

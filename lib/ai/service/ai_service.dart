@@ -257,10 +257,12 @@ class AiService with FirebaseMixin, ToolsMixin {
             MFileType.image,
             MFileType.video,
           ].contains(mediumFile.fileType)) {
-            final imagePath =
-                mediumFile.fileType == MFileType.image ? fileUri : '';
-            final videoPath =
-                mediumFile.fileType == MFileType.video ? fileUri : '';
+            final imagePath = mediumFile.fileType == MFileType.image
+                ? fileUri
+                : '';
+            final videoPath = mediumFile.fileType == MFileType.video
+                ? fileUri
+                : '';
             final mediaEmbedding = await obtainEmbedding(
               prompt: resolved,
               imagePath: imagePath,

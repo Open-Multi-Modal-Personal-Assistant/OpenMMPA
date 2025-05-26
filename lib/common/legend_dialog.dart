@@ -8,27 +8,26 @@ Future<void> legendDialog(
 ) async {
   await showDialog<int>(
     context: context,
-    builder:
-        (context) => AlertDialog(
-          title: Text(context.l10n.legendDialogTitle),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: ListView(
-              shrinkWrap: true,
-              children: legendItems
-                  .map(
-                    (i) => ListTile(
-                      leading: Icon(i.item1),
-                      title: Text(
-                        i.item2,
-                        maxLines: 10,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  )
-                  .toList(growable: false),
-            ),
-          ),
+    builder: (context) => AlertDialog(
+      title: Text(context.l10n.legendDialogTitle),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: ListView(
+          shrinkWrap: true,
+          children: legendItems
+              .map(
+                (i) => ListTile(
+                  leading: Icon(i.item1),
+                  title: Text(
+                    i.item2,
+                    maxLines: 10,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              )
+              .toList(growable: false),
         ),
+      ),
+    ),
   );
 }

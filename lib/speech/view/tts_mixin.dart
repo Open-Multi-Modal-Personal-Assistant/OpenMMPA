@@ -62,8 +62,9 @@ mixin TtsMixin {
         final synthFileName = synthFileResponse[0]! as String;
         log('Synth file name: $synthFileName');
         if (synthFileName.isNotEmpty) {
-          final synthBytes =
-              await FirebaseStorage.instance.ref(synthFileName).getData();
+          final synthBytes = await FirebaseStorage.instance
+              .ref(synthFileName)
+              .getData();
           if (synthBytes != null && synthBytes.isNotEmpty) {
             player ??= Player();
             final memoryMedia = await Media.memory(synthBytes);

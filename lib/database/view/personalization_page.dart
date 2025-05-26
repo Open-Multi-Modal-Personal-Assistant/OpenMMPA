@@ -148,9 +148,8 @@ class PersonalizationPageState extends State<PersonalizationPage>
           CustomListView(
             key: Key('CLV$_editCount'),
             paginationMode: PaginationMode.page,
-            loadingBuilder:
-                (BuildContext context) =>
-                    const Center(child: CircularProgressIndicator()),
+            loadingBuilder: (BuildContext context) =>
+                const Center(child: CircularProgressIndicator()),
             adapter: ListAdapter(
               fetchItems: (int page, int limit) async {
                 final data = await database.personalizationPaged(

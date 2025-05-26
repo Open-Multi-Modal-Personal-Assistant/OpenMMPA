@@ -209,9 +209,9 @@ class CameraPageState extends State<CameraPage>
                 border: Border.all(
                   color:
                       cameraController != null &&
-                              cameraController!.value.isRecordingVideo
-                          ? Colors.redAccent
-                          : Colors.grey,
+                          cameraController!.value.isRecordingVideo
+                      ? Colors.redAccent
+                      : Colors.grey,
                   width: 3,
                 ),
               ),
@@ -302,9 +302,8 @@ class CameraPageState extends State<CameraPage>
                 behavior: HitTestBehavior.opaque,
                 onScaleStart: handleScaleStart,
                 onScaleUpdate: handleScaleUpdate,
-                onTapDown:
-                    (TapDownDetails details) =>
-                        onViewFinderTap(details, constraints),
+                onTapDown: (TapDownDetails details) =>
+                    onViewFinderTap(details, constraints),
               );
             },
           ),
@@ -383,10 +382,9 @@ class CameraPageState extends State<CameraPage>
                     color: Colors.blue,
                   ),
                   color: Colors.transparent,
-                  onPressed:
-                      cameraController != null
-                          ? onFlashModeButtonPressed
-                          : null,
+                  onPressed: cameraController != null
+                      ? onFlashModeButtonPressed
+                      : null,
                 ),
                 ...[
                   IconButton(
@@ -397,10 +395,9 @@ class CameraPageState extends State<CameraPage>
                       color: Colors.blue,
                     ),
                     color: Colors.transparent,
-                    onPressed:
-                        cameraController != null
-                            ? onExposureModeButtonPressed
-                            : null,
+                    onPressed: cameraController != null
+                        ? onExposureModeButtonPressed
+                        : null,
                   ),
                   IconButton(
                     icon: outlinedIcon(
@@ -410,10 +407,9 @@ class CameraPageState extends State<CameraPage>
                       color: Colors.blue,
                     ),
                     color: Colors.transparent,
-                    onPressed:
-                        cameraController != null
-                            ? onFocusModeButtonPressed
-                            : null,
+                    onPressed: cameraController != null
+                        ? onFocusModeButtonPressed
+                        : null,
                   ),
                 ],
                 IconButton(
@@ -424,10 +420,9 @@ class CameraPageState extends State<CameraPage>
                     color: Colors.blue,
                   ),
                   color: Colors.transparent,
-                  onPressed:
-                      cameraController != null
-                          ? onAudioModeButtonPressed
-                          : null,
+                  onPressed: cameraController != null
+                      ? onAudioModeButtonPressed
+                      : null,
                 ),
                 IconButton(
                   icon: outlinedIcon(
@@ -439,10 +434,9 @@ class CameraPageState extends State<CameraPage>
                     color: Colors.blue,
                   ),
                   color: Colors.transparent,
-                  onPressed:
-                      cameraController != null
-                          ? onCaptureOrientationLockButtonPressed
-                          : null,
+                  onPressed: cameraController != null
+                      ? onCaptureOrientationLockButtonPressed
+                      : null,
                 ),
               ],
             ),
@@ -467,64 +461,56 @@ class CameraPageState extends State<CameraPage>
                 context,
                 Icons.flash_off,
                 iconSize,
-                color:
-                    cameraController?.value.flashMode == FlashMode.off
-                        ? Colors.orange
-                        : Colors.blue,
+                color: cameraController?.value.flashMode == FlashMode.off
+                    ? Colors.orange
+                    : Colors.blue,
               ),
               color: Colors.blue,
-              onPressed:
-                  cameraController != null
-                      ? () => onSetFlashModeButtonPressed(FlashMode.off)
-                      : null,
+              onPressed: cameraController != null
+                  ? () => onSetFlashModeButtonPressed(FlashMode.off)
+                  : null,
             ),
             IconButton(
               icon: outlinedIcon(
                 context,
                 Icons.flash_auto,
                 iconSize,
-                color:
-                    cameraController?.value.flashMode == FlashMode.auto
-                        ? Colors.orange
-                        : Colors.blue,
+                color: cameraController?.value.flashMode == FlashMode.auto
+                    ? Colors.orange
+                    : Colors.blue,
               ),
               color: Colors.transparent,
-              onPressed:
-                  cameraController != null
-                      ? () => onSetFlashModeButtonPressed(FlashMode.auto)
-                      : null,
+              onPressed: cameraController != null
+                  ? () => onSetFlashModeButtonPressed(FlashMode.auto)
+                  : null,
             ),
             IconButton(
               icon: outlinedIcon(
                 context,
                 Icons.flash_on,
                 iconSize,
-                color:
-                    cameraController?.value.flashMode == FlashMode.always
-                        ? Colors.orange
-                        : Colors.blue,
+                color: cameraController?.value.flashMode == FlashMode.always
+                    ? Colors.orange
+                    : Colors.blue,
               ),
               color: Colors.transparent,
-              onPressed:
-                  cameraController != null
-                      ? () => onSetFlashModeButtonPressed(FlashMode.always)
-                      : null,
+              onPressed: cameraController != null
+                  ? () => onSetFlashModeButtonPressed(FlashMode.always)
+                  : null,
             ),
             IconButton(
               icon: outlinedIcon(
                 context,
                 Icons.highlight,
                 iconSize,
-                color:
-                    cameraController?.value.flashMode == FlashMode.torch
-                        ? Colors.orange
-                        : Colors.blue,
+                color: cameraController?.value.flashMode == FlashMode.torch
+                    ? Colors.orange
+                    : Colors.blue,
               ),
               color: Colors.transparent,
-              onPressed:
-                  cameraController != null
-                      ? () => onSetFlashModeButtonPressed(FlashMode.torch)
-                      : null,
+              onPressed: cameraController != null
+                  ? () => onSetFlashModeButtonPressed(FlashMode.torch)
+                  : null,
             ),
           ],
         ),
@@ -534,16 +520,15 @@ class CameraPageState extends State<CameraPage>
 
   Widget exposureModeControlRowWidget() {
     final styleAuto = TextButton.styleFrom(
-      foregroundColor:
-          cameraController?.value.exposureMode == ExposureMode.auto
-              ? Colors.orange
-              : Colors.blue,
+      foregroundColor: cameraController?.value.exposureMode == ExposureMode.auto
+          ? Colors.orange
+          : Colors.blue,
     );
     final styleLocked = TextButton.styleFrom(
       foregroundColor:
           cameraController?.value.exposureMode == ExposureMode.locked
-              ? Colors.orange
-              : Colors.blue,
+          ? Colors.orange
+          : Colors.blue,
     );
 
     return SizeTransition(
@@ -559,12 +544,10 @@ class CameraPageState extends State<CameraPage>
                 children: [
                   TextButton(
                     style: styleAuto,
-                    onPressed:
-                        cameraController != null
-                            ? () => onSetExposureModeButtonPressed(
-                              ExposureMode.auto,
-                            )
-                            : null,
+                    onPressed: cameraController != null
+                        ? () =>
+                              onSetExposureModeButtonPressed(ExposureMode.auto)
+                        : null,
                     onLongPress: () {
                       if (cameraController != null) {
                         cameraController!.setExposurePoint(null);
@@ -575,20 +558,18 @@ class CameraPageState extends State<CameraPage>
                   ),
                   TextButton(
                     style: styleLocked,
-                    onPressed:
-                        cameraController != null
-                            ? () => onSetExposureModeButtonPressed(
-                              ExposureMode.locked,
-                            )
-                            : null,
+                    onPressed: cameraController != null
+                        ? () => onSetExposureModeButtonPressed(
+                            ExposureMode.locked,
+                          )
+                        : null,
                     child: const Text('LOCKED'),
                   ),
                   TextButton(
                     style: styleLocked,
-                    onPressed:
-                        cameraController != null
-                            ? () => cameraController!.setExposureOffset(0)
-                            : null,
+                    onPressed: cameraController != null
+                        ? () => cameraController!.setExposureOffset(0)
+                        : null,
                     child: const Text('RESET OFFSET'),
                   ),
                 ],
@@ -605,8 +586,8 @@ class CameraPageState extends State<CameraPage>
                     label: currentExposureOffset.toString(),
                     onChanged:
                         minAvailableExposureOffset == maxAvailableExposureOffset
-                            ? null
-                            : setExposureOffset,
+                        ? null
+                        : setExposureOffset,
                   ),
                   Text(maxAvailableExposureOffset.toString()),
                 ],
@@ -620,16 +601,14 @@ class CameraPageState extends State<CameraPage>
 
   Widget focusModeControlRowWidget() {
     final styleAuto = TextButton.styleFrom(
-      foregroundColor:
-          cameraController?.value.focusMode == FocusMode.auto
-              ? Colors.orange
-              : Colors.blue,
+      foregroundColor: cameraController?.value.focusMode == FocusMode.auto
+          ? Colors.orange
+          : Colors.blue,
     );
     final styleLocked = TextButton.styleFrom(
-      foregroundColor:
-          cameraController?.value.focusMode == FocusMode.locked
-              ? Colors.orange
-              : Colors.blue,
+      foregroundColor: cameraController?.value.focusMode == FocusMode.locked
+          ? Colors.orange
+          : Colors.blue,
     );
 
     return SizeTransition(
@@ -645,10 +624,9 @@ class CameraPageState extends State<CameraPage>
                 children: [
                   TextButton(
                     style: styleAuto,
-                    onPressed:
-                        cameraController != null
-                            ? () => onSetFocusModeButtonPressed(FocusMode.auto)
-                            : null,
+                    onPressed: cameraController != null
+                        ? () => onSetFocusModeButtonPressed(FocusMode.auto)
+                        : null,
                     onLongPress: () {
                       if (cameraController != null) {
                         cameraController!.setFocusPoint(null);
@@ -659,11 +637,9 @@ class CameraPageState extends State<CameraPage>
                   ),
                   TextButton(
                     style: styleLocked,
-                    onPressed:
-                        cameraController != null
-                            ? () =>
-                                onSetFocusModeButtonPressed(FocusMode.locked)
-                            : null,
+                    onPressed: cameraController != null
+                        ? () => onSetFocusModeButtonPressed(FocusMode.locked)
+                        : null,
                     child: const Text('LOCKED'),
                   ),
                 ],
@@ -690,10 +666,10 @@ class CameraPageState extends State<CameraPage>
           color: Colors.transparent,
           onPressed:
               cameraController != null &&
-                      cameraController!.value.isInitialized &&
-                      !cameraController!.value.isRecordingVideo
-                  ? onTakePictureButtonPressed
-                  : null,
+                  cameraController!.value.isInitialized &&
+                  !cameraController!.value.isRecordingVideo
+              ? onTakePictureButtonPressed
+              : null,
         ),
         IconButton(
           icon: outlinedIcon(
@@ -705,10 +681,10 @@ class CameraPageState extends State<CameraPage>
           color: Colors.transparent,
           onPressed:
               cameraController != null &&
-                      cameraController!.value.isInitialized &&
-                      !cameraController!.value.isRecordingVideo
-                  ? onVideoRecordButtonPressed
-                  : null,
+                  cameraController!.value.isInitialized &&
+                  !cameraController!.value.isRecordingVideo
+              ? onVideoRecordButtonPressed
+              : null,
         ),
         IconButton(
           icon: outlinedIcon(
@@ -723,22 +699,22 @@ class CameraPageState extends State<CameraPage>
           color: Colors.transparent,
           onPressed:
               cameraController != null &&
-                      cameraController!.value.isInitialized &&
-                      cameraController!.value.isRecordingVideo
-                  ? (cameraController!.value.isRecordingPaused)
-                      ? onResumeButtonPressed
-                      : onPauseButtonPressed
-                  : null,
+                  cameraController!.value.isInitialized &&
+                  cameraController!.value.isRecordingVideo
+              ? (cameraController!.value.isRecordingPaused)
+                    ? onResumeButtonPressed
+                    : onPauseButtonPressed
+              : null,
         ),
         IconButton(
           icon: outlinedIcon(context, Icons.stop, iconSize, color: Colors.red),
           color: Colors.transparent,
           onPressed:
               cameraController != null &&
-                      cameraController!.value.isInitialized &&
-                      cameraController!.value.isRecordingVideo
-                  ? onStopButtonPressed
-                  : null,
+                  cameraController!.value.isInitialized &&
+                  cameraController!.value.isRecordingVideo
+              ? onStopButtonPressed
+              : null,
         ),
         IconButton(
           icon: outlinedIcon(
@@ -747,13 +723,14 @@ class CameraPageState extends State<CameraPage>
             iconSize,
             color:
                 cameraController != null &&
-                        cameraController!.value.isPreviewPaused
-                    ? Colors.red
-                    : Colors.blue,
+                    cameraController!.value.isPreviewPaused
+                ? Colors.red
+                : Colors.blue,
           ),
           color: Colors.transparent,
-          onPressed:
-              cameraController == null ? null : onPausePreviewButtonPressed,
+          onPressed: cameraController == null
+              ? null
+              : onPausePreviewButtonPressed,
         ),
       ],
     );
@@ -929,9 +906,8 @@ class CameraPageState extends State<CameraPage>
       await Navigator.pushReplacement(
         context,
         MaterialPageRoute<void>(
-          builder:
-              (context) =>
-                  InteractionPage(InteractionMode.imageChat, mediaFiles: files),
+          builder: (context) =>
+              InteractionPage(InteractionMode.imageChat, mediaFiles: files),
         ),
       );
     });
@@ -990,11 +966,10 @@ class CameraPageState extends State<CameraPage>
           log('Capture orientation unlocked');
         } else {
           await cameraController?.lockCaptureOrientation();
-          final lockedTo =
-              cameraController?.value.lockedCaptureOrientation
-                  .toString()
-                  .split('.')
-                  .last;
+          final lockedTo = cameraController?.value.lockedCaptureOrientation
+              .toString()
+              .split('.')
+              .last;
           log('Capture orientation locked to $lockedTo');
         }
       }

@@ -33,8 +33,8 @@ class ThumbnailCarouselState extends State<ThumbnailCarouselWidget>
   late final PageState pageState;
   // Wonderous App also uses smooth_page_indicator
   // https://github.com/gskinnerTeam/flutter-wonderous-app/blob/main/lib/ui/screens/intro/intro_screen.dart#L27
-  late final PageController pageController =
-      PageController()..addListener(handlePageChanged);
+  late final PageController pageController = PageController()
+    ..addListener(handlePageChanged);
 
   VideoPlayerController? videoController;
   VoidCallback? videoPlayerListener;
@@ -117,14 +117,14 @@ class ThumbnailCarouselState extends State<ThumbnailCarouselWidget>
                 videoController == null
                     ? Icon(Icons.hourglass_bottom, size: mediaSize)
                     : Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.pink),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.pink),
+                        ),
+                        child: AspectRatio(
+                          aspectRatio: videoController!.value.aspectRatio,
+                          child: VideoPlayer(videoController!),
+                        ),
                       ),
-                      child: AspectRatio(
-                        aspectRatio: videoController!.value.aspectRatio,
-                        child: VideoPlayer(videoController!),
-                      ),
-                    ),
               MFileType.audio => Icon(Icons.audio_file, size: mediaSize),
               MFileType.pdf => Icon(Icons.picture_as_pdf, size: mediaSize),
               _ => Icon(
@@ -195,11 +195,9 @@ class ThumbnailCarouselState extends State<ThumbnailCarouselWidget>
     final commandButtons = <Widget>[
       if (pageCount > 0)
         IconButton.filledTonal(
-          onPressed:
-              () async =>
-                  pageCount > 0
-                      ? onDeleteMediaClicked(pageCount, currentPage)
-                      : null,
+          onPressed: () async => pageCount > 0
+              ? onDeleteMediaClicked(pageCount, currentPage)
+              : null,
           icon: const Icon(Icons.clear, color: Colors.red),
         )
       else
@@ -227,14 +225,13 @@ class ThumbnailCarouselState extends State<ThumbnailCarouselWidget>
               icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
             ),
             IconButton.filledTonal(
-              onPressed:
-                  isPlaying
-                      ? () async {
-                        await videoController?.pause();
-                        await videoController?.seekTo(Duration.zero);
-                        setState(() {});
-                      }
-                      : null,
+              onPressed: isPlaying
+                  ? () async {
+                      await videoController?.pause();
+                      await videoController?.seekTo(Duration.zero);
+                      setState(() {});
+                    }
+                  : null,
               icon: const Icon(Icons.stop),
             ),
           ]);
@@ -250,13 +247,12 @@ class ThumbnailCarouselState extends State<ThumbnailCarouselWidget>
             icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
           ),
           IconButton.filledTonal(
-            onPressed:
-                isPlaying
-                    ? () async {
-                      await stopAudio();
-                      setState(() {});
-                    }
-                    : null,
+            onPressed: isPlaying
+                ? () async {
+                    await stopAudio();
+                    setState(() {});
+                  }
+                : null,
             icon: const Icon(Icons.stop),
           ),
         ]);
@@ -273,10 +269,9 @@ class ThumbnailCarouselState extends State<ThumbnailCarouselWidget>
     final newPosition = currentPage + dir;
     return Center(
       child: IconButton.filledTonal(
-        onPressed:
-            newPosition >= 0 && newPosition < widget.files.length
-                ? () async => incrementPage(dir)
-                : null,
+        onPressed: newPosition >= 0 && newPosition < widget.files.length
+            ? () async => incrementPage(dir)
+            : null,
         icon: Icon(dir < 0 ? Icons.chevron_left : Icons.chevron_right),
       ),
     );

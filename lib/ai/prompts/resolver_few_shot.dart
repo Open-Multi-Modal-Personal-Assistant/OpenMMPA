@@ -5,7 +5,8 @@ const resolverSystemInstruction =
     'piece from a chat history by resolving all references '
     'and removing all possible ambiguity.';
 const resolverFewShotVariable = '{{INPUT}}';
-const resolverFewShotTemplate = """
+const resolverFewShotTemplate =
+    """
 Resolve any contextual references and remove any ambiguity from the last user request so it would be perfectly clear and it would able to stand alone as a request without the rest of the interaction. You'll receive the interaction as a context, $outputFormattingLower
 <examples>
 <example>

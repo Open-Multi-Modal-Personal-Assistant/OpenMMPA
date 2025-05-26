@@ -212,10 +212,9 @@ obx_int.ModelDefinition getObjectBoxModel() {
       objectToFB: (Personalization object, fb.Builder fbb) {
         final contentOffset = fbb.writeString(object.content);
         final localeOffset = fbb.writeString(object.locale);
-        final embeddingOffset =
-            object.embedding == null
-                ? null
-                : fbb.writeListFloat32(object.embedding!);
+        final embeddingOffset = object.embedding == null
+            ? null
+            : fbb.writeListFloat32(object.embedding!);
         fbb.startTable(7);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, contentOffset);
@@ -234,16 +233,15 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final localeParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGet(buffer, rootOffset, 8, '');
-        final object =
-            Personalization(contentParam, localeParam)
-              ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
-              ..embedding = const fb.ListReader<double>(
-                fb.Float32Reader(),
-                lazy: false,
-              ).vTableGetNullable(buffer, rootOffset, 12)
-              ..dateTime = DateTime.fromMillisecondsSinceEpoch(
-                const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0),
-              );
+        final object = Personalization(contentParam, localeParam)
+          ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
+          ..embedding = const fb.ListReader<double>(
+            fb.Float32Reader(),
+            lazy: false,
+          ).vTableGetNullable(buffer, rootOffset, 12)
+          ..dateTime = DateTime.fromMillisecondsSinceEpoch(
+            const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0),
+          );
 
         return object;
       },
@@ -261,17 +259,15 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final contentOffset = fbb.writeString(object.content);
         final localeOffset = fbb.writeString(object.locale);
         final rewriteOffset = fbb.writeString(object.rewrite);
-        final embeddingOffset =
-            object.embedding == null
-                ? null
-                : fbb.writeListFloat32(object.embedding!);
+        final embeddingOffset = object.embedding == null
+            ? null
+            : fbb.writeListFloat32(object.embedding!);
         final modeOffset = fbb.writeString(object.mode);
         final mediumPathOffset = fbb.writeString(object.mediumPath);
         final mimeTypeOffset = fbb.writeString(object.mimeType);
-        final mediumEmbeddingOffset =
-            object.mediumEmbedding == null
-                ? null
-                : fbb.writeListFloat32(object.mediumEmbedding!);
+        final mediumEmbeddingOffset = object.mediumEmbedding == null
+            ? null
+            : fbb.writeListFloat32(object.mediumEmbedding!);
         fbb.startTable(12);
         fbb.addInt64(0, object.id);
         fbb.addOffset(1, roleOffset);

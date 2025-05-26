@@ -83,8 +83,8 @@ class InteractionPageState extends State<InteractionPage>
     String prompt,
     String locale,
   ) async {
-    final interactionState =
-        GetIt.I.get<InteractionState>()..setState(StateBase.llmStateLabel);
+    final interactionState = GetIt.I.get<InteractionState>()
+      ..setState(StateBase.llmStateLabel);
 
     GenerateContentResponse? response;
     var targetLocale = '';
@@ -276,40 +276,38 @@ class InteractionPageState extends State<InteractionPage>
             ),
             // 5: Playback phase
             GestureDetector(
-              child:
-                  responseText.isNotEmptyOrNull
-                      ? Text(
-                        responseText,
-                        style: smallHeadline,
-                        textAlign: TextAlign.center,
-                        softWrap: true,
-                        overflow: TextOverflow.clip,
-                        maxLines: 100,
-                      )
-                      : AnimateStyles.pulse(
-                        _animationController,
-                        outlinedIcon(context, Icons.speaker, 200),
-                      ),
+              child: responseText.isNotEmptyOrNull
+                  ? Text(
+                      responseText,
+                      style: smallHeadline,
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      overflow: TextOverflow.clip,
+                      maxLines: 100,
+                    )
+                  : AnimateStyles.pulse(
+                      _animationController,
+                      outlinedIcon(context, Icons.speaker, 200),
+                    ),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
             // 6: Done phase
             GestureDetector(
-              child:
-                  responseText.isNotEmptyOrNull
-                      ? Text(
-                        responseText,
-                        style: smallHeadline,
-                        textAlign: TextAlign.center,
-                        softWrap: true,
-                        overflow: TextOverflow.clip,
-                        maxLines: 100,
-                      )
-                      : AnimateStyles.bounce(
-                        _animationController,
-                        outlinedIcon(context, Icons.check, 200),
-                      ),
+              child: responseText.isNotEmptyOrNull
+                  ? Text(
+                      responseText,
+                      style: smallHeadline,
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      overflow: TextOverflow.clip,
+                      maxLines: 100,
+                    )
+                  : AnimateStyles.bounce(
+                      _animationController,
+                      outlinedIcon(context, Icons.check, 200),
+                    ),
               onTap: () {
                 deferredActionQueue.add(DeferredAction(ActionKind.initialize));
                 interactionState.setState(StateBase.waitingStateLabel);

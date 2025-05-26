@@ -36,13 +36,12 @@ class Transcriptions {
       (lang, trs) => MapEntry(lang, trs.map((tr) => 1).reduce((a, b) => a + b)),
     );
 
-    final mode =
-        reduced.entries.reduce((a, b) {
-          final aValue = a.value;
-          final bValue = b.value;
+    final mode = reduced.entries.reduce((a, b) {
+      final aValue = a.value;
+      final bValue = b.value;
 
-          return aValue > bValue ? a : b;
-        }).key;
+      return aValue > bValue ? a : b;
+    }).key;
 
     return mode;
   }

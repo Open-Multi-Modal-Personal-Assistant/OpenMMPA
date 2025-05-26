@@ -5,8 +5,9 @@ extension LocaleEx on Locale {
   static Locale fromPreferences(String localeString) {
     final languageCode = localeString.left(2);
     final right2 = localeString.right(2);
-    final countryCode =
-        localeString.length > 2 && right2 != languageCode ? right2 : null;
+    final countryCode = localeString.length > 2 && right2 != languageCode
+        ? right2
+        : null;
 
     return Locale(languageCode, countryCode);
   }

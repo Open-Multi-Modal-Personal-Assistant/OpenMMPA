@@ -42,7 +42,8 @@ const translationExamples = '''
 </examples>
 ''';
 
-const translateOutputInstruction = '''
+const translateOutputInstruction =
+    '''
 Actual case:
 <request>
 <user>$translationSubjectVariable</user>
@@ -51,7 +52,8 @@ Actual case:
 <response>
 ''';
 
-const translateInstruction = '''
+const translateInstruction =
+    '''
 $translateTaskInstruction
 $translationExamples
 $translateOutputInstruction
