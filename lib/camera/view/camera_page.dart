@@ -11,6 +11,7 @@ import 'package:inspector_gadget/camera/view/capture_state.dart';
 import 'package:inspector_gadget/camera/view/thumbnail_carousel.dart';
 import 'package:inspector_gadget/common/deferred_action.dart';
 import 'package:inspector_gadget/interaction/view/interaction_page.dart';
+import 'package:inspector_gadget/l10n/arb/app_localizations.dart';
 import 'package:inspector_gadget/l10n/l10n.dart';
 import 'package:inspector_gadget/outlined_icon.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';

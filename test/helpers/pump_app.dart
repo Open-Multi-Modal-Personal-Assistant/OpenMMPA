@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:inspector_gadget/l10n/l10n.dart';
+import 'package:inspector_gadget/l10n/arb/app_localizations.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
 import 'package:pref/pref.dart';
 
