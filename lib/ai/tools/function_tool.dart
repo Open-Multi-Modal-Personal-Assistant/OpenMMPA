@@ -1,4 +1,4 @@
-import 'package:firebase_vertexai/firebase_vertexai.dart';
+import 'package:firebase_ai/firebase_ai.dart';
 import 'package:inspector_gadget/preferences/service/preferences.dart';
 
 abstract class FunctionTool {

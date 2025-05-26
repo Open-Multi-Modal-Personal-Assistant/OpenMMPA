@@ -1,5 +1,5 @@
 import 'package:dart_helper_utils/dart_helper_utils.dart';
-import 'package:firebase_vertexai/firebase_vertexai.dart';
+import 'package:firebase_ai/firebase_ai.dart';
 import 'package:inspector_gadget/ai/tools/alpha_vantage_tool.dart';
 import 'package:inspector_gadget/ai/tools/exchange_tool.dart';
 import 'package:inspector_gadget/ai/tools/function_tool.dart';

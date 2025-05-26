@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dart_helper_utils/dart_helper_utils.dart';
+import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:inspector_gadget/ai/prompts/closing_parts.dart';
@@ -39,7 +39,7 @@ class AiService with FirebaseMixin, ToolsMixin {
   GenerativeModel getModel(String systemInstruction, {bool withTools = true}) {
     final preferences = GetIt.I.get<PreferencesService>();
     final modelType = preferences.fastLlmMode ? 'flash' : 'pro';
-    return FirebaseVertexAI.instance.generativeModel(
+    return FirebaseAI.googleAI().generativeModel(
       model: 'gemini-2.0-$modelType-exp',
       safetySettings: [
         SafetySetting(

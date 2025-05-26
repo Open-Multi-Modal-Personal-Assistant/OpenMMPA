@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dart_helper_utils/dart_helper_utils.dart';
-import 'package:firebase_vertexai/firebase_vertexai.dart';
+import 'package:firebase_ai/firebase_ai.dart';
 import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/ai/tools/currency_request.dart';
 import 'package:inspector_gadget/ai/tools/function_tool.dart';
