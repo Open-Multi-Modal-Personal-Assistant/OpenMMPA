@@ -4,8 +4,8 @@ version: 1.0.2+1
 publish_to: none
 
 environment:
-  sdk: ">=3.8.0"
-  flutter: ">=3.32.0"
+  sdk: ">=3.8.1"
+  flutter: ">=3.32.4"
 
 dependencies:
   adaptive_dialog: ^2.4.1
