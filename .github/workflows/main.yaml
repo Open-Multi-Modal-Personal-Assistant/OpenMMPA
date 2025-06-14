@@ -24,6 +24,20 @@ jobs:
         echo "const chirpToken = 'a';" >> lib/secrets.dart
         echo "const alphaVantageAccessKey = 'a';" >> lib/secrets.dart
         echo "const tavilyApiKey = 'a';" >> lib/secrets.dart
+        echo "// ignore_for_file: type=lint" >> lib/firebase_options.dart
+        echo "import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;" >> lib/firebase_options.dart
+        echo "import 'package:flutter/foundation.dart'" >> lib/firebase_options.dart
+        echo "  show defaultTargetPlatform, TargetPlatform;" >> lib/firebase_options.dart
+        echo "class DefaultFirebaseOptions {" >> lib/firebase_options.dart
+        echo "  static FirebaseOptions get currentPlatform {" >> lib/firebase_options.dart
+        echo "    if (defaultTargetPlatform == TargetPlatform.android)" >> lib/firebase_options.dart
+        echo "      return android;" >> lib/firebase_options.dart
+        echo "    throw UnsupportedError('');" >> lib/firebase_options.dart
+        echo "  }" >> lib/firebase_options.dart
+        echo "  static const FirebaseOptions android = FirebaseOptions(" >> lib/firebase_options.dart
+        echo "    apiKey: '', appId: '', messagingSenderId: '', projectId: '', storageBucket: ''," >> lib/firebase_options.dart
+        echo "  );" >> lib/firebase_options.dart
+        echo "}" >> lib/firebase_options.dart
 
   spell-check:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
