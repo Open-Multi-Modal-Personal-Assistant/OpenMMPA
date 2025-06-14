@@ -24,26 +24,29 @@ jobs:
         echo "const chirpToken = 'a';" >> lib/secrets.dart
         echo "const alphaVantageAccessKey = 'a';" >> lib/secrets.dart
         echo "const tavilyApiKey = 'a';" >> lib/secrets.dart
-        echo "// ignore_for_file: type=lint" >> lib/firebase_options.dart
-        echo "import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;" >> lib/firebase_options.dart
-        echo "import 'package:flutter/foundation.dart'" >> lib/firebase_options.dart
-        echo "    show defaultTargetPlatform, TargetPlatform;" >> lib/firebase_options.dart
-        echo "" >> lib/firebase_options.dart
-        echo "class DefaultFirebaseOptions {" >> lib/firebase_options.dart
-        echo "  static FirebaseOptions get currentPlatform {" >> lib/firebase_options.dart
-        echo "    if (defaultTargetPlatform == TargetPlatform.android)" >> lib/firebase_options.dart
-        echo "      return android;" >> lib/firebase_options.dart
-        echo "    throw UnsupportedError('');" >> lib/firebase_options.dart
-        echo "  }" >> lib/firebase_options.dart
-        echo "" >> lib/firebase_options.dart
-        echo "  static const FirebaseOptions android = FirebaseOptions(" >> lib/firebase_options.dart
-        echo "    apiKey: ''," >> lib/firebase_options.dart
-        echo "    appId: ''," >> lib/firebase_options.dart
-        echo "    messagingSenderId: ''," >> lib/firebase_options.dart
-        echo "    projectId: ''," >> lib/firebase_options.dart
-        echo "    storageBucket: ''," >> lib/firebase_options.dart
-        echo "  );" >> lib/firebase_options.dart
-        echo "}" >> lib/firebase_options.dart
+        cat <<EOF > lib/firebase_options.json
+        // ignore_for_file: type=lint
+        import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
+        import 'package:flutter/foundation.dart'
+            show defaultTargetPlatform, TargetPlatform;
+          
+        class DefaultFirebaseOptions {
+          static FirebaseOptions get currentPlatform {
+            if (defaultTargetPlatform == TargetPlatform.android) {
+              return android;
+            }
+            throw UnsupportedError('');
+          }
+        
+          static const FirebaseOptions android = FirebaseOptions(
+            apiKey: '',
+            appId: '',
+            messagingSenderId: '',
+            projectId: '',
+            storageBucket: '',
+          );
+        }
+        EOF
 
   spell-check:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
