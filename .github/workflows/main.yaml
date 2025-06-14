@@ -24,7 +24,7 @@ jobs:
         echo "const chirpToken = 'a';" >> lib/secrets.dart
         echo "const alphaVantageAccessKey = 'a';" >> lib/secrets.dart
         echo "const tavilyApiKey = 'a';" >> lib/secrets.dart
-        cat <<EOF > lib/firebase_options.json
+        cat <<EOF > lib/firebase_options.dart
         // ignore_for_file: type=lint
         import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
         import 'package:flutter/foundation.dart'
