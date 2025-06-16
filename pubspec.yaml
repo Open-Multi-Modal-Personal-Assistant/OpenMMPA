@@ -52,7 +52,7 @@ dependencies:
   record: ^6.0.0
   smooth_page_indicator: ^1.2.1
   speech_to_text: ^7.0.0
-  statemachine: ^3.3.1
+  statemachine: ^3.4.0
   strings: ^4.0.0
   translator: ^1.0.3+1
   tuple: ^2.0.2
