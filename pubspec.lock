@@ -1414,10 +1414,10 @@ packages:
     dependency: "direct main"
     description:
       name: statemachine
-      sha256: "42ce52468879383c60d4983526114d91282b8b0c36657bc7d58be88975a02982"
+      sha256: "9d0088c5ab2c6baa08abe66e33086f5918f2b758a2e39955124ba03767e9fa61"
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.1"
+    version: "3.4.0"
   stream_channel:
     dependency: transitive
     description:
