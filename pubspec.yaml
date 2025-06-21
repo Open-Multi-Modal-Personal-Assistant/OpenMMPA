@@ -60,7 +60,7 @@ dependencies:
   watch_it: ^1.6.5
 
 dev_dependencies:
-  build_runner: ^2.5.1
+  build_runner: ^2.5.3
   flutter_test:
     sdk: flutter
   mocktail: ^1.0.3
