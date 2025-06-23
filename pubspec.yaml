@@ -51,7 +51,7 @@ dependencies:
   progress_indicators: ^1.0.0
   record: ^6.0.0
   smooth_page_indicator: ^1.2.1
-  speech_to_text: ^7.0.0
+  speech_to_text: ^7.1.0
   statemachine: ^3.4.0
   strings: ^4.0.0
   translator: ^1.0.3+1
