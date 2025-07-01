@@ -17,7 +17,7 @@ dependencies:
   dart_helper_utils: ^5.2.0
   daylight: ^3.1.0
   file_picker: ^10.2.0
-  firebase_ai: ^2.1.0
+  firebase_ai: ^2.2.0
   firebase_app_check: ^0.3.2+7
   firebase_auth: ^5.6.0
   firebase_core: ^3.14.0
