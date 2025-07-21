@@ -19,7 +19,7 @@ dependencies:
   file_picker: ^10.2.0
   firebase_ai: ^2.2.1
   firebase_app_check: ^0.3.2+7
-  firebase_auth: ^5.6.1
+  firebase_auth: ^5.7.0
   firebase_core: ^3.15.1
   firebase_storage: ^12.4.8
   firebase_ui_storage: ^2.1.2
