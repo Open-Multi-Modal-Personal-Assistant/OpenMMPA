@@ -301,10 +301,10 @@ packages:
     dependency: "direct main"
     description:
       name: dart_helper_utils
-      sha256: "450375d2d19a6a16564c0388663c5082f673489279c3d12cf046b6bf5504f3c4"
+      sha256: f1d3beb000323613a2aed9a08a2eb1727c18ddafbc8afd1a80d81a71e8b63fc0
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.0"
+    version: "5.2.2"
   dart_style:
     dependency: transitive
     description:
