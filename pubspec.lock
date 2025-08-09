@@ -1446,10 +1446,10 @@ packages:
     dependency: "direct main"
     description:
       name: strings
-      sha256: ff7373d0221207fe3b834953775c0e6a492b37f4409a3d539d35a34a7f50c38b
+      sha256: "8eccabcaad5f3b2d02b2bf8ca31ce1466fac7339229fd0472d63790f8c18095f"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "4.0.1"
   synchronized:
     dependency: transitive
     description:
