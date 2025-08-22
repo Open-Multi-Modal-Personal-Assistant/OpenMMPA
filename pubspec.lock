@@ -1622,10 +1622,10 @@ packages:
     dependency: "direct main"
     description:
       name: watch_it
-      sha256: "44ad14c66c9a4240ac39243c8e09849a85ab6511b7b9217cacde024ed45796e1"
+      sha256: "0cc7b8eb1d4a6551ae2525fd310422f8f6c4b2a91313eaa38fc2e9297253eca5"
       url: "https://pub.dev"
     source: hosted
-    version: "1.6.5"
+    version: "1.7.0"
   watcher:
     dependency: transitive
     description:
