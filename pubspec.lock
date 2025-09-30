@@ -453,26 +453,26 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_app_check
-      sha256: "3bf5d9c9043723ae12c09b2a012ca5f32653a1bc30a0a9818983766ea06d72a8"
+      sha256: "4c2266693e7b8fc9b0c8ef39ab286c70ead2bb8c74000ee9850906538f4257d1"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.0+1"
+    version: "0.4.1"
   firebase_app_check_platform_interface:
     dependency: transitive
     description:
       name: firebase_app_check_platform_interface
-      sha256: bdda519aa487be605a53093ececa564d48afadd1a1d018520ce45d00415ac03d
+      sha256: f0cb3e5223ea887dfb3378d4d05b61ca1b915ee61b8f3376f55c3938abe678dd
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0+1"
+    version: "0.2.1"
   firebase_app_check_web:
     dependency: transitive
     description:
       name: firebase_app_check_web
-      sha256: ab7b57c95faf266e2d5cd9fc57cda54d1fdfbc2c429c09b095830d4186f25920
+      sha256: "84e5195897c7fc37b9df4d0a2cba2f536fd99340ba251aed3c2de0c6d260d893"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0+16"
+    version: "0.2.1"
   firebase_auth:
     dependency: "direct main"
     description:
