@@ -49,7 +49,7 @@ dependencies:
   path_provider: ^2.1.5
   pref: ^2.8.0
   progress_indicators: ^1.0.0
-  record: ^6.1.1
+  record: ^6.1.2
   smooth_page_indicator: ^1.2.1
   speech_to_text: ^7.3.0
   statemachine: ^3.4.0
