@@ -533,26 +533,26 @@ packages:
     dependency: transitive
     description:
       name: firebase_ui_localizations
-      sha256: f2cdb38d6920b1241ab89fdd687452d17adce89603004ff6753123b646fcc99d
+      sha256: "53a44bd518a34bf0830229ff7edc1b360b77741d85b1801f24846637a3440e0b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   firebase_ui_shared:
     dependency: transitive
     description:
       name: firebase_ui_shared
-      sha256: f1d07c130a39104d32fba1dab274b7bcb13be2bf4e652624a4ccabb58f9781f1
+      sha256: "468fce5ba061f4443a5d382a9fef9f98e0fed02352118d5e3fd5279878d4261d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.1"
+    version: "1.4.2"
   firebase_ui_storage:
     dependency: "direct main"
     description:
       name: firebase_ui_storage
-      sha256: d77f799e7625384743377c9e632418080a95bf872e59beb44e13728c238ad8c6
+      sha256: "390dad9622fac0a082db5f76e2895170f80561b8e82c570200ec2c2f0d742c6a"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   fixnum:
     dependency: transitive
     description:
