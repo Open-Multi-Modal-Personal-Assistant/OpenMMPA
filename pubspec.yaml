@@ -13,7 +13,7 @@ dependencies:
   camera: ^0.11.3
   cloud_functions: ^6.0.5
   collection: ^1.19.1
-  country_flags: ^4.1.0
+  country_flags: ^4.1.1
   dart_helper_utils: ^5.4.1
   daylight: ^3.1.0
   file_picker: ^10.3.3
