@@ -16,7 +16,7 @@ dependencies:
   country_flags: ^4.1.1
   dart_helper_utils: ^5.4.1
   daylight: ^3.1.0
-  file_picker: ^10.3.3
+  file_picker: ^10.3.8
   firebase_ai: ^3.6.1
   firebase_app_check: ^0.4.1
   firebase_auth: ^6.1.0
