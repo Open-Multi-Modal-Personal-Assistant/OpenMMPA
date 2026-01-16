@@ -249,6 +249,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
+  convert_object:
+    dependency: transitive
+    description:
+      name: convert_object
+      sha256: de5fbd752788bafa60293712fbe06b3f5547f0fb2bd81a8f14201f02f1f8a425
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   country_flags:
     dependency: "direct main"
     description:
@@ -285,10 +293,10 @@ packages:
     dependency: "direct main"
     description:
       name: dart_helper_utils
-      sha256: c2c95a1aefdf8edbb63f86bdc22adb3de7c46d50eba9c48d6ed295e47c7292cc
+      sha256: "7943ab137b85692a9483a3ac952061505b6ca798fb1338600cc9291f86f269ec"
       url: "https://pub.dev"
     source: hosted
-    version: "5.4.1"
+    version: "6.0.0"
   dart_style:
     dependency: transitive
     description:
@@ -325,10 +333,10 @@ packages:
     dependency: transitive
     description:
       name: equatable
-      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      sha256: "3e0141505477fd8ad55d6eb4e7776d3fe8430be8e497ccb1521370c3f21a3e2b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.8"
   fake_async:
     dependency: transitive
     description:
