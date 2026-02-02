@@ -65,7 +65,7 @@ dev_dependencies:
     sdk: flutter
   mocktail: ^1.0.3
   objectbox_generator: ^5.0.1
-  very_good_analysis: ^10.0.0
+  very_good_analysis: ^10.1.0
 
 flutter:
   uses-material-design: true
