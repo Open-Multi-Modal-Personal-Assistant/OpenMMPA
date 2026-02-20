@@ -34,7 +34,7 @@ dependencies:
   flutter_localized_locales: ^2.0.5
   flutter_tts: ^4.2.5
   gap: ^3.0.1
-  get_it: ^9.2.0
+  get_it: ^9.2.1
   heart_rate_flutter: ^0.0.3
   http: ^1.6.0
   intl: ^0.20.2
