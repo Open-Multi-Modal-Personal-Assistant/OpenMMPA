@@ -856,8 +856,7 @@ class CameraPageState extends State<CameraPage>
         ),
       ]);
     } on CameraException catch (e) {
-      // ignore: unused_local_variable
-      final unused = switch (e.code) {
+      final _ = switch (e.code) {
         'CameraAccessDenied' => showInSnackBar(
           'You have denied camera access.',
         ),

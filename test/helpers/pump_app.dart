@@ -27,6 +27,7 @@ extension PumpApp on WidgetTester {
       wasThereError = false;
       try {
         await pumpAndSettle();
+        // Catching FlutterError allows for animations to finish across retries
         // ignore: avoid_catching_errors
       } on FlutterError {
         wasThereError = true;

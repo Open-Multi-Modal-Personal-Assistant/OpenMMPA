@@ -55,6 +55,7 @@ MockPreferencesService setUpServices() {
     when(
       () => mockPreferences.inputLocale,
     ).thenReturn(PreferencesService.inputLocaleDefault);
+    when(() => mockPreferences.measureHeartRate).thenReturn(false);
     when(
       () => mockPreferences.outputLocale,
     ).thenReturn(PreferencesService.outputLocaleDefault);
@@ -87,6 +88,7 @@ MockPreferencesService setUpServices() {
       () => interactionState.setState(StateBase.errorStateLabel),
     ).thenReturn(StateBase.errorStateLabel);
     when(() => interactionState.stateIndex).thenReturn(0);
+    when(() => interactionState.responseText).thenReturn('');
     when(interactionState.errorState).thenReturn(StateBase.errorStateLabel);
     GetIt.I.registerSingleton<InteractionState>(interactionState);
   }
