@@ -8,23 +8,23 @@ environment:
   flutter: ">=3.32.4"
 
 dependencies:
-  adaptive_dialog: ^2.5.0
-  assorted_layout_widgets: ^11.0.0
-  camera: ^0.11.3
-  cloud_functions: ^6.0.3
+  adaptive_dialog: ^2.7.1
+  assorted_layout_widgets: ^12.0.0
+  camera: ^0.12.0
+  cloud_functions: ^6.0.7
   collection: ^1.19.1
-  country_flags: ^4.1.0
-  dart_helper_utils: ^5.4.0
+  country_flags: ^4.1.2
+  dart_helper_utils: ^6.0.0
   daylight: ^3.1.0
-  file_picker: ^10.3.3
-  firebase_ai: ^3.4.0
+  file_picker: ^10.3.10
+  firebase_ai: ^3.9.0
   firebase_app_check: ^0.4.1
   firebase_auth: ^6.1.0
-  firebase_core: ^4.2.0
-  firebase_storage: ^13.0.3
+  firebase_core: ^4.5.0
+  firebase_storage: ^13.1.0
   firebase_ui_storage: ^3.0.1
   fl_location: ^5.0.0
-  flex_color_scheme: ^8.3.1
+  flex_color_scheme: ^8.4.0
   flutter:
     sdk: flutter
   flutter_easy_animations: ^0.0.2
@@ -32,40 +32,40 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_localized_locales: ^2.0.5
-  flutter_tts: ^4.2.3
+  flutter_tts: ^4.2.5
   gap: ^3.0.1
-  get_it: ^8.2.0
+  get_it: ^9.2.1
   heart_rate_flutter: ^0.0.3
-  http: ^1.5.0
+  http: ^1.6.0
   intl: ^0.20.2
   listview_utils_plus: ^0.0.5
-  media_kit: ^1.2.1
+  media_kit: ^1.2.6
   media_kit_libs_audio: ^1.0.7
   mime: ^2.0.0
   number_selector: ^1.0.7
-  objectbox: ^5.0.1
+  objectbox: ^5.2.0
   objectbox_flutter_libs: ^5.0.0
   path: ^1.9.1
   path_provider: ^2.1.5
   pref: ^2.8.0
   progress_indicators: ^1.0.0
-  record: ^6.1.2
-  smooth_page_indicator: ^1.2.1
+  record: ^6.2.0
+  smooth_page_indicator: ^2.0.1
   speech_to_text: ^7.3.0
   statemachine: ^3.4.0
   strings: ^4.0.1
   translator: ^1.0.4
   tuple: ^2.0.2
-  video_player: ^2.10.0
-  watch_it: ^1.7.0
+  video_player: ^2.11.1
+  watch_it: ^2.4.2
 
 dev_dependencies:
-  build_runner: ^2.10.1
+  build_runner: ^2.12.2
   flutter_test:
     sdk: flutter
   mocktail: ^1.0.3
   objectbox_generator: ^5.0.1
-  very_good_analysis: ^10.0.0
+  very_good_analysis: ^10.2.0
 
 flutter:
   uses-material-design: true
