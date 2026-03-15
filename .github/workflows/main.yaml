@@ -20,33 +20,8 @@ jobs:
       min_coverage: 10
       flutter_channel: stable
       setup: |
-        echo "const geminiApiKey = 'a';" > lib/secrets.dart
-        echo "const chirpToken = 'a';" >> lib/secrets.dart
-        echo "const alphaVantageAccessKey = 'a';" >> lib/secrets.dart
-        echo "const tavilyApiKey = 'a';" >> lib/secrets.dart
-        cat <<EOF > lib/firebase_options.dart
-        // ignore_for_file: type=lint
-        import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
-        import 'package:flutter/foundation.dart'
-            show defaultTargetPlatform, TargetPlatform;
-
-        class DefaultFirebaseOptions {
-          static FirebaseOptions get currentPlatform {
-            if (defaultTargetPlatform == TargetPlatform.android) {
-              return android;
-            }
-            throw UnsupportedError('');
-          }
-
-          static const FirebaseOptions android = FirebaseOptions(
-            apiKey: '',
-            appId: '',
-            messagingSenderId: '',
-            projectId: '',
-            storageBucket: '',
-          );
-        }
-        EOF
+        cp lib/secrets.mock.dart lib/secrets.dart
+        cp lib/firebase_options.mock.dart lib/firebase_options.dart
 
   spell-check:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
