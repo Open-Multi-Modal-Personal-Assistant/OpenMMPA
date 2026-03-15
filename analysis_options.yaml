@@ -5,7 +5,6 @@ linter:
     require_trailing_commas: false
     discarded_futures: false
     avoid_types_on_closure_parameters: false
-    avoid_catches_without_on_clauses: false
 
 analyzer:
   exclude:

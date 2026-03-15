@@ -244,7 +244,7 @@ class AiService with FirebaseMixin, ToolsMixin {
           try {
             // Check if already uploaded
             await fileRef.getDownloadURL();
-          } catch (e) {
+          } on Object {
             // Not uploaded yet
             await fileRef.putFile(mediumFile.file);
           }
@@ -333,7 +333,7 @@ class AiService with FirebaseMixin, ToolsMixin {
     var response = GenerateContentResponse([], null);
     try {
       response = await chat.sendMessage(message);
-    } catch (e) {
+    } on Object catch (e) {
       log('Exception during chat.sendMessage: $e');
       return null;
     }
@@ -358,7 +358,7 @@ class AiService with FirebaseMixin, ToolsMixin {
               History('user', 'function_call', response.toString(), ''),
             );
           }
-        } catch (e) {
+        } on Object catch (e) {
           log('Exception during transcription: $e');
           return null;
         }
@@ -368,7 +368,7 @@ class AiService with FirebaseMixin, ToolsMixin {
 
       try {
         response = await chat.sendMessage(message);
-      } catch (e) {
+      } on Object catch (e) {
         log('Exception during function iteration chat.sendMessage: $e');
         return null;
       }

@@ -82,7 +82,7 @@ mixin TtsMixin {
     } on FirebaseFunctionsException catch (e) {
       log('Exception during TTS function call: $e');
       state.errorState();
-    } catch (e) {
+    } on Object catch (e) {
       log('Error during TTS synth: $e');
       state.errorState();
     }

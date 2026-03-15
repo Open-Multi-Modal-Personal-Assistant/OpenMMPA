@@ -101,7 +101,7 @@ mixin SttMixin {
 
         await recordFile(_audioRecorder!, config);
       }
-    } catch (e) {
+    } on Object catch (e) {
       log('Error during start recording (speech $forSpeech): $e');
     }
   }
@@ -173,7 +173,7 @@ mixin SttMixin {
     } on FirebaseFunctionsException catch (e) {
       log('Exception during STT function call: $e');
       state.errorState();
-    } catch (e) {
+    } on Object catch (e) {
       log('Exception during STT transcription: $e');
       state.errorState();
     }

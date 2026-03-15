@@ -43,7 +43,7 @@ class SttService with StateLoggingMixin {
             systemLocaleName?.localeId ?? PreferencesService.inputLocaleDefault;
         logEvent('System locale: $systemLocale');
       }
-    } catch (e) {
+    } on Object catch (e) {
       log('Exception while initializing speech: $e');
       hasSpeech = false;
       initialized = false;

@@ -60,7 +60,7 @@ class LocationService with ChangeNotifier {
         timeLimit: const Duration(milliseconds: 500),
       );
       return location;
-    } catch (e) {
+    } on Object catch (e) {
       log('Exception while obtaining location: $e');
       return mockLocation;
     }
