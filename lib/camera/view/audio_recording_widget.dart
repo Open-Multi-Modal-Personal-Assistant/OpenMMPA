@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as m;
 
 import 'package:flutter/material.dart';
@@ -18,12 +19,13 @@ class AudioRecordingState extends State<AudioRecordingWidget>
 
   @override
   void initState() {
-    startRecording(forSpeech: false);
+    unawaited(startRecording(forSpeech: false));
 
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
-    )..repeat(reverse: true);
+    );
+    unawaited(_animationController.repeat(reverse: true));
 
     super.initState();
   }

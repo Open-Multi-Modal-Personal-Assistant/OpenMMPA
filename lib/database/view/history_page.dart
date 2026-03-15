@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
@@ -50,7 +51,8 @@ class HistoryPageState extends State<HistoryPage>
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
-    )..repeat(reverse: true);
+    );
+    unawaited(_animationController.repeat(reverse: true));
 
     WidgetsBinding.instance.addObserver(this);
 
@@ -94,7 +96,7 @@ class HistoryPageState extends State<HistoryPage>
       (s) => s.stateIndex,
     );
 
-    _processDeferredActionQueue(context);
+    unawaited(_processDeferredActionQueue(context));
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.historyAppBarTitle)),

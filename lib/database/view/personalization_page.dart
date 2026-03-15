@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
@@ -52,7 +53,8 @@ class PersonalizationPageState extends State<PersonalizationPage>
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
-    )..repeat(reverse: true);
+    );
+    unawaited(_animationController.repeat(reverse: true));
 
     GetIt.I.get<PersonalizationState>().setState(StateBase.browsingStateLabel);
     database = GetIt.I.get<DatabaseService>();
@@ -136,7 +138,7 @@ class PersonalizationPageState extends State<PersonalizationPage>
     );
     final personalizationViewState = GetIt.I.get<PersonalizationState>();
 
-    _processDeferredActionQueue(context);
+    unawaited(_processDeferredActionQueue(context));
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.personalizationAppBarTitle)),

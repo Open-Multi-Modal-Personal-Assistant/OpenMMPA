@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:math' as math;
 
@@ -41,11 +42,13 @@ class MainPageState extends State<MainPage> {
   }
 
   void navigateWithMode(BuildContext context, InteractionMode interactionMode) {
-    Navigator.push(
-      context,
-      MaterialPageRoute<void>(
-        builder: (context) =>
-            InteractionPage(interactionMode, mediaFiles: const []),
+    unawaited(
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) =>
+              InteractionPage(interactionMode, mediaFiles: const []),
+        ),
       ),
     );
   }

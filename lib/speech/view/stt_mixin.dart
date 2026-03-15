@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -239,6 +240,6 @@ mixin SttMixin {
   }
 
   void disposeStt() {
-    _audioRecorder?.dispose();
+    unawaited(_audioRecorder?.dispose());
   }
 }

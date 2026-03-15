@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:math' as m;
 
@@ -43,7 +44,7 @@ class ThumbnailCarouselState extends State<ThumbnailCarouselWidget>
   void initState() {
     pageState = GetIt.I.get<PageState>();
     pageState.setPageIndex(m.max(0, pageState.pageIndex));
-    initVideoPlayer();
+    unawaited(initVideoPlayer());
 
     super.initState();
   }
@@ -51,7 +52,7 @@ class ThumbnailCarouselState extends State<ThumbnailCarouselWidget>
   @override
   void dispose() {
     pageController.dispose();
-    videoController?.dispose();
+    unawaited(videoController?.dispose());
     super.dispose();
   }
 
@@ -65,10 +66,12 @@ class ThumbnailCarouselState extends State<ThumbnailCarouselWidget>
   }
 
   void handleSemanticSwipe(int dir) {
-    pageController.animateToPage(
-      (pageController.page ?? 0).round() + dir,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOut,
+    unawaited(
+      pageController.animateToPage(
+        (pageController.page ?? 0).round() + dir,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      ),
     );
   }
 

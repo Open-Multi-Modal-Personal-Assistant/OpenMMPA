@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:cloud_functions/cloud_functions.dart';
@@ -107,6 +108,6 @@ mixin TtsMixin {
   }
 
   void disposeTts() {
-    player?.dispose();
+    unawaited(player?.dispose());
   }
 }

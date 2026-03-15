@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
@@ -202,7 +203,7 @@ class PreferencesService with ChangeNotifier {
 
   void setOutputLocale(String locale) {
     if (locale.isNotEmpty) {
-      prefService?.set<String>(outputLocaleTag, locale);
+      final _ = prefService?.set<String>(outputLocaleTag, locale);
     }
   }
 

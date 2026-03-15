@@ -57,7 +57,8 @@ class InteractionPageState extends State<InteractionPage>
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
-    )..repeat(reverse: true);
+    );
+    unawaited(_animationController.repeat(reverse: true));
 
     GetIt.I.get<InteractionState>().setState(StateBase.waitingStateLabel);
     database = GetIt.I.get<DatabaseService>();
@@ -204,7 +205,7 @@ class InteractionPageState extends State<InteractionPage>
       );
     }
 
-    processDeferredActionQueue(context);
+    unawaited(processDeferredActionQueue(context));
 
     final interactionState = GetIt.I.get<InteractionState>();
     final stateIndex = watchPropertyValue<InteractionState, int>(

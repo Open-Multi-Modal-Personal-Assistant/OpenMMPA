@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:math' as m;
 
@@ -160,9 +161,9 @@ class CameraPageState extends State<CameraPage>
     }
 
     if (state == AppLifecycleState.inactive) {
-      cameraController?.dispose();
+      unawaited(cameraController?.dispose());
     } else if (state == AppLifecycleState.resumed) {
-      initializeCameraController(cameraController!.description);
+      unawaited(initializeCameraController(cameraController!.description));
     }
   }
   // #enddocregion AppLifecycle
@@ -195,7 +196,7 @@ class CameraPageState extends State<CameraPage>
     // https://www.geeksforgeeks.org/flutter-set-the-height-of-the-appbar/
     iconSize = m.min(size.width, size.height - appBarHeight) / 10;
 
-    _processDeferredActionQueue(context);
+    unawaited(_processDeferredActionQueue(context));
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n!.captureAppBarTitle)),
@@ -549,7 +550,7 @@ class CameraPageState extends State<CameraPage>
                         : null,
                     onLongPress: () {
                       if (cameraController != null) {
-                        cameraController!.setExposurePoint(null);
+                        unawaited(cameraController!.setExposurePoint(null));
                         log('Resetting exposure point');
                       }
                     },
@@ -628,7 +629,7 @@ class CameraPageState extends State<CameraPage>
                         : null,
                     onLongPress: () {
                       if (cameraController != null) {
-                        cameraController!.setFocusPoint(null);
+                        unawaited(cameraController!.setFocusPoint(null));
                       }
                       log('Resetting focus point');
                     },
@@ -798,9 +799,8 @@ class CameraPageState extends State<CameraPage>
       details.localPosition.dx / constraints.maxWidth,
       details.localPosition.dy / constraints.maxHeight,
     );
-    cameraController!
-      ..setExposurePoint(offset)
-      ..setFocusPoint(offset);
+    unawaited(cameraController!.setExposurePoint(offset));
+    unawaited(cameraController!.setFocusPoint(offset));
   }
 
   Future<void> onNewCameraSelected(CameraDescription cameraDescription) async {
@@ -883,20 +883,22 @@ class CameraPageState extends State<CameraPage>
   }
 
   void onTakePictureButtonPressed() {
-    takePicture().then((file) async {
-      log('Picture saved to ${file?.path}');
-      if (file != null) {
-        pageState.incrementPageCount(1);
-        final mimeType = await MFile.obtainMimeType(
-          file,
-          contentInspection: false,
-        );
-        files.add(MFile(file, mimeType));
-        if (mounted) {
-          setState(() {});
+    unawaited(
+      takePicture().then((file) async {
+        log('Picture saved to ${file?.path}');
+        if (file != null) {
+          pageState.incrementPageCount(1);
+          final mimeType = await MFile.obtainMimeType(
+            file,
+            contentInspection: false,
+          );
+          files.add(MFile(file, mimeType));
+          if (mounted) {
+            setState(() {});
+          }
         }
-      }
-    });
+      }),
+    );
   }
 
   void onMoveOnButtonPressed(BuildContext context) {
@@ -913,46 +915,46 @@ class CameraPageState extends State<CameraPage>
 
   void onSettingsButtonPressed() {
     if (settingsControlRowAnimationController.value == 1) {
-      settingsControlRowAnimationController.reverse();
+      unawaited(settingsControlRowAnimationController.reverse());
     } else {
-      settingsControlRowAnimationController.forward();
+      unawaited(settingsControlRowAnimationController.forward());
     }
   }
 
   void onFlashModeButtonPressed() {
     if (flashModeControlRowAnimationController.value == 1) {
-      flashModeControlRowAnimationController.reverse();
+      unawaited(flashModeControlRowAnimationController.reverse());
     } else {
-      flashModeControlRowAnimationController.forward();
-      exposureModeControlRowAnimationController.reverse();
-      focusModeControlRowAnimationController.reverse();
+      unawaited(flashModeControlRowAnimationController.forward());
+      unawaited(exposureModeControlRowAnimationController.reverse());
+      unawaited(focusModeControlRowAnimationController.reverse());
     }
   }
 
   void onExposureModeButtonPressed() {
     if (exposureModeControlRowAnimationController.value == 1) {
-      exposureModeControlRowAnimationController.reverse();
+      unawaited(exposureModeControlRowAnimationController.reverse());
     } else {
-      exposureModeControlRowAnimationController.forward();
-      flashModeControlRowAnimationController.reverse();
-      focusModeControlRowAnimationController.reverse();
+      unawaited(exposureModeControlRowAnimationController.forward());
+      unawaited(flashModeControlRowAnimationController.reverse());
+      unawaited(focusModeControlRowAnimationController.reverse());
     }
   }
 
   void onFocusModeButtonPressed() {
     if (focusModeControlRowAnimationController.value == 1) {
-      focusModeControlRowAnimationController.reverse();
+      unawaited(focusModeControlRowAnimationController.reverse());
     } else {
-      focusModeControlRowAnimationController.forward();
-      flashModeControlRowAnimationController.reverse();
-      exposureModeControlRowAnimationController.reverse();
+      unawaited(focusModeControlRowAnimationController.forward());
+      unawaited(flashModeControlRowAnimationController.reverse());
+      unawaited(exposureModeControlRowAnimationController.reverse());
     }
   }
 
   void onAudioModeButtonPressed() {
     enableAudio = !enableAudio;
     if (cameraController != null) {
-      onNewCameraSelected(cameraController!.description);
+      unawaited(onNewCameraSelected(cameraController!.description));
     }
   }
 
@@ -977,55 +979,65 @@ class CameraPageState extends State<CameraPage>
   }
 
   void onSetFlashModeButtonPressed(FlashMode mode) {
-    setFlashMode(mode).then((_) {
-      if (mounted) {
-        setState(() {});
-      }
-
-      log('Flash mode set to ${mode.toString().split('.').last}');
-    });
-  }
-
-  void onSetExposureModeButtonPressed(ExposureMode mode) {
-    setExposureMode(mode).then((_) {
-      if (mounted) {
-        setState(() {});
-      }
-
-      log('Exposure mode set to ${mode.toString().split('.').last}');
-    });
-  }
-
-  void onSetFocusModeButtonPressed(FocusMode mode) {
-    setFocusMode(mode).then((_) {
-      if (mounted) {
-        setState(() {});
-      }
-
-      log('Focus mode set to ${mode.toString().split('.').last}');
-    });
-  }
-
-  void onVideoRecordButtonPressed() {
-    startVideoRecording().then((_) {
-      if (mounted) {
-        setState(() {});
-      }
-    });
-  }
-
-  void onStopButtonPressed() {
-    stopVideoRecording().then((file) async {
-      log('Video recorded to ${file?.path}');
-      if (file != null && file.path.trim().isNotEmpty) {
-        pageState.incrementPageCount(1);
-        final mimeType = await MFile.obtainMimeType(file);
-        files.add(MFile(file, mimeType));
+    unawaited(
+      setFlashMode(mode).then((_) {
         if (mounted) {
           setState(() {});
         }
-      }
-    });
+
+        log('Flash mode set to ${mode.toString().split('.').last}');
+      }),
+    );
+  }
+
+  void onSetExposureModeButtonPressed(ExposureMode mode) {
+    unawaited(
+      setExposureMode(mode).then((_) {
+        if (mounted) {
+          setState(() {});
+        }
+
+        log('Exposure mode set to ${mode.toString().split('.').last}');
+      }),
+    );
+  }
+
+  void onSetFocusModeButtonPressed(FocusMode mode) {
+    unawaited(
+      setFocusMode(mode).then((_) {
+        if (mounted) {
+          setState(() {});
+        }
+
+        log('Focus mode set to ${mode.toString().split('.').last}');
+      }),
+    );
+  }
+
+  void onVideoRecordButtonPressed() {
+    unawaited(
+      startVideoRecording().then((_) {
+        if (mounted) {
+          setState(() {});
+        }
+      }),
+    );
+  }
+
+  void onStopButtonPressed() {
+    unawaited(
+      stopVideoRecording().then((file) async {
+        log('Video recorded to ${file?.path}');
+        if (file != null && file.path.trim().isNotEmpty) {
+          pageState.incrementPageCount(1);
+          final mimeType = await MFile.obtainMimeType(file);
+          files.add(MFile(file, mimeType));
+          if (mounted) {
+            setState(() {});
+          }
+        }
+      }),
+    );
   }
 
   Future<void> onPausePreviewButtonPressed() async {
@@ -1046,23 +1058,27 @@ class CameraPageState extends State<CameraPage>
   }
 
   void onPauseButtonPressed() {
-    pauseVideoRecording().then((_) {
-      if (mounted) {
-        setState(() {});
-      }
+    unawaited(
+      pauseVideoRecording().then((_) {
+        if (mounted) {
+          setState(() {});
+        }
 
-      log('Video recording paused');
-    });
+        log('Video recording paused');
+      }),
+    );
   }
 
   void onResumeButtonPressed() {
-    resumeVideoRecording().then((_) {
-      if (mounted) {
-        setState(() {});
-      }
+    unawaited(
+      resumeVideoRecording().then((_) {
+        if (mounted) {
+          setState(() {});
+        }
 
-      log('Video recording resumed');
-    });
+        log('Video recording resumed');
+      }),
+    );
   }
 
   Future<void> startVideoRecording() async {

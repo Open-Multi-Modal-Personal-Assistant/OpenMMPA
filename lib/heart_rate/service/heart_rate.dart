@@ -16,8 +16,10 @@ class HeartRateService with ChangeNotifier {
     }
 
     _heartBeatFlutter = HeartRateFlutter();
-    _heartBeatFlutter!.getPlatformVersion().then(
-      (platformVersion) => debugPrint('HR $platformVersion'),
+    unawaited(
+      _heartBeatFlutter!.getPlatformVersion().then(
+        (platformVersion) => debugPrint('HR $platformVersion'),
+      ),
     );
     _heartRateStream = _heartBeatFlutter?.heartBeatStream;
 
