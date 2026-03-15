@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dart_helper_utils/dart_helper_utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,7 +39,7 @@ class ApiKeysPreferencesPageState extends State<ApiKeysPreferencesPage> {
             final csvLines = await apiKeysCsvFile.readAsLines();
             final preferencesMap = <String, String>{};
             for (final csvLine in csvLines) {
-              if (!csvLine.isNullOrWhiteSpace) {
+              if (csvLine.trim().isNotEmpty) {
                 final keyValues = csvLine.split(',');
                 if (keyValues.length >= 2) {
                   preferencesMap.putIfAbsent(keyValues[0], () => keyValues[1]);

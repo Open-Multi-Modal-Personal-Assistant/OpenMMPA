@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:dart_helper_utils/dart_helper_utils.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/ai/tools/function_tool.dart';
@@ -54,7 +53,7 @@ class LyricsTool implements FunctionTool {
   Future<String> _lyricsLookup(Map<String, Object?> jsonObject) async {
     final artist = (jsonObject['artist'] ?? '') as String;
     final title = (jsonObject['title'] ?? '') as String;
-    if (artist.isNullOrWhiteSpace || title.isNullOrWhiteSpace) {
+    if (artist.trim().isEmpty || title.trim().isEmpty) {
       return 'N/A';
     }
 

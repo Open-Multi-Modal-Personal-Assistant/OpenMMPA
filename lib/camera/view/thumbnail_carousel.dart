@@ -281,8 +281,10 @@ class ThumbnailCarouselState extends State<ThumbnailCarouselWidget>
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final mediaSize = m.min(size.width, size.height);
-    final currentPage = watchPropertyValue((PageState p) => p.currentPage);
-    final pageCount = watchPropertyValue((PageState p) => p.pageCount);
+    final currentPage = watchPropertyValue<PageState, int>(
+      (p) => p.currentPage,
+    );
+    final pageCount = watchPropertyValue<PageState, int>((p) => p.pageCount);
     return LayoutGrid(
       columnSizes: [controlIconSize.px, auto, controlIconSize.px],
       rowSizes: [controlIconSize.px, auto, controlIconSize.px],

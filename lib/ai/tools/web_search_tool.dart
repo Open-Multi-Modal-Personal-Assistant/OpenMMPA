@@ -57,7 +57,7 @@ class WebSearchTool implements FunctionTool {
 
   Future<String> _webSearch(Map<String, Object?> jsonObject) async {
     final query = (jsonObject['query'] ?? '') as String;
-    if (query.isNullOrWhiteSpace) {
+    if (query.trim().isEmpty) {
       return 'N/A';
     }
 
@@ -80,7 +80,7 @@ class WebSearchTool implements FunctionTool {
         result = resultJson['Abstract'] as String;
       }
 
-      if (result.isNullOrWhiteSpace) {
+      if (result.trim().isEmpty) {
         // TODO(MrCsabaToth): Try Cloud Function!
         return 'N/A';
       }

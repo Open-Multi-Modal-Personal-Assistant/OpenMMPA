@@ -24,7 +24,7 @@ class AppPageIndicator extends WatchingStatefulWidget {
 class AppPageIndicatorState extends State<AppPageIndicator> {
   @override
   Widget build(BuildContext context) {
-    final pageCount = watchPropertyValue((PageState p) => p.pageCount);
+    final pageCount = watchPropertyValue<PageState, int>((p) => p.pageCount);
     final colorScheme = Theme.of(context).colorScheme;
     return Positioned.fill(
       child: Center(

@@ -16,6 +16,7 @@ void main() {
 
   group('MainView', () {
     testWidgets('renders MainPage', (tester) async {
+      // await FirebaseMixin.initFirebase();
       await tester.pumpApp(const MainPage());
       expect(find.byType(MainPage), findsOneWidget);
     });

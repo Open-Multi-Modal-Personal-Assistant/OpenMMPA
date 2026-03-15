@@ -297,13 +297,12 @@ class CameraPageState extends State<CameraPage>
         child: CameraPreview(
           cameraController!,
           child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
+            builder: (context, constraints) {
               return GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onScaleStart: handleScaleStart,
                 onScaleUpdate: handleScaleUpdate,
-                onTapDown: (TapDownDetails details) =>
-                    onViewFinderTap(details, constraints),
+                onTapDown: (details) => onViewFinderTap(details, constraints),
               );
             },
           ),
@@ -342,7 +341,7 @@ class CameraPageState extends State<CameraPage>
           expand: false,
           initialChildSize:
               0.90, // Initial height as a fraction of screen height
-          builder: (BuildContext context, ScrollController scrollController) {
+          builder: (context, scrollController) {
             return ThumbnailCarouselWidget(files);
           },
         );
@@ -351,7 +350,7 @@ class CameraPageState extends State<CameraPage>
   }
 
   Widget cardStackWidget(BuildContext context) {
-    final pageCount = watchPropertyValue((PageState p) => p.pageCount);
+    final pageCount = watchPropertyValue<PageState, int>((p) => p.pageCount);
     return IconButton(
       icon: outlinedIcon(
         context,
@@ -843,17 +842,17 @@ class CameraPageState extends State<CameraPage>
       await Future.wait(<Future<Object?>>[
         ...<Future<Object?>>[
           cameraController!.getMinExposureOffset().then(
-            (double value) => minAvailableExposureOffset = value,
+            (value) => minAvailableExposureOffset = value,
           ),
           cameraController!.getMaxExposureOffset().then(
-            (double value) => maxAvailableExposureOffset = value,
+            (value) => maxAvailableExposureOffset = value,
           ),
         ],
         cameraController!.getMaxZoomLevel().then(
-          (double value) => maxAvailableZoom = value,
+          (value) => maxAvailableZoom = value,
         ),
         cameraController!.getMinZoomLevel().then(
-          (double value) => minAvailableZoom = value,
+          (value) => minAvailableZoom = value,
         ),
       ]);
     } on CameraException catch (e) {
@@ -885,7 +884,7 @@ class CameraPageState extends State<CameraPage>
   }
 
   void onTakePictureButtonPressed() {
-    takePicture().then((XFile? file) async {
+    takePicture().then((file) async {
       log('Picture saved to ${file?.path}');
       if (file != null) {
         pageState.incrementPageCount(1);
@@ -1017,7 +1016,7 @@ class CameraPageState extends State<CameraPage>
   }
 
   void onStopButtonPressed() {
-    stopVideoRecording().then((XFile? file) async {
+    stopVideoRecording().then((file) async {
       log('Video recorded to ${file?.path}');
       if (file != null && file.path.trim().isNotEmpty) {
         pageState.incrementPageCount(1);

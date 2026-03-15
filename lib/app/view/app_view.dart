@@ -14,8 +14,12 @@ class AppView extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     final preferences = GetIt.I.get<PreferencesService>();
-    final themeMode = watchPropertyValue((PreferencesService s) => s.themeMode);
-    final appLocale = watchPropertyValue((PreferencesService s) => s.appLocale);
+    final themeMode = watchPropertyValue<PreferencesService, ThemeMode>(
+      (s) => s.themeMode,
+    );
+    final appLocale = watchPropertyValue<PreferencesService, String>(
+      (s) => s.appLocale,
+    );
 
     final localizationDelegates = [
       ...AppLocalizations.localizationsDelegates,

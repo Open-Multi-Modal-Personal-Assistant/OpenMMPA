@@ -131,8 +131,8 @@ class PersonalizationPageState extends State<PersonalizationPage>
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     inputLocaleId = preferences.inputLocale;
-    final stateIndex = watchPropertyValue(
-      (PersonalizationState s) => s.stateIndex,
+    final stateIndex = watchPropertyValue<PersonalizationState, int>(
+      (s) => s.stateIndex,
     );
     final personalizationViewState = GetIt.I.get<PersonalizationState>();
 
@@ -148,10 +148,10 @@ class PersonalizationPageState extends State<PersonalizationPage>
           CustomListView(
             key: Key('CLV$_editCount'),
             paginationMode: PaginationMode.page,
-            loadingBuilder: (BuildContext context) =>
+            loadingBuilder: (context) =>
                 const Center(child: CircularProgressIndicator()),
             adapter: ListAdapter(
-              fetchItems: (int page, int limit) async {
+              fetchItems: (page, limit) async {
                 final data = await database.personalizationPaged(
                   page * limit,
                   limit,

@@ -3,6 +3,10 @@ linter:
   rules:
     public_member_api_docs: false
     require_trailing_commas: false
+    discarded_futures: false
+    avoid_types_on_closure_parameters: false
+    avoid_catches_without_on_clauses: false
+    document_ignores: false
 
 analyzer:
   exclude:

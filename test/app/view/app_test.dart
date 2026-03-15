@@ -11,6 +11,7 @@ void main() {
 
   group('App', () {
     testWidgets('renders MainPage', (tester) async {
+      // await FirebaseMixin.initFirebase();
       await tester.pumpWidget(const AppView());
       await tester.pumpAndSettle();
 

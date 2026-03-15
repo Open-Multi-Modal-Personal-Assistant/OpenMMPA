@@ -1,4 +1,3 @@
-import 'package:dart_helper_utils/dart_helper_utils.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:http/http.dart' as http;
 import 'package:inspector_gadget/ai/tools/function_tool.dart';
@@ -12,7 +11,7 @@ class AlphaVantageTool implements FunctionTool {
 
   @override
   bool isAvailable(PreferencesService preferences) {
-    return preferences.alphaVantageAccessKey.isNullOrWhiteSpace;
+    return preferences.alphaVantageAccessKey.trim().isNotEmpty;
   }
 
   @override
@@ -113,7 +112,7 @@ and technology''',
 
   Future<String> _getStockPrice(Map<String, Object?> jsonObject) async {
     final ticker = (jsonObject['ticker'] ?? '') as String;
-    if (alphaVantageAccessKey.isNullOrWhiteSpace || ticker.isNullOrWhiteSpace) {
+    if (alphaVantageAccessKey.trim().isEmpty || ticker.trim().isEmpty) {
       return 'N/A';
     }
 
@@ -133,7 +132,7 @@ and technology''',
 
   Future<String> _getCompanyOverview(Map<String, Object?> jsonObject) async {
     final ticker = (jsonObject['ticker'] ?? '') as String;
-    if (alphaVantageAccessKey.isNullOrWhiteSpace || ticker.isNullOrWhiteSpace) {
+    if (alphaVantageAccessKey.trim().isEmpty || ticker.trim().isEmpty) {
       return 'N/A';
     }
 
@@ -153,7 +152,7 @@ and technology''',
 
   Future<String> _getCompanyNews(Map<String, Object?> jsonObject) async {
     final ticker = (jsonObject['ticker'] ?? '') as String;
-    if (alphaVantageAccessKey.isNullOrWhiteSpace || ticker.isNullOrWhiteSpace) {
+    if (alphaVantageAccessKey.trim().isEmpty || ticker.trim().isEmpty) {
       return 'N/A';
     }
 
@@ -175,8 +174,7 @@ and technology''',
 
   Future<String> _getNewsWithSentiment(Map<String, Object?> jsonObject) async {
     final newsTopic = (jsonObject['newsTopic'] ?? '') as String;
-    if (alphaVantageAccessKey.isNullOrWhiteSpace ||
-        newsTopic.isNullOrWhiteSpace) {
+    if (alphaVantageAccessKey.trim().isEmpty || newsTopic.trim().isEmpty) {
       return 'N/A';
     }
 

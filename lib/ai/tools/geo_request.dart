@@ -18,7 +18,7 @@ class GeoRequest {
           }
         case 'date':
           final dateString = mapEntry.value as String?;
-          final parsedDate = dateString.tryToDateAutoFormat();
+          final parsedDate = dateString?.tryToDateAutoFormat();
           if (parsedDate != null) {
             date = parsedDate;
           }

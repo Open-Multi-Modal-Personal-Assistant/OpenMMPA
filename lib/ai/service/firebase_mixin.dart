@@ -11,9 +11,7 @@ mixin FirebaseMixin {
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
-    await FirebaseAppCheck.instance.activate(
-      androidProvider: AndroidProvider.debug,
-    );
+    await FirebaseAppCheck.instance.activate();
 
     try {
       final userCredential = await FirebaseAuth.instance.signInAnonymously();

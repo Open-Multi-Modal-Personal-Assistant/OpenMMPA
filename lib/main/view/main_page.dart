@@ -5,6 +5,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:inspector_gadget/camera/view/camera_page.dart';
+import 'package:inspector_gadget/common/constants.dart';
 import 'package:inspector_gadget/common/legend_dialog.dart';
 import 'package:inspector_gadget/database/view/personalization_page.dart';
 import 'package:inspector_gadget/interaction/view/interaction_page.dart';
@@ -20,7 +21,7 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
-  final appCheck = FirebaseAppCheck.instance;
+  final FirebaseAppCheck? appCheck = testing ? FirebaseAppCheck.instance : null;
 
   static const String uniModalKey = 'UniModal';
   static const String multiModalKey = 'MultiModal';
@@ -31,7 +32,7 @@ class MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    appCheck.onTokenChange.listen(setEventToken);
+    appCheck?.onTokenChange.listen(setEventToken);
     super.initState();
   }
 

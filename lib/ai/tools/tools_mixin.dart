@@ -28,7 +28,7 @@ mixin ToolsMixin {
       ExchangeTool(),
     ]);
 
-    if (!preferences.alphaVantageAccessKey.isNullOrWhiteSpace) {
+    if (preferences.alphaVantageAccessKey.trim().isNotEmpty) {
       functionTools.add(AlphaVantageTool());
     }
 

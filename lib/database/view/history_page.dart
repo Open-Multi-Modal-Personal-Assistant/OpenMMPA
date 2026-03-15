@@ -90,7 +90,9 @@ class HistoryPageState extends State<HistoryPage>
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final stateIndex = watchPropertyValue((HistoryState s) => s.stateIndex);
+    final stateIndex = watchPropertyValue<HistoryState, int>(
+      (s) => s.stateIndex,
+    );
 
     _processDeferredActionQueue(context);
 
@@ -104,10 +106,10 @@ class HistoryPageState extends State<HistoryPage>
           CustomListView(
             key: Key('CLV$_editCount'),
             paginationMode: PaginationMode.page,
-            loadingBuilder: (BuildContext context) =>
+            loadingBuilder: (context) =>
                 const Center(child: CircularProgressIndicator()),
             adapter: ListAdapter(
-              fetchItems: (int page, int limit) async {
+              fetchItems: (page, limit) async {
                 final data = await database.historyPaged(page * limit, limit);
                 return ListItems(data, reachedToEnd: data.length < limit);
               },

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:dart_helper_utils/dart_helper_utils.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_animations/flutter_easy_animations.dart';
@@ -208,9 +207,11 @@ class InteractionPageState extends State<InteractionPage>
     processDeferredActionQueue(context);
 
     final interactionState = GetIt.I.get<InteractionState>();
-    final stateIndex = watchPropertyValue((InteractionState s) => s.stateIndex);
-    final responseText = watchPropertyValue(
-      (InteractionState s) => s.responseText,
+    final stateIndex = watchPropertyValue<InteractionState, int>(
+      (s) => s.stateIndex,
+    );
+    final responseText = watchPropertyValue<InteractionState, String>(
+      (s) => s.responseText,
     );
 
     final smallHeadline = Theme.of(context).textTheme.headlineSmall;
@@ -276,7 +277,7 @@ class InteractionPageState extends State<InteractionPage>
             ),
             // 5: Playback phase
             GestureDetector(
-              child: responseText.isNotEmptyOrNull
+              child: responseText.isNotEmpty
                   ? Text(
                       responseText,
                       style: smallHeadline,
@@ -295,7 +296,7 @@ class InteractionPageState extends State<InteractionPage>
             ),
             // 6: Done phase
             GestureDetector(
-              child: responseText.isNotEmptyOrNull
+              child: responseText.isNotEmpty
                   ? Text(
                       responseText,
                       style: smallHeadline,

@@ -9,7 +9,7 @@ import 'package:inspector_gadget/preferences/service/preferences.dart';
 class WebResearchTool implements FunctionTool {
   @override
   bool isAvailable(PreferencesService preferences) {
-    return preferences.tavilyApiKey.isNullOrWhiteSpace;
+    return preferences.tavilyApiKey.trim().isNotEmpty;
   }
 
   @override
@@ -65,7 +65,7 @@ class WebResearchTool implements FunctionTool {
     String tavilyApiKey,
   ) async {
     final query = (jsonObject['query'] ?? '') as String;
-    if (query.isNullOrWhiteSpace) {
+    if (query.trim().isEmpty) {
       return 'N/A';
     }
 
