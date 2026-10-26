@@ -642,10 +642,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_easy_animations
-      sha256: "86cea94c1d1b9e3d7dcbd94fd7e9d772ae6cd7c54ad4f0d9681ca6cd25bd4b2f"
+      sha256: "6f6dca9ce3022193abfe2649ffce06f643c553b4ef0c5bb6bd5339de34a94dcf"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2"
+    version: "1.0.0"
   flutter_layout_grid:
     dependency: "direct main"
     description:
