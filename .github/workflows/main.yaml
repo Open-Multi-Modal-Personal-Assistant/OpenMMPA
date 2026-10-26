@@ -24,7 +24,7 @@ jobs:
         cp lib/firebase_options.mock.dart lib/firebase_options.dart
 
   spell-check:
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v2
     with:
       includes: |
         **/*.md
