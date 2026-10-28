@@ -27,7 +27,7 @@ dependencies:
   flex_color_scheme: ^9.0.0
   flutter:
     sdk: flutter
-  flutter_easy_animations: ^0.0.2
+  flutter_easy_animations: ^1.0.0
   flutter_layout_grid: ^2.0.8
   flutter_localizations:
     sdk: flutter
