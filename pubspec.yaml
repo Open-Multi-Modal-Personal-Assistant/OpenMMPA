@@ -57,7 +57,7 @@ dependencies:
   translator: ^1.0.4+1
   tuple: ^2.0.2
   video_player: ^2.14.1
-  watch_it: ^2.4.2
+  watch_it: ^2.5.0
 
 dev_dependencies:
   build_runner: ^2.15.1
