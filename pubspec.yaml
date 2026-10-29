@@ -47,7 +47,7 @@ dependencies:
   objectbox_flutter_libs: ^5.3.2
   path: ^1.9.1
   path_provider: ^2.1.6
-  pref: ^2.8.0
+  pref: ^3.0.0
   progress_indicators: ^1.0.0
   record: ^7.1.1
   smooth_page_indicator: ^2.0.1
